@@ -12,6 +12,7 @@ export default function TradingHallPage() {
   const [activeTab, setActiveTab] = useState<'positions' | 'orders'>('positions');
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [direction, setDirection] = useState<'buy' | 'sell'>('buy');
+  const [stockCode, setStockCode] = useState('');
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
@@ -64,6 +65,25 @@ export default function TradingHallPage() {
           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
           </svg>
+        </div>
+
+        {/* 股票代码输入 */}
+        <div className={`px-4 py-4 border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-100'}`}>
+          <div className="flex items-center">
+            <span className={`w-16 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>股票</span>
+            <div className={`flex-1 flex items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg px-3 py-2`}>
+              <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={stockCode}
+                onChange={(e) => setStockCode(e.target.value.toUpperCase())}
+                placeholder="输入股票代码，如 AAPL、700.HK"
+                className={`flex-1 bg-transparent outline-none text-sm ${theme === 'dark' ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'}`}
+              />
+            </div>
+          </div>
         </div>
 
         {/* 订单类型 */}
