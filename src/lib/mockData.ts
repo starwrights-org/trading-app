@@ -137,11 +137,37 @@ export async function submitOrder(params: {
   // TODO: 对接柜台 API
   console.log('📤 [预留接口] 提交订单:', params);
   
+  // 生成订单ID
+  const orderId = 'ORD' + Date.now();
+  
+  // 查找股票信息
+  const stockInfo = MOCK_STOCKS.find(s => s.symbol === params.symbol) || 
+                    { symbol: params.symbol, name: params.symbol, market: 'HK' as const };
+  
+  // 创建新订单
+  const newOrder: Order = {
+    id: orderId,
+    symbol: params.symbol,
+    name: stockInfo.name,
+    market: stockInfo.market,
+    side: params.side,
+    orderType: params.orderType,
+    price: params.price,
+    quantity: params.quantity,
+    filledQuantity: 0,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  
+  // 添加到订单列表开头
+  MOCK_ORDERS.unshift(newOrder);
+  
   // 模拟返回
   return {
     success: true,
-    orderId: 'ORD' + Date.now(),
-    message: '订单已提交（模拟）',
+    orderId,
+    message: '订单已提交',
   };
 }
 
