@@ -682,169 +682,125 @@ function TradeModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center">
-      <div className={`w-full max-w-lg ${colors.bgCard} rounded-t-2xl`}>
-        {/* 标题 */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <span className="font-bold">{stock.name} ({stock.symbol})</span>
-          <button onClick={onClose} className={colors.textMuted}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
+      <div className={`w-full max-w-lg ${colors.bgCard} rounded-t-3xl`}>
         {result ? (
           <div className="p-6 text-center">
-            <div className={`text-4xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
+            <div className={`text-5xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
               {result.success ? '✓' : '✗'}
             </div>
             <div className="text-lg mb-4">{result.message}</div>
-            <button
-              onClick={onClose}
-              className="px-8 py-2 bg-orange-500 text-white rounded-lg"
-            >
-              确定
-            </button>
+            <button onClick={onClose} className="px-8 py-2 bg-orange-500 text-white rounded-lg">确定</button>
           </div>
         ) : (
-          <div className="p-4 space-y-4">
-            {/* 买卖切换 */}
-            <div className="flex rounded-lg overflow-hidden">
-              <button
-                onClick={() => setTradeType('buy')}
-                className={`flex-1 py-2 font-bold ${
-                  tradeType === 'buy'
-                    ? 'bg-green-600 text-white'
-                    : `${colors.bgCard} ${colors.textMuted}`
-                }`}
-              >
-                买入
+          <>
+            {/* 顶部栏 */}
+            <div className="flex items-center justify-between px-4 py-3">
+              <button className={colors.textMuted}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
               </button>
-              <button
-                onClick={() => setTradeType('sell')}
-                className={`flex-1 py-2 font-bold ${
-                  tradeType === 'sell'
-                    ? 'bg-red-600 text-white'
-                    : `${colors.bgCard} ${colors.textMuted}`
-                }`}
-              >
-                卖出
+              <button onClick={onClose} className={colors.textMuted}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-
-            {/* 订单类型 */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setOrderType('limit')}
-                className={`px-4 py-1 rounded text-sm ${
-                  orderType === 'limit'
-                    ? 'bg-orange-500 text-white'
-                    : `${colors.bg} ${colors.textMuted}`
-                }`}
-              >
-                限价单
-              </button>
-              <button
-                onClick={() => setOrderType('market')}
-                className={`px-4 py-1 rounded text-sm ${
-                  orderType === 'market'
-                    ? 'bg-orange-500 text-white'
-                    : `${colors.bg} ${colors.textMuted}`
-                }`}
-              >
-                市价单
+            
+            {/* 账户 + 订单类型 */}
+            <div className="flex items-center justify-between px-4 pb-3">
+              <div className="flex items-center gap-1">
+                <span className="font-medium">证券账户 (LBPT10078568)</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                </svg>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className={colors.textMuted}>{orderType === 'limit' ? '竞价限价单' : '市价单'}</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            
+            {/* 价格行 */}
+            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <span className={`w-14 ${colors.textMuted}`}>价格</span>
+              <div className="flex-1 flex items-center justify-center gap-4">
+                <button onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
+                <span className="text-xl font-bold w-24 text-center">{price}</span>
+                <button onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
+              </div>
+              <button className={colors.textMuted}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                  <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                </svg>
               </button>
             </div>
-
-            {/* 价格输入 */}
-            {orderType === 'limit' && (
-              <div>
-                <label className={`text-sm ${colors.textMuted}`}>价格 ({currency})</label>
-                <div className="flex items-center mt-1">
-                  <button
-                    onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))}
-                    className={`px-3 py-2 ${colors.bg} rounded-l`}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="text"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
-                  />
-                  <button
-                    onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))}
-                    className={`px-3 py-2 ${colors.bg} rounded-r`}
-                  >
-                    +
-                  </button>
+            
+            {/* 数量行 */}
+            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="w-14 flex items-center gap-1">
+                <span className={colors.textMuted}>数量</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                </svg>
+              </div>
+              <div className="flex-1 flex items-center justify-center gap-4">
+                <button onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
+                <div className="text-center">
+                  <span className="text-xl font-bold">{quantity || '0'}</span>
+                  <div className={`text-xs ${colors.textMuted}`}>最小买卖单位 {lotSize}</div>
                 </div>
+                <button onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
               </div>
-            )}
-
-            {/* 数量输入 */}
-            <div>
-              <label className={`text-sm ${colors.textMuted}`}>数量 (每手 {lotSize} 股)</label>
-              <div className="flex items-center mt-1">
-                <button
-                  onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))}
-                  className={`px-3 py-2 ${colors.bg} rounded-l`}
-                >
-                  -
-                </button>
-                <input
-                  type="text"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
-                />
-                <button
-                  onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))}
-                  className={`px-3 py-2 ${colors.bg} rounded-r`}
-                >
-                  +
-                </button>
-              </div>
+              <button className={colors.textMuted}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
             </div>
-
-            {/* 预估金额 / 最大可卖 */}
-            <div className={`p-3 ${colors.bg} rounded-lg`}>
+            
+            {/* 可买/可卖信息 */}
+            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm">
               {tradeType === 'buy' ? (
-                <div className="flex justify-between">
-                  <span className={colors.textMuted}>预估金额</span>
-                  <span className="font-bold">
-                    {currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                  </span>
-                </div>
+                <>
+                  <span className={colors.textMuted}>现金可买 <span className="text-orange-500">0</span> 股</span>
+                  <span className={colors.textMuted}>融资最大可买 <span className="text-orange-500">101,000</span> 股</span>
+                </>
               ) : (
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className={colors.textMuted}>持仓数量</span>
-                    <span className="font-bold">{availableQty} 股</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className={colors.textMuted}>最大可卖</span>
-                    <span className="font-bold text-red-500">
-                      {maxSellQty > 0 ? `${maxSellQty} 股 (${maxSellLots}手)` : '无持仓'}
-                    </span>
-                  </div>
-                </div>
+                <>
+                  <span className={colors.textMuted}>持仓 <span className="text-orange-500">{availableQty}</span> 股</span>
+                  <span className={colors.textMuted}>最大可卖 <span className="text-red-500">{maxSellQty > 0 ? `${maxSellQty}` : '0'}</span> 股</span>
+                </>
               )}
             </div>
-
-            {/* 提交按钮 */}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className={`w-full py-3 rounded-lg font-bold text-white ${
-                tradeType === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
-              } ${submitting ? 'opacity-50' : ''}`}
-            >
-              {submitting ? '提交中...' : `确认${tradeType === 'buy' ? '买入' : '卖出'}`}
-            </button>
-          </div>
+            
+            {/* 底部 */}
+            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex-1">
+                <div className="font-bold">{currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                <div className={`text-xs ${colors.textMuted}`}>预估成交后成本 --</div>
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={`px-8 py-3 rounded-lg font-bold text-white ${
+                  tradeType === 'buy' ? 'bg-orange-500' : 'bg-blue-500'
+                } ${submitting ? 'opacity-50' : ''}`}
+              >
+                {submitting ? '提交中...' : tradeType === 'buy' ? '买入' : '卖出'}
+              </button>
+              <button className="flex flex-col items-center ml-4">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className={`text-xs ${colors.textMuted}`}>预览</span>
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>
