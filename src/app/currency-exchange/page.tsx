@@ -153,15 +153,29 @@ export default function CurrencyExchangePage() {
             <div className="text-lg font-medium">货币兑换</div>
             <div className={`text-xs ${colors.textMuted}`}>模拟炒股 (LBPT10078568)</div>
           </div>
-          <button className={colors.textSecondary}>
+          <Link href="/exchange-records" className={colors.textSecondary}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
 
       <div className="max-w-lg mx-auto">
+        {/* 进行中的兑换提示 */}
+        <Link 
+          href="/exchange-records"
+          className={`mx-4 mt-3 flex items-center justify-between px-4 py-3 ${colors.bgCard} rounded-xl`}
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-lg">📋</span>
+            <span className={colors.text}>您有 1 笔进行中的货币兑换</span>
+          </div>
+          <svg className={`w-5 h-5 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+
         {/* 参考汇率 */}
         <div className={`px-4 py-3 ${colors.textSecondary} text-sm`}>
           参考汇率：1 {CURRENCIES[fromCurrency].name} = {rate.toFixed(4)} {CURRENCIES[toCurrency].name}
