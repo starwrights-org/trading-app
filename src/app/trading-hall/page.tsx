@@ -218,11 +218,6 @@ export default function TradingHallPage() {
           </button>
         </div>
 
-        {/* 服务提示 */}
-        <div className={`text-center py-2 text-sm ${theme === 'dark' ? 'text-gray-600' : 'text-gray-400'}`}>
-          以上服务由模拟炒股环境提供
-        </div>
-
         {/* 底部持仓区域 */}
         <div className={`mt-4 ${theme === 'dark' ? 'bg-gray-800/50' : 'bg-gray-50'} rounded-t-3xl`}>
           {/* 持仓/当日订单 Tab */}
