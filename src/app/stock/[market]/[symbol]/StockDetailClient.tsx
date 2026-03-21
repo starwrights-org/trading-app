@@ -598,22 +598,32 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
       
       {/* 底部操作栏 - 长桥风格 */}
       <div className={`fixed bottom-0 left-0 right-0 ${colors.bgCard} border-t ${colors.border}`}>
-        <div className="max-w-lg mx-auto flex items-center px-2 py-2">
-          <button className="flex flex-col items-center px-3">
-            <span>🔲</span>
+        <div className="max-w-lg mx-auto flex items-center px-3 py-2 gap-2">
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">🔲</span>
             <span className={`text-xs ${colors.textMuted}`}>更多</span>
           </button>
-          <button className="flex flex-col items-center px-3">
-            <span>↗️</span>
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">↗️</span>
             <span className={`text-xs ${colors.textMuted}`}>分享</span>
           </button>
-          <button className="flex flex-col items-center px-3">
-            <span>📈</span>
-            <span className={`text-xs ${colors.textMuted}`}>{market === 'HK' ? '窝轮' : '期权'}</span>
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">🎯</span>
+            <span className={`text-xs ${colors.textMuted}`}>{market === 'HK' ? '轮证' : '期权'}</span>
           </button>
-          <div className="flex-1 flex gap-2 ml-2">
-            <button onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} className="flex-1 bg-green-500 text-white font-bold py-3 rounded-lg">买入</button>
-            <button onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} className="flex-1 bg-red-500 text-white font-bold py-3 rounded-lg">卖出</button>
+          <div className="flex-1 flex gap-3 ml-2">
+            <button 
+              onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} 
+              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-center"
+            >
+              买入
+            </button>
+            <button 
+              onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} 
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg text-center"
+            >
+              卖出
+            </button>
           </div>
         </div>
       </div>
