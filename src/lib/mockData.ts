@@ -13,7 +13,7 @@ export const MOCK_STOCKS: Stock[] = [
   // 美股 - Google Finance 实时数据
   { symbol: 'AAPL', name: '苹果', nameEn: 'Apple', market: 'US', price: 247.99, change: -0.97, changePercent: -0.39, open: 248.5, high: 250.2, low: 246.8, prevClose: 248.96, volume: 32428002, pe: 31.2 },
   { symbol: 'NVDA', name: '英伟达', nameEn: 'NVIDIA', market: 'US', price: 172.93, change: -5.63, changePercent: -3.15, open: 176, high: 177.5, low: 171.5, prevClose: 178.56, volume: 168525509, pe: 35.1 },
-  { symbol: 'TSLA', name: '特斯拉', nameEn: 'Tesla', market: 'US', price: 367.96, change: 142.65, changePercent: 63.33, open: 240, high: 372, low: 238, prevClose: 225.31, volume: 285765432, pe: 142.5 },
+  { symbol: 'TSLA', name: '特斯拉', nameEn: 'Tesla', market: 'US', price: 367.96, change: -12.34, changePercent: -3.24, open: 378, high: 380, low: 365, prevClose: 380.30, volume: 85765432, pe: 142.5 },
   { symbol: 'AMZN', name: '亚马逊', nameEn: 'Amazon', market: 'US', price: 205.37, change: -3.39, changePercent: -1.62, open: 207, high: 208.5, low: 204.2, prevClose: 208.76, volume: 38995364, pe: 28.5 },
   { symbol: 'GOOGL', name: '谷歌', nameEn: 'Alphabet', market: 'US', price: 301.00, change: -6.13, changePercent: -2.00, open: 305, high: 306.5, low: 299.5, prevClose: 307.13, volume: 25623215, pe: 27.8 },
   { symbol: 'META', name: 'Meta', nameEn: 'Meta Platforms', market: 'US', price: 593.66, change: -13.04, changePercent: -2.15, open: 602, high: 605, low: 590, prevClose: 606.70, volume: 13568305, pe: 20.2 },
