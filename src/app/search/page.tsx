@@ -63,12 +63,12 @@ export default function SearchPage() {
   }, [allStocks]);
 
   return (
-    <main className={\`min-h-screen \${colors.bg} \${colors.text}\`}>
+    <main className={`min-h-screen ${colors.bg} ${colors.text}`}>
       {/* 搜索栏 */}
-      <div className={\`\${colors.bg} sticky top-0 z-10 px-4 py-3\`}>
+      <div className={`${colors.bg} sticky top-0 z-10 px-4 py-3`}>
         <div className="max-w-lg mx-auto flex items-center gap-3">
-          <div className={\`flex-1 flex items-center \${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg px-3 py-2\`}>
-            <svg className={\`w-5 h-5 \${colors.textMuted} mr-2\`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className={`flex-1 flex items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg px-3 py-2`}>
+            <svg className={`w-5 h-5 ${colors.textMuted} mr-2`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -77,7 +77,7 @@ export default function SearchPage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="搜索股票代码、名称"
               autoFocus
-              className={\`flex-1 bg-transparent outline-none \${colors.text} placeholder-gray-500\`}
+              className={`flex-1 bg-transparent outline-none ${colors.text} placeholder-gray-500`}
             />
             {query && (
               <button onClick={() => setQuery('')} className={colors.textMuted}>
@@ -94,13 +94,13 @@ export default function SearchPage() {
       <div className="max-w-lg mx-auto px-4">
         {loading ? (
           <div className="text-center py-8">
-            <div className={\`animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mx-auto\`}></div>
-            <p className={\`mt-2 \${colors.textMuted}\`}>加载股票数据...</p>
+            <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className={`mt-2 ${colors.textMuted}`}>加载股票数据...</p>
           </div>
         ) : query ? (
           /* 搜索结果 */
           <div>
-            <div className={\`text-sm \${colors.textMuted} py-2 flex justify-between\`}>
+            <div className={`text-sm ${colors.textMuted} py-2 flex justify-between`}>
               <span>搜索结果 ({results.length})</span>
               <span>共 {stockCount.toLocaleString()} 只股票</span>
             </div>
@@ -112,22 +112,22 @@ export default function SearchPage() {
               <div className="space-y-1">
                 {results.map(stock => (
                   <Link
-                    key={\`\${stock.market}-\${stock.symbol}\`}
-                    href={\`/stock/\${stock.market}/\${stock.symbol}\`}
-                    className={\`flex items-center justify-between py-3 px-2 rounded-lg \${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}\`}
+                    key={`${stock.market}-${stock.symbol}`}
+                    href={`/stock/${stock.market}/${stock.symbol}`}
+                    className={`flex items-center justify-between py-3 px-2 rounded-lg ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
                   >
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{stock.symbol}</span>
-                        <span className={\`text-xs px-1.5 py-0.5 rounded \${stock.market === 'US' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}\`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${stock.market === 'US' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}`}>
                           {stock.market === 'US' ? '美' : '港'}
                         </span>
                       </div>
-                      <div className={\`text-sm \${colors.textMuted} truncate max-w-[250px]\`}>
-                        {stock.alias ? \`\${stock.alias} · \${stock.name}\` : stock.name}
+                      <div className={`text-sm ${colors.textMuted} truncate max-w-[250px]`}>
+                        {stock.alias ? `${stock.alias} · ${stock.name}` : stock.name}
                       </div>
                     </div>
-                    <svg className={\`w-5 h-5 \${colors.textMuted}\`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-5 h-5 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
@@ -139,19 +139,19 @@ export default function SearchPage() {
           /* 默认显示 */
           <div>
             {/* 股票数量提示 */}
-            <div className={\`text-xs \${colors.textMuted} text-center py-2\`}>
+            <div className={`text-xs ${colors.textMuted} text-center py-2`}>
               已加载 {stockCount.toLocaleString()} 只股票（美股+港股）
             </div>
             
             {/* 热门搜索 */}
             <div className="py-4">
-              <h3 className={\`text-sm \${colors.textMuted} mb-3\`}>热门搜索</h3>
+              <h3 className={`text-sm ${colors.textMuted} mb-3`}>热门搜索</h3>
               <div className="flex flex-wrap gap-2">
                 {HOT_SEARCHES.map(term => (
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
-                    className={\`px-3 py-1.5 rounded-full text-sm \${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}\`}
+                    className={`px-3 py-1.5 rounded-full text-sm ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}`}
                   >
                     {term}
                   </button>
@@ -162,15 +162,15 @@ export default function SearchPage() {
             {/* 搜索历史 */}
             <div className="py-4">
               <div className="flex justify-between items-center mb-3">
-                <h3 className={\`text-sm \${colors.textMuted}\`}>搜索历史</h3>
-                <button className={\`text-sm \${colors.textMuted}\`}>清空</button>
+                <h3 className={`text-sm ${colors.textMuted}`}>搜索历史</h3>
+                <button className={`text-sm ${colors.textMuted}`}>清空</button>
               </div>
               <div className="space-y-2">
                 {SEARCH_HISTORY.map(term => (
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
-                    className={\`flex items-center gap-2 w-full text-left py-2 \${colors.textMuted}\`}
+                    className={`flex items-center gap-2 w-full text-left py-2 ${colors.textMuted}`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -183,26 +183,26 @@ export default function SearchPage() {
 
             {/* 热门股票 */}
             <div className="py-4">
-              <h3 className={\`text-sm \${colors.textMuted} mb-3\`}>热门股票</h3>
+              <h3 className={`text-sm ${colors.textMuted} mb-3`}>热门股票</h3>
               <div className="space-y-1">
                 {hotStocks.map(stock => (
                   <Link
-                    key={\`\${stock.market}-\${stock.symbol}\`}
-                    href={\`/stock/\${stock.market}/\${stock.symbol}\`}
-                    className={\`flex items-center justify-between py-3 px-2 rounded-lg \${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}\`}
+                    key={`${stock.market}-${stock.symbol}`}
+                    href={`/stock/${stock.market}/${stock.symbol}`}
+                    className={`flex items-center justify-between py-3 px-2 rounded-lg ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
                   >
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{stock.symbol}</span>
-                        <span className={\`text-xs px-1.5 py-0.5 rounded \${stock.market === 'US' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}\`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${stock.market === 'US' ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}`}>
                           {stock.market === 'US' ? '美' : '港'}
                         </span>
                       </div>
-                      <div className={\`text-sm \${colors.textMuted}\`}>
+                      <div className={`text-sm ${colors.textMuted}`}>
                         {stock.alias || stock.name}
                       </div>
                     </div>
-                    <svg className={\`w-5 h-5 \${colors.textMuted}\`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className={`w-5 h-5 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
