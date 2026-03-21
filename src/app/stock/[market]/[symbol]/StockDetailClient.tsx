@@ -252,6 +252,7 @@ interface StockFullInfo {
   low?: number;
   prevClose?: number;
   volume?: number;
+  lotSize?: number;  // 每手股数（港股）
 }
 
 // 生成随机价格数据（仅作为后备方案）
@@ -596,19 +597,20 @@ function TradeModal({
   onClose,
   colors,
 }: {
-  stock: { symbol: string; name: string; price: number; market: string };
+  stock: { symbol: string; name: string; price: number; market: string; lotSize?: number };
   tradeType: 'buy' | 'sell';
   setTradeType: (t: 'buy' | 'sell') => void;
   onClose: () => void;
   colors: typeof themeColors.dark;
 }) {
   const [price, setPrice] = useState(stock.price.toFixed(2));
-  const [quantity, setQuantity] = useState('100');
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  const lotSize = stock.market === 'HK' ? 100 : 1;
+  // 港股从 stock.lotSize 读取，美股默认 1 股
+  const lotSize = stock.market === 'HK' ? (stock.lotSize || 100) : 1;
+  const [quantity, setQuantity] = useState(String(lotSize));
   const total = parseFloat(price) * parseInt(quantity || '0');
   const currency = stock.market === 'HK' ? 'HKD' : 'USD';
 
