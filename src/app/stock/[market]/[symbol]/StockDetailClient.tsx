@@ -84,6 +84,139 @@ function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: 
   );
 }
 
+// 窝轮/牛熊证数据类型
+interface WarrantData {
+  symbol: string;
+  name: string;
+  lastDone: number;
+  changePercent: number;
+  volume: number;
+  strikePrice: number;
+  expiryDate: string;
+  type: 'call' | 'put' | 'bull' | 'bear';
+}
+
+// 窝轮列表组件
+function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 'dark' | 'light'; colors: typeof themeColors.dark }) {
+  const [warrants, setWarrants] = useState<WarrantData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'call' | 'put' | 'bull' | 'bear'>('all');
+
+  useEffect(() => {
+    // 模拟窝轮数据 - 实际应从长桥 API 获取
+    // 长桥 API: ctx.warrant_list(symbol, sort_by, sort_order)
+    const mockWarrants: WarrantData[] = [
+      { symbol: '22629', name: `${symbol}瑞信购A`, lastDone: 0.67, changePercent: 5.2, volume: 12500000, strikePrice: 520, expiryDate: '2026-08-28', type: 'call' },
+      { symbol: '25228', name: `${symbol}摩通购B`, lastDone: 0.65, changePercent: -2.1, volume: 8900000, strikePrice: 530, expiryDate: '2026-06-30', type: 'call' },
+      { symbol: '24687', name: `${symbol}法巴沽A`, lastDone: 0.48, changePercent: -8.5, volume: 15600000, strikePrice: 480, expiryDate: '2026-06-30', type: 'put' },
+      { symbol: '24210', name: `${symbol}汇丰沽B`, lastDone: 0.52, changePercent: 12.3, volume: 22300000, strikePrice: 490, expiryDate: '2026-07-31', type: 'put' },
+      { symbol: '58123', name: `${symbol}瑞信牛A`, lastDone: 0.125, changePercent: 2.5, volume: 45000000, strikePrice: 495, expiryDate: '2026-05-30', type: 'bull' },
+      { symbol: '68456', name: `${symbol}摩通熊B`, lastDone: 0.098, changePercent: -5.2, volume: 38000000, strikePrice: 515, expiryDate: '2026-05-30', type: 'bear' },
+      { symbol: '58789', name: `${symbol}法兴牛C`, lastDone: 0.088, changePercent: 8.1, volume: 52000000, strikePrice: 500, expiryDate: '2026-06-15', type: 'bull' },
+      { symbol: '68012', name: `${symbol}汇丰熊A`, lastDone: 0.115, changePercent: -3.8, volume: 41000000, strikePrice: 510, expiryDate: '2026-06-15', type: 'bear' },
+    ];
+    
+    setTimeout(() => {
+      setWarrants(mockWarrants);
+      setLoading(false);
+    }, 500);
+  }, [symbol]);
+
+  const filteredWarrants = filter === 'all' 
+    ? warrants 
+    : warrants.filter(w => w.type === filter);
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'call': return '认购';
+      case 'put': return '认沽';
+      case 'bull': return '牛证';
+      case 'bear': return '熊证';
+      default: return type;
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'call': return 'bg-green-500/20 text-green-400';
+      case 'put': return 'bg-red-500/20 text-red-400';
+      case 'bull': return 'bg-orange-500/20 text-orange-400';
+      case 'bear': return 'bg-blue-500/20 text-blue-400';
+      default: return 'bg-gray-500/20 text-gray-400';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={`${colors.bgCard} rounded-lg p-8`}>
+        <div className="flex items-center justify-center">
+          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* 筛选按钮 */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {(['all', 'call', 'put', 'bull', 'bear'] as const).map((f) => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
+              filter === f
+                ? 'bg-orange-500 text-white'
+                : `${colors.bgCard} ${colors.textMuted}`
+            }`}
+          >
+            {f === 'all' ? '全部' : getTypeLabel(f)}
+          </button>
+        ))}
+      </div>
+
+      {/* 窝轮列表 */}
+      <div className={`${colors.bgCard} rounded-lg divide-y ${colors.border}`}>
+        {filteredWarrants.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="text-4xl mb-2">📋</div>
+            <div className={colors.textMuted}>暂无数据</div>
+          </div>
+        ) : (
+          filteredWarrants.map((w) => (
+            <div key={w.symbol} className="p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{w.symbol}</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${getTypeColor(w.type)}`}>
+                      {getTypeLabel(w.type)}
+                    </span>
+                  </div>
+                  <div className={`text-xs ${colors.textMuted} mt-1`}>
+                    行使价: {w.strikePrice} | 到期: {w.expiryDate}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-medium">{w.lastDone.toFixed(3)}</div>
+                  <div className={`text-xs ${w.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {w.changePercent >= 0 ? '+' : ''}{w.changePercent.toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* 提示 */}
+      <div className={`text-xs ${colors.textMuted} text-center`}>
+        📋 展示模拟数据 | 实际将接入长桥窝轮 API
+      </div>
+    </div>
+  );
+}
+
 // 股票完整信息（包含价格）
 interface StockFullInfo {
   symbol: string;
@@ -151,7 +284,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRealData, setIsRealData] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news'>('chart');
+  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news' | 'warrant'>('chart');
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
 
@@ -337,19 +470,19 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           </div>
         </div>
         
-        {/* Tab 切换 */}
+        {/* Tab 切换 - 港股多一个窝轮Tab */}
         <div className={`flex border-b ${colors.border}`}>
-          {(['chart', 'info', 'news'] as const).map((tab) => (
+          {(market === 'HK' ? ['chart', 'warrant', 'info', 'news'] as const : ['chart', 'info', 'news'] as const).map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => setActiveTab(tab as any)}
               className={`flex-1 py-3 text-center text-sm ${
                 activeTab === tab
                   ? `${colors.text} border-b-2 border-orange-500`
                   : colors.textMuted
               }`}
             >
-              {tab === 'chart' ? '图表' : tab === 'info' ? '简况' : '资讯'}
+              {tab === 'chart' ? '图表' : tab === 'warrant' ? '窝轮' : tab === 'info' ? '简况' : '资讯'}
             </button>
           ))}
         </div>
@@ -358,6 +491,10 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
         <div className="p-4">
           {activeTab === 'chart' && (
             <KlineChartWrapper symbol={symbol} market={market} theme={theme} />
+          )}
+          
+          {activeTab === 'warrant' && market === 'HK' && (
+            <WarrantListWrapper symbol={symbol} theme={theme} colors={colors} />
           )}
           
           {activeTab === 'info' && (
