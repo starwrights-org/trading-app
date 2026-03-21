@@ -306,7 +306,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRealData, setIsRealData] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news' | 'warrant'>('chart');
+  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news' | 'warrant'>('news');
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
 
