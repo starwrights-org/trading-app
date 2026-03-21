@@ -802,14 +802,23 @@ function TradeModal({
               </div>
             </div>
 
-            {/* 预估金额 */}
+            {/* 预估金额 / 最大可卖 */}
             <div className={`p-3 ${colors.bg} rounded-lg`}>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>预估金额</span>
-                <span className="font-bold">
-                  {currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                </span>
-              </div>
+              {tradeType === 'buy' ? (
+                <div className="flex justify-between">
+                  <span className={colors.textMuted}>预估金额</span>
+                  <span className="font-bold">
+                    {currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex justify-between">
+                  <span className={colors.textMuted}>最大可卖</span>
+                  <span className="font-bold">
+                    {lotSize * 10} 股
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* 提交按钮 */}
