@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { getStock, submitOrder, MOCK_STOCKS } from '@/lib/mockData';
+import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
 
 // 动态加载 K 线图表组件（避免 SSR 问题）
@@ -657,6 +657,13 @@ function TradeModal({
   const total = parseFloat(price) * parseInt(quantity || '0');
   const currency = stock.market === 'HK' ? 'HKD' : 'USD';
 
+  // 从持仓数据获取最大可卖
+  const position = MOCK_POSITIONS.find(p => p.symbol === stock.symbol);
+  const availableQty = position?.availableQuantity || 0;
+  // 计算整手可卖数量
+  const maxSellLots = Math.floor(availableQty / lotSize);
+  const maxSellQty = maxSellLots * lotSize;
+
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
@@ -812,11 +819,17 @@ function TradeModal({
                   </span>
                 </div>
               ) : (
-                <div className="flex justify-between">
-                  <span className={colors.textMuted}>最大可卖</span>
-                  <span className="font-bold">
-                    {lotSize * 10} 股
-                  </span>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className={colors.textMuted}>持仓数量</span>
+                    <span className="font-bold">{availableQty} 股</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className={colors.textMuted}>最大可卖</span>
+                    <span className="font-bold text-red-500">
+                      {maxSellQty > 0 ? `${maxSellQty} 股 (${maxSellLots}手)` : '无持仓'}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
