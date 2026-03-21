@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
-import BottomNav from '@/components/BottomNav';
 
 // 货币配置
 const CURRENCIES = {
@@ -29,12 +28,14 @@ export default function CurrencyExchangePage() {
   const [showFromPicker, setShowFromPicker] = useState(false);
   const [showToPicker, setShowToPicker] = useState(false);
   const [showBalanceDetail, setShowBalanceDetail] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showSuccessPage, setShowSuccessPage] = useState(false);
+  const [submitTime, setSubmitTime] = useState('');
 
   const rate = EXCHANGE_RATES[fromCurrency]?.[toCurrency] || 1;
   const toAmount = fromAmount ? (parseFloat(fromAmount) * rate).toFixed(2) : '';
   
   const fromBalance = CURRENCIES[fromCurrency].balance;
-  const toBalance = CURRENCIES[toCurrency].balance;
 
   const handleSwap = () => {
     const temp = fromCurrency;
@@ -46,6 +47,97 @@ export default function CurrencyExchangePage() {
   const handleAll = () => {
     setFromAmount(fromBalance.toFixed(2));
   };
+
+  const handleApply = () => {
+    if (fromAmount && parseFloat(fromAmount) > 0) {
+      setShowConfirmModal(true);
+    }
+  };
+
+  const handleConfirm = () => {
+    const now = new Date();
+    const timeStr = now.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }).replace(/\//g, '.');
+    setSubmitTime(timeStr);
+    setShowConfirmModal(false);
+    setShowSuccessPage(true);
+  };
+
+  const getEstimateTime = () => {
+    const now = new Date();
+    now.setDate(now.getDate() + 2);
+    now.setHours(9, 5, 0);
+    return now.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).replace(/\//g, '.');
+  };
+
+  // 成功页面
+  if (showSuccessPage) {
+    return (
+      <main className={`min-h-screen ${colors.bg} ${colors.text}`}>
+        <div className="max-w-lg mx-auto flex flex-col min-h-screen">
+          {/* 成功图标和标题 */}
+          <div className="flex-1 flex flex-col items-center justify-center px-4">
+            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 className={`text-xl font-bold ${colors.text} mb-2`}>兑换申请已提交</h1>
+            <p className={`text-sm ${colors.textMuted}`}>您的兑换申请正在加速处理中，请耐心等待</p>
+          </div>
+
+          {/* 时间线 */}
+          <div className={`px-6 py-8 border-t ${colors.border}`}>
+            <div className="flex">
+              {/* 时间线左侧 */}
+              <div className="flex flex-col items-center mr-4">
+                <div className="w-3 h-3 bg-gray-900 rounded-full" />
+                <div className={`w-0.5 h-12 ${colors.border} bg-current`} />
+                <div className={`w-3 h-3 border-2 ${colors.border} rounded-full`} />
+              </div>
+              
+              {/* 时间线内容 */}
+              <div className="flex-1">
+                <div className="mb-8">
+                  <div className={`font-medium ${colors.text}`}>兑换申请已提交</div>
+                  <div className={`text-sm ${colors.textMuted}`}>{submitTime}</div>
+                </div>
+                <div>
+                  <div className={`font-medium ${colors.text}`}>预计到帐时间</div>
+                  <div className={`text-sm ${colors.textMuted}`}>预计 {getEstimateTime()} 前完成</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 底部按钮 */}
+          <div className="px-4 pb-8">
+            <Link 
+              href="/positions"
+              className="block w-full py-4 bg-blue-500 text-white text-center rounded-full font-medium"
+            >
+              完成
+            </Link>
+            <div className={`text-center mt-4 text-sm ${colors.textMuted}`}>
+              如有疑问，可联系<span className="text-blue-500">在线客服</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
@@ -119,10 +211,10 @@ export default function CurrencyExchangePage() {
                   value={fromAmount}
                   onChange={(e) => setFromAmount(e.target.value)}
                   placeholder="输入兑出金额"
-                  className={`text-lg bg-transparent outline-none ${colors.textMuted} placeholder-${colors.textMuted}`}
+                  className={`text-2xl font-bold bg-transparent outline-none w-32 ${colors.text}`}
                 />
               </div>
-              <button onClick={handleAll} className="text-orange-500 text-sm">
+              <button onClick={handleAll} className="text-blue-500 text-sm">
                 全部
               </button>
             </div>
@@ -159,9 +251,10 @@ export default function CurrencyExchangePage() {
             <div className={`text-sm ${colors.textMuted} mb-2`}>兑入</div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold">{toCurrency}</span>
-              <span className={`text-lg ${toAmount ? colors.text : colors.textMuted}`}>
-                {toAmount || '输入兑入金额'}
+              <span className={`text-2xl font-bold ${toAmount ? colors.text : colors.textMuted}`}>
+                {toAmount || '0.00'}
               </span>
+              {toAmount && <span className={`text-sm ${colors.textMuted}`}>预估</span>}
             </div>
           </div>
         </div>
@@ -186,10 +279,11 @@ export default function CurrencyExchangePage() {
       <div className={`fixed bottom-0 left-0 right-0 ${colors.bg} p-4 pb-6`}>
         <div className="max-w-lg mx-auto">
           <button 
+            onClick={handleApply}
             disabled={!fromAmount || parseFloat(fromAmount) <= 0}
             className={`w-full py-4 rounded-full font-medium transition ${
               fromAmount && parseFloat(fromAmount) > 0
-                ? 'bg-orange-500 text-white'
+                ? 'bg-blue-500 text-white'
                 : `${colors.bgSecondary} ${colors.textMuted}`
             }`}
           >
@@ -197,6 +291,52 @@ export default function CurrencyExchangePage() {
           </button>
         </div>
       </div>
+
+      {/* 确认弹窗 */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
+          <div className={`w-full ${colors.bg} rounded-t-3xl`}>
+            {/* 标题栏 */}
+            <div className={`flex items-center justify-between px-4 py-4`}>
+              <span className={`text-lg font-medium ${colors.text}`}>货币兑换确认</span>
+              <button onClick={() => setShowConfirmModal(false)} className={colors.textMuted}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* 兑换信息 */}
+            <div className="px-4 py-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className={colors.textMuted}>兑出</span>
+                <span className={`font-medium ${colors.text}`}>
+                  {parseFloat(fromAmount).toFixed(2)} {CURRENCIES[fromCurrency].name}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className={colors.textMuted}>兑入</span>
+                <div className="text-right">
+                  <span className={`text-sm ${colors.textMuted}`}>预估 </span>
+                  <span className={`font-medium ${colors.text}`}>
+                    {toAmount} {CURRENCIES[toCurrency].name}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 确定按钮 */}
+            <div className="px-4 py-4 pb-8">
+              <button 
+                onClick={handleConfirm}
+                className="w-full py-4 bg-blue-500 text-white rounded-full font-medium"
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 货币选择弹窗 - 兑出 */}
       {showFromPicker && (
@@ -256,7 +396,7 @@ function CurrencyPicker({
         <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.border}`}>
           <button onClick={onClose} className={colors.textSecondary}>取消</button>
           <span className={`font-medium ${colors.text}`}>{title}</span>
-          <button onClick={onClose} className="text-orange-500">确定</button>
+          <button onClick={onClose} className="text-blue-500">确定</button>
         </div>
 
         {/* 货币列表 */}
@@ -275,7 +415,7 @@ function CurrencyPicker({
                 </div>
               </div>
               {selected === currency && (
-                <svg className="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                 </svg>
               )}
