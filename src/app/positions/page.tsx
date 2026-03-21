@@ -294,6 +294,42 @@ export default function PositionsPage() {
           )}
         </div>
 
+        {/* 基金 */}
+        <div className={`px-4 py-3 border-t ${colors.border}`}>
+          <button className="w-full flex items-center justify-between py-2">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🔵</span>
+              <span className="font-medium">基金</span>
+              <span className="font-bold">0.00</span>
+            </div>
+            <span className={colors.textMuted}>∨</span>
+          </button>
+        </div>
+
+        {/* 债券 */}
+        <div className={`px-4 py-3 border-t ${colors.border}`}>
+          <button className="w-full flex items-center justify-between py-2">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">📜</span>
+              <span className="font-medium">债券</span>
+              <span className="font-bold">0.00</span>
+            </div>
+            <span className={colors.textMuted}>∨</span>
+          </button>
+        </div>
+
+        {/* 结构化产品 */}
+        <div className={`px-4 py-3 border-t ${colors.border}`}>
+          <button className="w-full flex items-center justify-between py-2">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🏗️</span>
+              <span className="font-medium">结构化产品</span>
+              <span className="font-bold">0.00</span>
+            </div>
+            <span className={colors.textMuted}>∨</span>
+          </button>
+        </div>
+
         {/* 编辑按钮 */}
         <div className="flex justify-center py-6">
           <button className={`flex items-center gap-2 px-6 py-2 border ${colors.borderLight} rounded-full ${colors.textSecondary} ${colors.hover} transition`}>
