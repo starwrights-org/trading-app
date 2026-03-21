@@ -151,7 +151,7 @@ export default function CurrencyExchangePage() {
           </Link>
           <div className="flex-1 text-center">
             <div className="text-lg font-medium">货币兑换</div>
-            <div className={`text-xs ${colors.textMuted}`}>模拟炒股 (LBPT10078568)</div>
+            <div className={`text-xs ${colors.textMuted}`}>证券账户 (LBPT10078568)</div>
           </div>
           <Link href="/exchange-records" className={colors.textSecondary}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

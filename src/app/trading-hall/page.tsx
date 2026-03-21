@@ -60,7 +60,7 @@ export default function TradingHallPage() {
         <div className={`px-4 py-3 flex items-center justify-between border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-100'}`}>
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-xs">💰</span>
-            <span className="font-medium">模拟炒股 (LBPT10078568)</span>
+            <span className="font-medium">证券账户 (LBPT10078568)</span>
           </div>
           <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
@@ -228,7 +228,7 @@ export default function TradingHallPage() {
             } ${!price || !quantity ? 'opacity-50' : ''}`}
             disabled={!price || !quantity}
           >
-            模拟{direction === 'buy' ? '买入' : '卖出'}
+            确认{direction === 'buy' ? '买入' : '卖出'}
           </button>
           <button className="flex flex-col items-center">
             <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

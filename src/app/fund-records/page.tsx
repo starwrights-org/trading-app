@@ -102,7 +102,7 @@ export default function FundRecordsPage() {
         {/* 账户选择 */}
         <div className="px-4 py-3 flex items-center gap-2">
           <span className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white text-sm">💰</span>
-          <span className={colors.text}>模拟炒股 (LBPT10078568)</span>
+          <span className={colors.text}>证券账户 (LBPT10078568)</span>
         </div>
 
         {/* 时间筛选 + 筛选图标 */}

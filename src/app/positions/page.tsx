@@ -38,7 +38,7 @@ export default function PositionsPage() {
       <div className={`${colors.bg} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-lg">模拟炒股 (8568)</span>
+            <span className="font-bold text-lg">证券账户 (8568)</span>
             <span className={colors.textMuted}>⇄</span>
           </div>
           <div className="flex items-center gap-4">
