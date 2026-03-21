@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
 import { MOCK_POSITIONS } from '@/lib/mockData';
 
@@ -30,7 +30,9 @@ export default function TradingHallPage() {
   const [showResults, setShowResults] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [allStocks, setAllStocks] = useState<Stock[]>([]);
+  const [isComposing, setIsComposing] = useState(false);  // 中文输入法状态
   const searchRef = useRef<HTMLDivElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // 加载股票数据库
   useEffect(() => {
@@ -40,24 +42,50 @@ export default function TradingHallPage() {
       .catch(err => console.error('加载股票数据失败:', err));
   }, []);
 
-  // 搜索股票
-  useEffect(() => {
-    if (!stockCode.trim() || stockCode.length < 1) {
+  // 搜索股票 - 防抖处理
+  const doSearch = useCallback((query: string) => {
+    if (!query.trim() || query.length < 1 || allStocks.length === 0) {
       setSearchResults([]);
+      setShowResults(false);
       return;
     }
     
-    const query = stockCode.toLowerCase();
+    const q = query.toLowerCase().trim();
     const results = allStocks
       .filter(s => 
-        s.symbol.toLowerCase().includes(query) ||
-        s.name.toLowerCase().includes(query)
+        s.symbol.toLowerCase().includes(q) ||
+        s.name.toLowerCase().includes(q)
       )
       .slice(0, 10);
     
     setSearchResults(results);
     setShowResults(results.length > 0);
-  }, [stockCode, allStocks]);
+  }, [allStocks]);
+
+  // 搜索防抖
+  useEffect(() => {
+    // 中文输入进行中不搜索
+    if (isComposing) return;
+    
+    // 如果已选择股票，不搜索
+    if (selectedStock) return;
+
+    // 清除之前的定时器
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // 延迟搜索
+    searchTimeoutRef.current = setTimeout(() => {
+      doSearch(stockCode);
+    }, 200);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [stockCode, isComposing, selectedStock, doSearch]);
 
   // 点击外部关闭搜索结果
   useEffect(() => {
@@ -163,12 +191,23 @@ export default function TradingHallPage() {
                   type="text"
                   value={stockCode}
                   onChange={(e) => {
-                    setStockCode(e.target.value);
-                    if (selectedStock && e.target.value !== `${selectedStock.symbol} ${selectedStock.name}`) {
+                    const val = e.target.value;
+                    setStockCode(val);
+                    if (selectedStock) {
                       setSelectedStock(null);
                     }
                   }}
-                  onFocus={() => searchResults.length > 0 && setShowResults(true)}
+                  onCompositionStart={() => setIsComposing(true)}
+                  onCompositionEnd={(e) => {
+                    setIsComposing(false);
+                    // 输入法结束时触发搜索
+                    doSearch(e.currentTarget.value);
+                  }}
+                  onFocus={() => {
+                    if (searchResults.length > 0 && !selectedStock) {
+                      setShowResults(true);
+                    }
+                  }}
                   placeholder="输入股票代码或名称"
                   className={`flex-1 bg-transparent outline-none text-sm ${theme === 'dark' ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'}`}
                 />
