@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
 
 // 股票类型
@@ -10,17 +10,17 @@ interface Stock {
   name: string;
   market: 'US' | 'HK';
   sector?: string;
-  alias?: string; // 中文别名
+  alias?: string;
 }
 
 // 热门搜索
 const HOT_SEARCHES = ['NVDA', '腾讯', 'TSLA', '阿里巴巴', 'SPY', '小米', 'AAPL', '美团', 'QQQ', '00700'];
 
-// 搜索历史（模拟）
-const SEARCH_HISTORY = ['英伟达', 'QQQ', '00700'];
-
 // 数据版本（用于缓存破解）
-const DATA_VERSION = '20260321v3';
+const DATA_VERSION = '20260321v4';
+
+// localStorage key
+const HISTORY_KEY = 'trading_search_history';
 
 export default function SearchPage() {
   const { theme } = useTheme();
@@ -30,6 +30,46 @@ export default function SearchPage() {
   const [allStocks, setAllStocks] = useState<Stock[]>([]);
   const [loading, setLoading] = useState(true);
   const [stockCount, setStockCount] = useState(0);
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+
+  // 加载搜索历史
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
+      if (saved) {
+        setSearchHistory(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error('加载搜索历史失败:', e);
+    }
+  }, []);
+
+  // 保存搜索历史
+  const saveHistory = useCallback((history: string[]) => {
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (e) {
+      console.error('保存搜索历史失败:', e);
+    }
+  }, []);
+
+  // 添加搜索记录
+  const addToHistory = useCallback((term: string) => {
+    if (!term.trim()) return;
+    setSearchHistory(prev => {
+      // 去重，最新的放前面，最多保留 10 条
+      const filtered = prev.filter(t => t.toLowerCase() !== term.toLowerCase());
+      const newHistory = [term, ...filtered].slice(0, 10);
+      saveHistory(newHistory);
+      return newHistory;
+    });
+  }, [saveHistory]);
+
+  // 清空搜索历史
+  const clearHistory = useCallback(() => {
+    setSearchHistory([]);
+    saveHistory([]);
+  }, [saveHistory]);
 
   // 加载股票数据
   useEffect(() => {
@@ -61,6 +101,11 @@ export default function SearchPage() {
   const hotStocks = useMemo(() => {
     return allStocks.slice(0, 10);
   }, [allStocks]);
+
+  // 点击搜索结果时添加到历史
+  const handleStockClick = (stock: Stock) => {
+    addToHistory(stock.symbol);
+  };
 
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text}`}>
@@ -114,6 +159,7 @@ export default function SearchPage() {
                   <Link
                     key={`${stock.market}-${stock.symbol}`}
                     href={`/stock/${stock.market}/${stock.symbol}`}
+                    onClick={() => handleStockClick(stock)}
                     className={`flex items-center justify-between py-3 px-2 rounded-lg ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
                   >
                     <div>
@@ -160,26 +206,33 @@ export default function SearchPage() {
             </div>
 
             {/* 搜索历史 */}
-            <div className="py-4">
-              <div className="flex justify-between items-center mb-3">
-                <h3 className={`text-sm ${colors.textMuted}`}>搜索历史</h3>
-                <button className={`text-sm ${colors.textMuted}`}>清空</button>
-              </div>
-              <div className="space-y-2">
-                {SEARCH_HISTORY.map(term => (
-                  <button
-                    key={term}
-                    onClick={() => setQuery(term)}
-                    className={`flex items-center gap-2 w-full text-left py-2 ${colors.textMuted}`}
+            {searchHistory.length > 0 && (
+              <div className="py-4">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className={`text-sm ${colors.textMuted}`}>搜索历史</h3>
+                  <button 
+                    onClick={clearHistory}
+                    className={`text-sm text-orange-500 hover:text-orange-400`}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {term}
+                    清空
                   </button>
-                ))}
+                </div>
+                <div className="space-y-2">
+                  {searchHistory.map((term, index) => (
+                    <button
+                      key={`${term}-${index}`}
+                      onClick={() => setQuery(term)}
+                      className={`flex items-center gap-2 w-full text-left py-2 ${colors.textMuted} hover:${colors.text}`}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {term}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* 热门股票 */}
             <div className="py-4">
@@ -189,6 +242,7 @@ export default function SearchPage() {
                   <Link
                     key={`${stock.market}-${stock.symbol}`}
                     href={`/stock/${stock.market}/${stock.symbol}`}
+                    onClick={() => handleStockClick(stock)}
                     className={`flex items-center justify-between py-3 px-2 rounded-lg ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
                   >
                     <div>
