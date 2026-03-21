@@ -19111,7 +19111,8 @@
   {
     "symbol": "00241",
     "name": "阿里健康",
-    "market": "HK"
+    "market": "HK",
+    "alias": "阿里健康"
   },
   {
     "symbol": "00242",
@@ -20866,7 +20867,8 @@
   {
     "symbol": "00708",
     "name": "恒大汽车",
-    "market": "HK"
+    "market": "HK",
+    "alias": "恒大汽车"
   },
   {
     "symbol": "00709",
@@ -29131,7 +29133,8 @@
   {
     "symbol": "06666",
     "name": "恒大物业",
-    "market": "HK"
+    "market": "HK",
+    "alias": "恒大物业"
   },
   {
     "symbol": "06667",
@@ -30102,5 +30105,11 @@
     "symbol": "08178",
     "name": "中国信息科技",
     "market": "HK"
+  },
+  {
+    "symbol": "09988",
+    "name": "阿里巴巴-SW",
+    "market": "HK",
+    "alias": "阿里巴巴"
   }
 ]

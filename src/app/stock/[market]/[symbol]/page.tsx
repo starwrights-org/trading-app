@@ -1,9 +1,17 @@
-import { MOCK_STOCKS } from '@/lib/mockData';
 import StockDetailClient from './StockDetailClient';
+import stocksData from '../../../../../public/data/stocks.json';
 
-// 为静态导出生成所有可能的路径
+// 股票类型
+interface Stock {
+  symbol: string;
+  name: string;
+  market: 'US' | 'HK';
+}
+
+// 为静态导出生成所有股票路径
 export function generateStaticParams() {
-  return MOCK_STOCKS.map(stock => ({
+  const stocks = stocksData as Stock[];
+  return stocks.map(stock => ({
     market: stock.market,
     symbol: stock.symbol,
   }));
