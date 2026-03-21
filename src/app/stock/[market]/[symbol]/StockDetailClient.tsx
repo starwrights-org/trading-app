@@ -739,7 +739,12 @@ function TradeModal({
               <span className={`w-14 ${colors.textMuted}`}>价格</span>
               <div className="flex-1 flex items-center justify-center gap-4">
                 <button onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
-                <span className="text-xl font-bold w-24 text-center">{price}</span>
+                <input
+                  type="text"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className={`text-xl font-bold w-24 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
+                />
                 <button onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
               </div>
               <button className={colors.textMuted}>
@@ -761,7 +766,12 @@ function TradeModal({
               <div className="flex-1 flex items-center justify-center gap-4">
                 <button onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
                 <div className="text-center">
-                  <span className="text-xl font-bold">{quantity || '0'}</span>
+                  <input
+                    type="text"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className={`text-xl font-bold w-16 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
+                  />
                   <div className={`text-xs ${colors.textMuted}`}>最小买卖单位 {lotSize}</div>
                 </div>
                 <button onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
