@@ -104,7 +104,7 @@ export default function PositionsPage() {
         <div className={`grid grid-cols-5 gap-2 px-4 py-4 border-t border-b ${colors.border}`}>
           {[
             { icon: '📋', label: '订单查询', color: 'text-yellow-500', href: '/orders' },
-            { icon: '📊', label: '资金记录', color: 'text-blue-500', href: '#' },
+            { icon: '📊', label: '资金记录', color: 'text-blue-500', href: '/fund-records' },
             { icon: '🏛', label: '交易大厅', color: 'text-red-500', href: '#' },
             { icon: '💱', label: '货币兑换', color: 'text-green-500', href: '#' },
             { icon: '⚙️', label: '全部功能', color: 'text-purple-500', href: '#' },
