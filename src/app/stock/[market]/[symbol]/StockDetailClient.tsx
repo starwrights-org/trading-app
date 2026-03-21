@@ -1,31 +1,149 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { getStock, submitOrder } from '@/lib/mockData';
+import { useState, useEffect } from 'react';
+import { getStock, submitOrder, MOCK_STOCKS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
-import BottomNav from '@/components/BottomNav';
+
+// 从完整股票数据获取基本信息
+interface StockBasicInfo {
+  symbol: string;
+  name: string;
+  market: 'US' | 'HK';
+  alias?: string;
+}
+
+// 生成随机价格数据（用于没有实时数据的股票）
+function generateMockPrice(symbol: string): {
+  price: number;
+  change: number;
+  changePercent: number;
+  open: number;
+  high: number;
+  low: number;
+  prevClose: number;
+  volume: number;
+} {
+  // 用 symbol 作为 seed 生成固定的伪随机数
+  let seed = 0;
+  for (let i = 0; i < symbol.length; i++) {
+    seed = ((seed << 5) - seed) + symbol.charCodeAt(i);
+    seed = seed & seed;
+  }
+  const random = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+  
+  // 根据 symbol 特征生成合理的价格
+  let basePrice = 50 + random() * 450; // 50-500
+  if (symbol.startsWith('0')) {
+    // 港股
+    basePrice = 5 + random() * 195; // 5-200
+  }
+  
+  const changePercent = (random() - 0.5) * 6; // -3% ~ +3%
+  const change = basePrice * changePercent / 100;
+  const prevClose = basePrice - change;
+  const high = basePrice * (1 + random() * 0.02);
+  const low = basePrice * (1 - random() * 0.02);
+  
+  return {
+    price: parseFloat(basePrice.toFixed(2)),
+    change: parseFloat(change.toFixed(2)),
+    changePercent: parseFloat(changePercent.toFixed(2)),
+    open: parseFloat(prevClose.toFixed(2)),
+    high: parseFloat(high.toFixed(2)),
+    low: parseFloat(low.toFixed(2)),
+    prevClose: parseFloat(prevClose.toFixed(2)),
+    volume: Math.floor(random() * 50000000),
+  };
+}
 
 export default function StockDetailClient({ market, symbol }: { market: string; symbol: string }) {
   const { theme } = useTheme();
   const colors = themeColors[theme];
   
-  const stock = getStock(symbol);
+  const [stockInfo, setStockInfo] = useState<StockBasicInfo | null>(null);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news'>('chart');
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
 
-  if (!stock) {
+  // 先尝试从 MOCK_STOCKS 获取完整数据
+  const mockStock = getStock(symbol);
+  
+  // 加载股票基本信息
+  useEffect(() => {
+    if (mockStock) {
+      setStockInfo({
+        symbol: mockStock.symbol,
+        name: mockStock.name,
+        market: mockStock.market as 'US' | 'HK',
+      });
+      setLoading(false);
+      return;
+    }
+    
+    // 从完整数据库加载
+    fetch('/trading-app/data/stocks.json?v=20260321v4')
+      .then(res => res.json())
+      .then((data: StockBasicInfo[]) => {
+        const found = data.find(s => s.symbol === symbol);
+        if (found) {
+          setStockInfo(found);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('加载股票数据失败:', err);
+        setLoading(false);
+      });
+  }, [symbol, mockStock]);
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen ${colors.bg} ${colors.text} flex items-center justify-center`}>
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
+          <p className={`mt-2 ${colors.textMuted}`}>加载中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stockInfo && !mockStock) {
     return (
       <div className={`min-h-screen ${colors.bg} ${colors.text} flex items-center justify-center`}>
         <div className="text-center">
           <div className="text-4xl mb-4">😕</div>
           <div className="text-xl">找不到股票 {symbol}</div>
-          <Link href="/" className="text-blue-500 mt-4 inline-block">返回首页</Link>
+          <Link href="/search" className="text-blue-500 mt-4 inline-block">返回搜索</Link>
         </div>
       </div>
     );
   }
+
+  // 使用真实数据或生成模拟数据
+  const priceData = mockStock ? {
+    price: mockStock.price,
+    change: mockStock.change,
+    changePercent: mockStock.changePercent,
+    open: mockStock.open,
+    high: mockStock.high,
+    low: mockStock.low,
+    prevClose: mockStock.prevClose,
+    volume: mockStock.volume,
+    pe: mockStock.pe,
+  } : generateMockPrice(symbol);
+
+  const stock = {
+    symbol,
+    name: stockInfo?.name || mockStock?.name || symbol,
+    nameEn: mockStock?.nameEn || stockInfo?.alias || '',
+    market: market as 'HK' | 'US',
+    ...priceData,
+  };
 
   const isUp = stock.change >= 0;
 
@@ -34,7 +152,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
       {/* Header */}
       <div className={`${colors.bg} border-b ${colors.border} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center">
-          <Link href="/" className={`mr-4 ${colors.textSecondary} hover:${colors.text}`}>
+          <Link href="/search" className={`mr-4 ${colors.textSecondary} hover:${colors.text}`}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -43,7 +161,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
             <div className="flex items-center gap-2">
               <span className="font-bold">{stock.name}</span>
               <span className={`text-xs px-1.5 py-0.5 rounded ${market === 'HK' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                {market}
+                {market === 'HK' ? '港' : '美'}
               </span>
             </div>
             <div className={`text-sm ${colors.textMuted}`}>{stock.symbol}</div>
@@ -67,6 +185,13 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
               {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
             </span>
           </div>
+          
+          {/* 模拟数据提示 */}
+          {!mockStock && (
+            <div className={`text-xs ${colors.textMuted} mt-1`}>
+              📊 模拟数据（接入实时行情后显示真实价格）
+            </div>
+          )}
           
           {/* 详细数据 */}
           <div className="grid grid-cols-4 gap-4 mt-4 text-sm">
@@ -92,7 +217,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
             </div>
             <div>
               <div className={colors.textMuted}>市盈率</div>
-              <div className={colors.text}>{stock.pe?.toFixed(2) || '-'}</div>
+              <div className={colors.text}>{(stock as any).pe?.toFixed(2) || '-'}</div>
             </div>
             <div>
               <div className={colors.textMuted}>52周高</div>
@@ -151,7 +276,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className={`p-4 text-sm ${colors.textSecondary}`}>
             <div className={`${colors.bgCard} rounded-xl p-4`}>
               <h3 className={`font-medium ${colors.text} mb-2`}>公司简介</h3>
-              <p>{stock.nameEn} ({stock.symbol}) 是一家在{market === 'HK' ? '香港' : '美国'}上市的公司。</p>
+              <p>{stock.nameEn || stock.name} ({stock.symbol}) 是一家在{market === 'HK' ? '香港' : '美国'}上市的公司。</p>
             </div>
           </div>
         )}
