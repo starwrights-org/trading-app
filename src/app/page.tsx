@@ -249,7 +249,7 @@ export default function WatchlistPage() {
         </div>
       </div>
 
-      <BottomNav active="watchlist" />
+      <BottomNav active="home" />
     </main>
   );
 }
