@@ -5,15 +5,23 @@ import { useState, useEffect } from 'react';
 import { getStock, submitOrder, MOCK_STOCKS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
 
-// 从完整股票数据获取基本信息
-interface StockBasicInfo {
+// 股票完整信息（包含价格）
+interface StockFullInfo {
   symbol: string;
   name: string;
   market: 'US' | 'HK';
   alias?: string;
+  price?: number;
+  change?: number;
+  changePercent?: number;
+  open?: number;
+  high?: number;
+  low?: number;
+  prevClose?: number;
+  volume?: number;
 }
 
-// 生成随机价格数据（用于没有实时数据的股票）
+// 生成随机价格数据（仅作为后备方案）
 function generateMockPrice(symbol: string): {
   price: number;
   change: number;
@@ -24,7 +32,6 @@ function generateMockPrice(symbol: string): {
   prevClose: number;
   volume: number;
 } {
-  // 用 symbol 作为 seed 生成固定的伪随机数
   let seed = 0;
   for (let i = 0; i < symbol.length; i++) {
     seed = ((seed << 5) - seed) + symbol.charCodeAt(i);
@@ -35,14 +42,12 @@ function generateMockPrice(symbol: string): {
     return seed / 233280;
   };
   
-  // 根据 symbol 特征生成合理的价格
-  let basePrice = 50 + random() * 450; // 50-500
+  let basePrice = 50 + random() * 450;
   if (symbol.startsWith('0')) {
-    // 港股
-    basePrice = 5 + random() * 195; // 5-200
+    basePrice = 5 + random() * 195;
   }
   
-  const changePercent = (random() - 0.5) * 6; // -3% ~ +3%
+  const changePercent = (random() - 0.5) * 6;
   const change = basePrice * changePercent / 100;
   const prevClose = basePrice - change;
   const high = basePrice * (1 + random() * 0.02);
@@ -64,8 +69,9 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const { theme } = useTheme();
   const colors = themeColors[theme];
   
-  const [stockInfo, setStockInfo] = useState<StockBasicInfo | null>(null);
+  const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRealData, setIsRealData] = useState(false);
   const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news'>('chart');
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
@@ -73,25 +79,36 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   // 先尝试从 MOCK_STOCKS 获取完整数据
   const mockStock = getStock(symbol);
   
-  // 加载股票基本信息
+  // 加载股票完整信息（包含价格）
   useEffect(() => {
     if (mockStock) {
       setStockInfo({
         symbol: mockStock.symbol,
         name: mockStock.name,
         market: mockStock.market as 'US' | 'HK',
+        price: mockStock.price,
+        change: mockStock.change,
+        changePercent: mockStock.changePercent,
+        open: mockStock.open,
+        high: mockStock.high,
+        low: mockStock.low,
+        prevClose: mockStock.prevClose,
+        volume: mockStock.volume,
       });
+      setIsRealData(true);
       setLoading(false);
       return;
     }
     
-    // 从完整数据库加载
-    fetch('/trading-app/data/stocks.json?v=20260321v4')
+    // 从完整数据库加载（包含长桥 API 更新的价格）
+    fetch('/trading-app/data/stocks.json?v=20260321v5')
       .then(res => res.json())
-      .then((data: StockBasicInfo[]) => {
+      .then((data: StockFullInfo[]) => {
         const found = data.find(s => s.symbol === symbol);
         if (found) {
           setStockInfo(found);
+          // 检查是否有真实价格数据
+          setIsRealData(found.price !== undefined && found.price > 0);
         }
         setLoading(false);
       })
@@ -124,17 +141,19 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
     );
   }
 
-  // 使用真实数据或生成模拟数据
-  const priceData = mockStock ? {
-    price: mockStock.price,
-    change: mockStock.change,
-    changePercent: mockStock.changePercent,
-    open: mockStock.open,
-    high: mockStock.high,
-    low: mockStock.low,
-    prevClose: mockStock.prevClose,
-    volume: mockStock.volume,
-    pe: mockStock.pe,
+  // 优先使用 stocks.json 中的真实价格数据，没有则生成模拟数据
+  const hasRealPrice = stockInfo && stockInfo.price !== undefined && stockInfo.price > 0;
+  
+  const priceData = hasRealPrice ? {
+    price: stockInfo!.price!,
+    change: stockInfo!.change || 0,
+    changePercent: stockInfo!.changePercent || 0,
+    open: stockInfo!.open || stockInfo!.price!,
+    high: stockInfo!.high || stockInfo!.price!,
+    low: stockInfo!.low || stockInfo!.price!,
+    prevClose: stockInfo!.prevClose || stockInfo!.price!,
+    volume: stockInfo!.volume || 0,
+    pe: undefined as number | undefined,
   } : generateMockPrice(symbol);
 
   const stock = {
@@ -185,161 +204,150 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
               {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
             </span>
           </div>
-          
-          {/* 模拟数据提示 */}
-          {!mockStock && (
-            <div className={`text-xs ${colors.textMuted} mt-1`}>
-              📊 模拟数据（接入实时行情后显示真实价格）
+          {/* 数据来源标识 */}
+          {!hasRealPrice && (
+            <div className={`text-xs ${colors.textMuted} mt-1 flex items-center gap-1`}>
+              <span>🏭</span>
+              <span>模拟数据（接入实时行情后显示真实价格）</span>
+            </div>
+          )}
+          {hasRealPrice && (
+            <div className={`text-xs ${colors.textMuted} mt-1 flex items-center gap-1`}>
+              <span>📊</span>
+              <span>长桥 API 数据</span>
             </div>
           )}
           
-          {/* 详细数据 */}
-          <div className="grid grid-cols-4 gap-4 mt-4 text-sm">
+          {/* 关键指标 */}
+          <div className="grid grid-cols-4 gap-4 mt-4">
             <div>
-              <div className={colors.textMuted}>今开</div>
-              <div className={colors.text}>{stock.open?.toFixed(2) || '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>今开</div>
+              <div className="text-sm">{stock.open.toFixed(2)}</div>
             </div>
             <div>
-              <div className={colors.textMuted}>最高</div>
-              <div className="text-red-400">{stock.high?.toFixed(2) || '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>最高</div>
+              <div className="text-sm text-red-500">{stock.high.toFixed(2)}</div>
             </div>
             <div>
-              <div className={colors.textMuted}>最低</div>
-              <div className="text-green-400">{stock.low?.toFixed(2) || '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>最低</div>
+              <div className="text-sm text-green-500">{stock.low.toFixed(2)}</div>
             </div>
             <div>
-              <div className={colors.textMuted}>昨收</div>
-              <div className={colors.text}>{stock.prevClose?.toFixed(2) || '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>昨收</div>
+              <div className="text-sm">{stock.prevClose.toFixed(2)}</div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-4 gap-4 mt-3">
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>成交量</div>
+              <div className="text-sm">{(stock.volume / 10000).toFixed(0)}万</div>
             </div>
             <div>
-              <div className={colors.textMuted}>成交量</div>
-              <div className={colors.text}>{stock.volume ? (stock.volume / 10000).toFixed(0) + '万' : '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>市盈率</div>
+              <div className="text-sm">{(stock as any).pe ? (stock as any).pe.toFixed(1) : '-'}</div>
             </div>
             <div>
-              <div className={colors.textMuted}>市盈率</div>
-              <div className={colors.text}>{(stock as any).pe?.toFixed(2) || '-'}</div>
+              <div className={`text-xs ${colors.textMuted}`}>52周高</div>
+              <div className="text-sm">-</div>
             </div>
             <div>
-              <div className={colors.textMuted}>52周高</div>
-              <div className={colors.text}>-</div>
-            </div>
-            <div>
-              <div className={colors.textMuted}>52周低</div>
-              <div className={colors.text}>-</div>
+              <div className={`text-xs ${colors.textMuted}`}>52周低</div>
+              <div className="text-sm">-</div>
             </div>
           </div>
         </div>
-
+        
         {/* Tab 切换 */}
-        <div className={`flex border-b ${colors.border} px-4`}>
-          {[
-            { key: 'chart', label: '图表' },
-            { key: 'info', label: '简况' },
-            { key: 'news', label: '资讯' },
-          ].map(tab => (
+        <div className={`flex border-b ${colors.border}`}>
+          {(['chart', 'info', 'news'] as const).map((tab) => (
             <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key as typeof activeTab)}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition ${
-                activeTab === tab.key
-                  ? 'border-blue-500 text-blue-500'
-                  : `border-transparent ${colors.textSecondary} hover:${colors.text}`
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-3 text-center text-sm ${
+                activeTab === tab
+                  ? `${colors.text} border-b-2 border-orange-500`
+                  : colors.textMuted
               }`}
             >
-              {tab.label}
+              {tab === 'chart' ? '图表' : tab === 'info' ? '简况' : '资讯'}
             </button>
           ))}
         </div>
-
-        {/* 图表区域 */}
-        {activeTab === 'chart' && (
-          <div className="p-4">
-            <div className={`${colors.bgCard} rounded-xl p-4 h-64 flex items-center justify-center`}>
-              <div className={`text-center ${colors.textMuted}`}>
-                <div className="text-4xl mb-2">📊</div>
-                <div>K线图表</div>
-                <div className="text-xs mt-1">（集成 TradingView / ECharts）</div>
-              </div>
-            </div>
-            
-            <div className="flex gap-2 mt-4">
-              {['分时', '5分', '15分', '30分', '60分', '日K', '周K', '月K'].map(period => (
-                <button key={period} className={`px-3 py-1.5 text-xs ${colors.bgSecondary} rounded ${colors.hover} transition`}>
-                  {period}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'info' && (
-          <div className={`p-4 text-sm ${colors.textSecondary}`}>
-            <div className={`${colors.bgCard} rounded-xl p-4`}>
-              <h3 className={`font-medium ${colors.text} mb-2`}>公司简介</h3>
-              <p>{stock.nameEn || stock.name} ({stock.symbol}) 是一家在{market === 'HK' ? '香港' : '美国'}上市的公司。</p>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'news' && (
-          <div className={`p-4 text-sm ${colors.textSecondary}`}>
-            <div className="text-center py-8">暂无相关资讯</div>
-          </div>
-        )}
-
-        {/* 买卖盘 */}
+        
+        {/* 内容区 */}
         <div className="p-4">
-          <div className={`${colors.bgCard} rounded-xl p-4`}>
-            <div className={`text-sm ${colors.textSecondary} mb-3`}>买卖盘</div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                {[5, 4, 3, 2, 1].map(i => (
-                  <div key={`ask${i}`} className="flex justify-between py-1">
-                    <span className={colors.textMuted}>卖{i}</span>
-                    <span className="text-red-400">{(stock.price + i * 0.2).toFixed(2)}</span>
-                    <span className={colors.textMuted}>{Math.floor(Math.random() * 1000)}</span>
-                  </div>
-                ))}
+          {activeTab === 'chart' && (
+            <div className={`${colors.bgCard} rounded-lg p-8 text-center`}>
+              <div className="text-4xl mb-2">📊</div>
+              <div className={colors.textMuted}>K线图表</div>
+              <div className={`text-sm ${colors.textMuted} mt-1`}>（集成 TradingView / ECharts）</div>
+            </div>
+          )}
+          
+          {activeTab === 'info' && (
+            <div className={`${colors.bgCard} rounded-lg p-4 space-y-3`}>
+              <div className="flex justify-between">
+                <span className={colors.textMuted}>股票代码</span>
+                <span>{stock.symbol}</span>
               </div>
-              <div>
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={`bid${i}`} className="flex justify-between py-1">
-                    <span className={colors.textMuted}>买{i}</span>
-                    <span className="text-green-400">{(stock.price - i * 0.2).toFixed(2)}</span>
-                    <span className={colors.textMuted}>{Math.floor(Math.random() * 1000)}</span>
-                  </div>
-                ))}
+              <div className="flex justify-between">
+                <span className={colors.textMuted}>公司名称</span>
+                <span>{stock.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={colors.textMuted}>交易市场</span>
+                <span>{market === 'HK' ? '香港交易所' : '美国股市'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className={colors.textMuted}>货币</span>
+                <span>{market === 'HK' ? 'HKD' : 'USD'}</span>
               </div>
             </div>
-          </div>
+          )}
+          
+          {activeTab === 'news' && (
+            <div className={`${colors.bgCard} rounded-lg p-4`}>
+              <div className="text-center py-8">
+                <div className="text-4xl mb-2">📰</div>
+                <div className={colors.textMuted}>暂无相关资讯</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* 底部交易按钮 */}
-      <div className={`fixed bottom-0 left-0 right-0 ${colors.bg} border-t ${colors.border} p-4`}>
+      
+      {/* 底部买卖按钮 */}
+      <div className={`fixed bottom-0 left-0 right-0 ${colors.bgCard} border-t ${colors.border} p-4`}>
         <div className="max-w-lg mx-auto flex gap-4">
           <button
-            onClick={() => { setTradeType('buy'); setShowTradeModal(true); }}
-            className="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl transition"
+            onClick={() => {
+              setTradeType('buy');
+              setShowTradeModal(true);
+            }}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg"
           >
             买入
           </button>
           <button
-            onClick={() => { setTradeType('sell'); setShowTradeModal(true); }}
-            className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition"
+            onClick={() => {
+              setTradeType('sell');
+              setShowTradeModal(true);
+            }}
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg"
           >
             卖出
           </button>
         </div>
       </div>
-
+      
       {/* 交易弹窗 */}
       {showTradeModal && (
         <TradeModal
           stock={stock}
-          type={tradeType}
+          tradeType={tradeType}
+          setTradeType={setTradeType}
           onClose={() => setShowTradeModal(false)}
-          theme={theme}
           colors={colors}
         />
       )}
@@ -348,156 +356,196 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
 }
 
 // 交易弹窗组件
-function TradeModal({ stock, type, onClose, theme, colors }: { 
-  stock: any; 
-  type: 'buy' | 'sell'; 
+function TradeModal({
+  stock,
+  tradeType,
+  setTradeType,
+  onClose,
+  colors,
+}: {
+  stock: { symbol: string; name: string; price: number; market: string };
+  tradeType: 'buy' | 'sell';
+  setTradeType: (t: 'buy' | 'sell') => void;
   onClose: () => void;
-  theme: string;
   colors: typeof themeColors.dark;
 }) {
-  const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [price, setPrice] = useState(stock.price.toFixed(2));
   const [quantity, setQuantity] = useState('100');
+  const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  const lotSize = stock.market === 'HK' ? 100 : 1;
+  const total = parseFloat(price) * parseInt(quantity || '0');
+  const currency = stock.market === 'HK' ? 'HKD' : 'USD';
 
   const handleSubmit = async () => {
     setSubmitting(true);
-    
-    const result = await submitOrder({
-      symbol: stock.symbol,
-      side: type,
-      orderType,
-      price: orderType === 'limit' ? parseFloat(price) : undefined,
-      quantity: parseInt(quantity),
-    });
-
-    setSubmitting(false);
-
-    if (result.success) {
-      alert(`✅ ${result.message}\n订单号: ${result.orderId}`);
-      onClose();
-    } else {
-      alert(`❌ 下单失败: ${result.message}`);
+    try {
+      const res = await submitOrder({
+        symbol: stock.symbol,
+        side: tradeType,
+        orderType,
+        price: orderType === 'limit' ? parseFloat(price) : undefined,
+        quantity: parseInt(quantity),
+      });
+      setResult({ success: res.success, message: res.message || '订单已提交' });
+    } catch (err) {
+      setResult({ success: false, message: '提交失败' });
     }
+    setSubmitting(false);
   };
 
-  const total = parseFloat(price) * parseInt(quantity || '0');
-
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-end">
-      <div className={`w-full ${colors.bg} rounded-t-3xl p-6 max-w-lg mx-auto`}>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className={`text-xl font-bold ${colors.text}`}>
-            {type === 'buy' ? '买入' : '卖出'} {stock.name}
-          </h2>
-          <button onClick={onClose} className={`${colors.textSecondary} hover:${colors.text}`}>
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center">
+      <div className={`w-full max-w-lg ${colors.bgCard} rounded-t-2xl`}>
+        {/* 标题 */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+          <span className="font-bold">{stock.name} ({stock.symbol})</span>
+          <button onClick={onClose} className={colors.textMuted}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="mb-4">
-          <label className={`text-sm ${colors.textSecondary} mb-2 block`}>订单类型</label>
-          <div className="flex gap-2">
+        {result ? (
+          <div className="p-6 text-center">
+            <div className={`text-4xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
+              {result.success ? '✓' : '✗'}
+            </div>
+            <div className="text-lg mb-4">{result.message}</div>
             <button
-              onClick={() => setOrderType('limit')}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
-                orderType === 'limit' ? 'bg-blue-600 text-white' : `${colors.bgSecondary} ${colors.textSecondary}`
-              }`}
+              onClick={onClose}
+              className="px-8 py-2 bg-orange-500 text-white rounded-lg"
             >
-              限价单
-            </button>
-            <button
-              onClick={() => setOrderType('market')}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
-                orderType === 'market' ? 'bg-blue-600 text-white' : `${colors.bgSecondary} ${colors.textSecondary}`
-              }`}
-            >
-              市价单
+              确定
             </button>
           </div>
-        </div>
-
-        {orderType === 'limit' && (
-          <div className="mb-4">
-            <label className={`text-sm ${colors.textSecondary} mb-2 block`}>委托价格</label>
-            <div className={`flex items-center ${colors.bgSecondary} rounded-lg`}>
+        ) : (
+          <div className="p-4 space-y-4">
+            {/* 买卖切换 */}
+            <div className="flex rounded-lg overflow-hidden">
               <button
-                onClick={() => setPrice((parseFloat(price) - 0.1).toFixed(2))}
-                className={`px-4 py-3 text-xl ${colors.textSecondary} hover:${colors.text}`}
+                onClick={() => setTradeType('buy')}
+                className={`flex-1 py-2 font-bold ${
+                  tradeType === 'buy'
+                    ? 'bg-green-600 text-white'
+                    : `${colors.bgCard} ${colors.textMuted}`
+                }`}
               >
-                −
+                买入
               </button>
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className={`flex-1 bg-transparent text-center text-xl font-medium outline-none ${colors.text}`}
-              />
               <button
-                onClick={() => setPrice((parseFloat(price) + 0.1).toFixed(2))}
-                className={`px-4 py-3 text-xl ${colors.textSecondary} hover:${colors.text}`}
+                onClick={() => setTradeType('sell')}
+                className={`flex-1 py-2 font-bold ${
+                  tradeType === 'sell'
+                    ? 'bg-red-600 text-white'
+                    : `${colors.bgCard} ${colors.textMuted}`
+                }`}
               >
-                +
+                卖出
               </button>
             </div>
+
+            {/* 订单类型 */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setOrderType('limit')}
+                className={`px-4 py-1 rounded text-sm ${
+                  orderType === 'limit'
+                    ? 'bg-orange-500 text-white'
+                    : `${colors.bg} ${colors.textMuted}`
+                }`}
+              >
+                限价单
+              </button>
+              <button
+                onClick={() => setOrderType('market')}
+                className={`px-4 py-1 rounded text-sm ${
+                  orderType === 'market'
+                    ? 'bg-orange-500 text-white'
+                    : `${colors.bg} ${colors.textMuted}`
+                }`}
+              >
+                市价单
+              </button>
+            </div>
+
+            {/* 价格输入 */}
+            {orderType === 'limit' && (
+              <div>
+                <label className={`text-sm ${colors.textMuted}`}>价格 ({currency})</label>
+                <div className="flex items-center mt-1">
+                  <button
+                    onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))}
+                    className={`px-3 py-2 ${colors.bg} rounded-l`}
+                  >
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
+                  />
+                  <button
+                    onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))}
+                    className={`px-3 py-2 ${colors.bg} rounded-r`}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 数量输入 */}
+            <div>
+              <label className={`text-sm ${colors.textMuted}`}>数量 (每手 {lotSize} 股)</label>
+              <div className="flex items-center mt-1">
+                <button
+                  onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))}
+                  className={`px-3 py-2 ${colors.bg} rounded-l`}
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
+                />
+                <button
+                  onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))}
+                  className={`px-3 py-2 ${colors.bg} rounded-r`}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* 预估金额 */}
+            <div className={`p-3 ${colors.bg} rounded-lg`}>
+              <div className="flex justify-between">
+                <span className={colors.textMuted}>预估金额</span>
+                <span className="font-bold">
+                  {currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            </div>
+
+            {/* 提交按钮 */}
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className={`w-full py-3 rounded-lg font-bold text-white ${
+                tradeType === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
+              } ${submitting ? 'opacity-50' : ''}`}
+            >
+              {submitting ? '提交中...' : `确认${tradeType === 'buy' ? '买入' : '卖出'}`}
+            </button>
           </div>
         )}
-
-        <div className="mb-4">
-          <label className={`text-sm ${colors.textSecondary} mb-2 block`}>委托数量</label>
-          <div className={`flex items-center ${colors.bgSecondary} rounded-lg`}>
-            <button
-              onClick={() => setQuantity(String(Math.max(0, parseInt(quantity || '0') - 100)))}
-              className={`px-4 py-3 text-xl ${colors.textSecondary} hover:${colors.text}`}
-            >
-              −
-            </button>
-            <input
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              className={`flex-1 bg-transparent text-center text-xl font-medium outline-none ${colors.text}`}
-            />
-            <button
-              onClick={() => setQuantity(String(parseInt(quantity || '0') + 100))}
-              className={`px-4 py-3 text-xl ${colors.textSecondary} hover:${colors.text}`}
-            >
-              +
-            </button>
-          </div>
-          <div className="flex gap-2 mt-2">
-            {['100', '500', '1000', '全仓'].map(q => (
-              <button
-                key={q}
-                onClick={() => q !== '全仓' && setQuantity(q)}
-                className={`flex-1 py-1.5 text-xs ${colors.bgSecondary} rounded ${colors.hover} transition`}
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className={`${colors.bgCard} rounded-lg p-4 mb-6`}>
-          <div className="flex justify-between text-sm">
-            <span className={colors.textSecondary}>预估金额</span>
-            <span className={`font-medium ${colors.text}`}>{stock.market === 'HK' ? 'HKD' : 'USD'} {total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-          </div>
-        </div>
-
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className={`w-full py-4 rounded-xl font-medium text-lg transition ${
-            type === 'buy'
-              ? 'bg-green-600 hover:bg-green-700 text-white'
-              : 'bg-red-600 hover:bg-red-700 text-white'
-          } disabled:opacity-50`}
-        >
-          {submitting ? '提交中...' : `确认${type === 'buy' ? '买入' : '卖出'}`}
-        </button>
       </div>
     </div>
   );
