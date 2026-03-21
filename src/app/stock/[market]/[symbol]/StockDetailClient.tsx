@@ -741,8 +741,14 @@ function TradeModal({
                 <button onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
                 <input
                   type="text"
+                  inputMode="decimal"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                      setPrice(val);
+                    }
+                  }}
                   className={`text-xl font-bold w-24 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
                 />
                 <button onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
@@ -768,8 +774,14 @@ function TradeModal({
                 <div className="text-center">
                   <input
                     type="text"
+                    inputMode="numeric"
                     value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d+$/.test(val)) {
+                        setQuantity(val);
+                      }
+                    }}
                     className={`text-xl font-bold w-16 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
                   />
                   <div className={`text-xs ${colors.textMuted}`}>最小买卖单位 {lotSize}</div>
