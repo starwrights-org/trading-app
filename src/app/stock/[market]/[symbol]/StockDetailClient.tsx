@@ -93,33 +93,36 @@ interface WarrantData {
   volume: number;
   strikePrice: number;
   expiryDate: string;
-  type: 'call' | 'put' | 'bull' | 'bear';
+  type: 'call' | 'put' | 'bull' | 'bear' | 'other';
+  premium?: number;
+  leverage?: number;
 }
 
 // 窝轮列表组件
 function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 'dark' | 'light'; colors: typeof themeColors.dark }) {
   const [warrants, setWarrants] = useState<WarrantData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'call' | 'put' | 'bull' | 'bear'>('all');
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
-    // 模拟窝轮数据 - 实际应从长桥 API 获取
-    // 长桥 API: ctx.warrant_list(symbol, sort_by, sort_order)
-    const mockWarrants: WarrantData[] = [
-      { symbol: '22629', name: `${symbol}瑞信购A`, lastDone: 0.67, changePercent: 5.2, volume: 12500000, strikePrice: 520, expiryDate: '2026-08-28', type: 'call' },
-      { symbol: '25228', name: `${symbol}摩通购B`, lastDone: 0.65, changePercent: -2.1, volume: 8900000, strikePrice: 530, expiryDate: '2026-06-30', type: 'call' },
-      { symbol: '24687', name: `${symbol}法巴沽A`, lastDone: 0.48, changePercent: -8.5, volume: 15600000, strikePrice: 480, expiryDate: '2026-06-30', type: 'put' },
-      { symbol: '24210', name: `${symbol}汇丰沽B`, lastDone: 0.52, changePercent: 12.3, volume: 22300000, strikePrice: 490, expiryDate: '2026-07-31', type: 'put' },
-      { symbol: '58123', name: `${symbol}瑞信牛A`, lastDone: 0.125, changePercent: 2.5, volume: 45000000, strikePrice: 495, expiryDate: '2026-05-30', type: 'bull' },
-      { symbol: '68456', name: `${symbol}摩通熊B`, lastDone: 0.098, changePercent: -5.2, volume: 38000000, strikePrice: 515, expiryDate: '2026-05-30', type: 'bear' },
-      { symbol: '58789', name: `${symbol}法兴牛C`, lastDone: 0.088, changePercent: 8.1, volume: 52000000, strikePrice: 500, expiryDate: '2026-06-15', type: 'bull' },
-      { symbol: '68012', name: `${symbol}汇丰熊A`, lastDone: 0.115, changePercent: -3.8, volume: 41000000, strikePrice: 510, expiryDate: '2026-06-15', type: 'bear' },
-    ];
-    
-    setTimeout(() => {
-      setWarrants(mockWarrants);
-      setLoading(false);
-    }, 500);
+    // 从预生成的 JSON 加载窝轮数据
+    fetch(`/trading-app/data/warrants/${symbol}.json?v=20260321`)
+      .then(res => {
+        if (!res.ok) throw new Error('暂无窝轮数据');
+        return res.json();
+      })
+      .then((data: WarrantData[]) => {
+        setWarrants(data);
+        setTotalCount(data.length);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('加载窝轮数据失败:', err);
+        setError('暂无窝轮数据');
+        setLoading(false);
+      });
   }, [symbol]);
 
   const filteredWarrants = filter === 'all' 
@@ -170,14 +173,19 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
                 : `${colors.bgCard} ${colors.textMuted}`
             }`}
           >
-            {f === 'all' ? '全部' : getTypeLabel(f)}
+            {f === 'all' ? `全部(${totalCount})` : getTypeLabel(f)}
           </button>
         ))}
       </div>
 
       {/* 窝轮列表 */}
       <div className={`${colors.bgCard} rounded-lg divide-y ${colors.border}`}>
-        {filteredWarrants.length === 0 ? (
+        {error ? (
+          <div className="p-8 text-center">
+            <div className="text-4xl mb-2">📋</div>
+            <div className={colors.textMuted}>{error}</div>
+          </div>
+        ) : filteredWarrants.length === 0 ? (
           <div className="p-8 text-center">
             <div className="text-4xl mb-2">📋</div>
             <div className={colors.textMuted}>暂无数据</div>
@@ -194,13 +202,16 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
                     </span>
                   </div>
                   <div className={`text-xs ${colors.textMuted} mt-1`}>
-                    行使价: {w.strikePrice} | 到期: {w.expiryDate}
+                    {w.expiryDate} | 溢价: {w.premium || '-'}% | 杠杆: {w.leverage || '-'}x
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="font-medium">{w.lastDone.toFixed(3)}</div>
                   <div className={`text-xs ${w.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                     {w.changePercent >= 0 ? '+' : ''}{w.changePercent.toFixed(1)}%
+                  </div>
+                  <div className={`text-xs ${colors.textMuted}`}>
+                    {(w.volume / 100000000).toFixed(1)}亿
                   </div>
                 </div>
               </div>
@@ -210,9 +221,11 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
       </div>
 
       {/* 提示 */}
-      <div className={`text-xs ${colors.textMuted} text-center`}>
-        📋 展示模拟数据 | 实际将接入长桥窝轮 API
-      </div>
+      {totalCount > 0 && (
+        <div className={`text-xs ${colors.textMuted} text-center`}>
+          📊 长桥 API 数据 | 显示前 {filteredWarrants.length} 只 | 按成交量排序
+        </div>
+      )}
     </div>
   );
 }
