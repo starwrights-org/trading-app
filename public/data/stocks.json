@@ -3,61 +3,71 @@
     "symbol": "NVDA",
     "name": "NVIDIA Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "英伟达"
   },
   {
     "symbol": "GOOGL",
     "name": "Alphabet Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "谷歌"
   },
   {
     "symbol": "AAPL",
     "name": "Apple Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "苹果"
   },
   {
     "symbol": "GOOG",
     "name": "Alphabet Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "谷歌"
   },
   {
     "symbol": "MSFT",
     "name": "Microsoft Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "微软"
   },
   {
     "symbol": "AMZN",
     "name": "Amazon.com Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "亚马逊"
   },
   {
     "symbol": "TSM",
     "name": "Taiwan Semiconductor Manufacturing Company Ltd.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "台积电"
   },
   {
     "symbol": "META",
     "name": "Meta Platforms Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "脸书 Meta"
   },
   {
     "symbol": "AVGO",
     "name": "Broadcom Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "博通"
   },
   {
     "symbol": "TSLA",
     "name": "Tesla Inc.",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "特斯拉"
   },
   {
     "symbol": "BRK/B",
@@ -75,31 +85,36 @@
     "symbol": "WMT",
     "name": "Walmart Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "沃尔玛"
   },
   {
     "symbol": "LLY",
     "name": "Eli Lilly and Company",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "礼来"
   },
   {
     "symbol": "JPM",
     "name": "JP Morgan Chase & Co.",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "摩根大通"
   },
   {
     "symbol": "XOM",
     "name": "Exxon Mobil Corporation",
     "market": "US",
-    "sector": "Energy"
+    "sector": "Energy",
+    "alias": "埃克森美孚"
   },
   {
     "symbol": "V",
     "name": "Visa Inc.",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "Visa"
   },
   {
     "symbol": "AZN",
@@ -111,7 +126,8 @@
     "symbol": "JNJ",
     "name": "Johnson & Johnson",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "强生"
   },
   {
     "symbol": "ASML",
@@ -123,79 +139,92 @@
     "symbol": "MU",
     "name": "Micron Technology Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "美光"
   },
   {
     "symbol": "MA",
     "name": "Mastercard Incorporated",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "万事达"
   },
   {
     "symbol": "COST",
     "name": "Costco Wholesale Corporation",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "Costco 好市多"
   },
   {
     "symbol": "ORCL",
     "name": "Oracle Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "甲骨文"
   },
   {
     "symbol": "CVX",
     "name": "Chevron Corporation",
     "market": "US",
-    "sector": "Energy"
+    "sector": "Energy",
+    "alias": "雪佛龙"
   },
   {
     "symbol": "NFLX",
     "name": "Netflix Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "奈飞 Netflix"
   },
   {
     "symbol": "ABBV",
     "name": "AbbVie Inc.",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "艾伯维"
   },
   {
     "symbol": "PLTR",
     "name": "Palantir Technologies Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Palantir"
   },
   {
     "symbol": "BAC",
     "name": "Bank of America Corporation",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "美国银行"
   },
   {
     "symbol": "PG",
     "name": "Procter & Gamble Company (The)",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "宝洁"
   },
   {
     "symbol": "AMD",
     "name": "Advanced Micro Devices Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "超微半导体"
   },
   {
     "symbol": "KO",
     "name": "Coca-Cola Company (The)",
     "market": "US",
-    "sector": "Consumer Staples"
+    "sector": "Consumer Staples",
+    "alias": "可口可乐"
   },
   {
     "symbol": "HD",
     "name": "Home Depot Inc. (The)",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "家得宝"
   },
   {
     "symbol": "CAT",
@@ -207,7 +236,8 @@
     "symbol": "CSCO",
     "name": "Cisco Systems Inc.",
     "market": "US",
-    "sector": "Telecommunications"
+    "sector": "Telecommunications",
+    "alias": "思科"
   },
   {
     "symbol": "GE",
@@ -231,13 +261,15 @@
     "symbol": "BABA",
     "name": "Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "阿里巴巴"
   },
   {
     "symbol": "MRK",
     "name": "Merck & Company Inc.",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "默沙东"
   },
   {
     "symbol": "NVS",
@@ -273,7 +305,8 @@
     "symbol": "MS",
     "name": "Morgan Stanley",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "摩根士丹利"
   },
   {
     "symbol": "PM",
@@ -285,19 +318,22 @@
     "symbol": "UNH",
     "name": "UnitedHealth Group Incorporated",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "联合健康"
   },
   {
     "symbol": "GS",
     "name": "Goldman Sachs Group Inc. (The)",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "高盛"
   },
   {
     "symbol": "WFC",
     "name": "Wells Fargo & Company",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "富国银行"
   },
   {
     "symbol": "TMUS",
@@ -315,7 +351,8 @@
     "symbol": "IBM",
     "name": "International Business Machines Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "IBM"
   },
   {
     "symbol": "LIN",
@@ -339,13 +376,15 @@
     "symbol": "MCD",
     "name": "McDonald's Corporation",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "麦当劳"
   },
   {
     "symbol": "INTC",
     "name": "Intel Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "英特尔"
   },
   {
     "symbol": "SAP",
@@ -363,13 +402,15 @@
     "symbol": "PEP",
     "name": "PepsiCo Inc.",
     "market": "US",
-    "sector": "Consumer Staples"
+    "sector": "Consumer Staples",
+    "alias": "百事"
   },
   {
     "symbol": "AXP",
     "name": "American Express Company",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "美国运通"
   },
   {
     "symbol": "T",
@@ -399,7 +440,8 @@
     "symbol": "C",
     "name": "Citigroup Inc.",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "花旗"
   },
   {
     "symbol": "AMGN",
@@ -423,7 +465,8 @@
     "symbol": "CRM",
     "name": "Salesforce Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Salesforce"
   },
   {
     "symbol": "DIS",
@@ -465,7 +508,8 @@
     "symbol": "SCHW",
     "name": "Charles Schwab Corporation (The)",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "嘉信理财"
   },
   {
     "symbol": "BHP",
@@ -495,7 +539,8 @@
     "symbol": "COP",
     "name": "ConocoPhillips",
     "market": "US",
-    "sector": "Energy"
+    "sector": "Energy",
+    "alias": "康菲石油"
   },
   {
     "symbol": "SAN",
@@ -519,7 +564,8 @@
     "symbol": "PFE",
     "name": "Pfizer Inc.",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "辉瑞"
   },
   {
     "symbol": "BA",
@@ -531,13 +577,15 @@
     "symbol": "SHOP",
     "name": "Shopify Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Shopify"
   },
   {
     "symbol": "UBER",
     "name": "Uber Technologies Inc.",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "优步"
   },
   {
     "symbol": "DE",
@@ -561,7 +609,8 @@
     "symbol": "BLK",
     "name": "BlackRock Inc.",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "贝莱德"
   },
   {
     "symbol": "LMT",
@@ -591,7 +640,8 @@
     "symbol": "QCOM",
     "name": "QUALCOMM Incorporated",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "高通"
   },
   {
     "symbol": "ETN",
@@ -621,7 +671,8 @@
     "symbol": "PDD",
     "name": "PDD Holdings Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "拼多多"
   },
   {
     "symbol": "DHR",
@@ -633,7 +684,8 @@
     "symbol": "PANW",
     "name": "Palo Alto Networks Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Palo Alto"
   },
   {
     "symbol": "ACN",
@@ -663,7 +715,8 @@
     "symbol": "LOW",
     "name": "Lowe's Companies Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "劳氏"
   },
   {
     "symbol": "INTU",
@@ -837,7 +890,8 @@
     "symbol": "SBUX",
     "name": "Starbucks Corporation",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "星巴克"
   },
   {
     "symbol": "SNDK",
@@ -873,7 +927,8 @@
     "symbol": "CRWD",
     "name": "CrowdStrike Holdings Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "CrowdStrike"
   },
   {
     "symbol": "BSX",
@@ -897,7 +952,8 @@
     "symbol": "ADBE",
     "name": "Adobe Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Adobe"
   },
   {
     "symbol": "DELL",
@@ -933,7 +989,8 @@
     "symbol": "SPOT",
     "name": "Spotify Technology S.A. Ordinary Shares",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "Spotify"
   },
   {
     "symbol": "MFG",
@@ -1149,13 +1206,15 @@
     "symbol": "ABNB",
     "name": "Airbnb Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "爱彼迎 Airbnb"
   },
   {
     "symbol": "NKE",
     "name": "Nike Inc.",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "耐克"
   },
   {
     "symbol": "REGN",
@@ -1185,7 +1244,8 @@
     "symbol": "NET",
     "name": "Cloudflare Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Cloudflare"
   },
   {
     "symbol": "SU",
@@ -1287,7 +1347,8 @@
     "symbol": "NTES",
     "name": "NetEase Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "网易"
   },
   {
     "symbol": "EMR",
@@ -1347,7 +1408,8 @@
     "symbol": "SLB",
     "name": "SLB Limited Common Shares",
     "market": "US",
-    "sector": "Energy"
+    "sector": "Energy",
+    "alias": "斯伦贝谢"
   },
   {
     "symbol": "BCS",
@@ -1395,7 +1457,8 @@
     "symbol": "DASH",
     "name": "DoorDash Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "DoorDash"
   },
   {
     "symbol": "WBD",
@@ -1593,7 +1656,8 @@
     "symbol": "SNOW",
     "name": "Snowflake Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Snowflake"
   },
   {
     "symbol": "TEL",
@@ -1719,7 +1783,8 @@
     "symbol": "COIN",
     "name": "Coinbase Global Inc.",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "Coinbase"
   },
   {
     "symbol": "WPM",
@@ -1737,7 +1802,8 @@
     "symbol": "TGT",
     "name": "Target Corporation",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "Target"
   },
   {
     "symbol": "TRGP",
@@ -1989,7 +2055,8 @@
     "symbol": "DDOG",
     "name": "Datadog Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Datadog"
   },
   {
     "symbol": "CCJ",
@@ -2115,7 +2182,8 @@
     "symbol": "PYPL",
     "name": "PayPal Holdings Inc.",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "PayPal 贝宝"
   },
   {
     "symbol": "ARGX",
@@ -2139,7 +2207,8 @@
     "symbol": "RBLX",
     "name": "Roblox Corporation",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Roblox"
   },
   {
     "symbol": "AU",
@@ -2193,7 +2262,8 @@
     "symbol": "JD",
     "name": "JD.com Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "京东"
   },
   {
     "symbol": "PEG",
@@ -2229,7 +2299,8 @@
     "symbol": "BIDU",
     "name": "Baidu Inc. ADS",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "百度"
   },
   {
     "symbol": "VG",
@@ -2499,7 +2570,8 @@
     "symbol": "TCOM",
     "name": "Trip.com Group Limited American Depositary Shares",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "携程"
   },
   {
     "symbol": "KVUE",
@@ -3165,7 +3237,8 @@
     "symbol": "ZS",
     "name": "Zscaler Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Zscaler"
   },
   {
     "symbol": "STRD",
@@ -3345,7 +3418,8 @@
     "symbol": "ZM",
     "name": "Zoom Communications Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Zoom"
   },
   {
     "symbol": "Q",
@@ -3435,7 +3509,8 @@
     "symbol": "EDU",
     "name": "New Oriental Education & Technology Group Inc. Sponsored ADR representing 10 Ordinary Share (Cayman Islands)",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "新东方"
   },
   {
     "symbol": "L",
@@ -3531,7 +3606,8 @@
     "symbol": "MDB",
     "name": "MongoDB Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "MongoDB"
   },
   {
     "symbol": "BEP",
@@ -3603,7 +3679,8 @@
     "symbol": "MRNA",
     "name": "Moderna Inc.",
     "market": "US",
-    "sector": "Health Care"
+    "sector": "Health Care",
+    "alias": "Moderna"
   },
   {
     "symbol": "BR",
@@ -3681,7 +3758,8 @@
     "symbol": "ZTO",
     "name": "ZTO Express (Cayman) Inc. American Depositary Shares each representing one",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "中通快递"
   },
   {
     "symbol": "AQNB",
@@ -3807,13 +3885,15 @@
     "symbol": "TWLO",
     "name": "Twilio Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Twilio"
   },
   {
     "symbol": "FUTU",
     "name": "Futu Holdings Limited American Depositary Shares",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "富途"
   },
   {
     "symbol": "TROW",
@@ -3987,7 +4067,8 @@
     "symbol": "LI",
     "name": "Li Auto Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "理想汽车"
   },
   {
     "symbol": "LNT",
@@ -4131,7 +4212,8 @@
     "symbol": "XPEV",
     "name": "XPeng Inc. American depositary shares each representing two",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "小鹏汽车"
   },
   {
     "symbol": "ULS",
@@ -4251,7 +4333,8 @@
     "symbol": "TME",
     "name": "Tencent Music Entertainment Group American Depositary Shares each representing two",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "腾讯音乐"
   },
   {
     "symbol": "EMA",
@@ -4281,7 +4364,8 @@
     "symbol": "HTHT",
     "name": "H World Group Limited American Depositary Shares",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "华住集团"
   },
   {
     "symbol": "TRMB",
@@ -4539,7 +4623,8 @@
     "symbol": "OKTA",
     "name": "Okta Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Okta"
   },
   {
     "symbol": "SN",
@@ -4929,7 +5014,8 @@
     "symbol": "PINS",
     "name": "Pinterest Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Pinterest"
   },
   {
     "symbol": "AVY",
@@ -5001,7 +5087,8 @@
     "symbol": "NIO",
     "name": "NIO Inc. American depositary shares each  representing one",
     "market": "US",
-    "sector": "Industrials"
+    "sector": "Industrials",
+    "alias": "蔚来"
   },
   {
     "symbol": "HRL",
@@ -5541,7 +5628,8 @@
     "symbol": "BILI",
     "name": "Bilibili Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "哔哩哔哩 B站"
   },
   {
     "symbol": "AES",
@@ -5817,7 +5905,8 @@
     "symbol": "DOCU",
     "name": "DocuSign Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "DocuSign"
   },
   {
     "symbol": "ALSN",
@@ -6021,7 +6110,8 @@
     "symbol": "YMM",
     "name": "Full Truck Alliance Co. Ltd. American Depositary Shares (each representing 20",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "满帮"
   },
   {
     "symbol": "KNX",
@@ -6321,7 +6411,8 @@
     "symbol": "U",
     "name": "Unity Software Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Unity"
   },
   {
     "symbol": "SSL",
@@ -6465,7 +6556,8 @@
     "symbol": "SNAP",
     "name": "Snap Inc.",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "Snapchat"
   },
   {
     "symbol": "CAMT",
@@ -6843,7 +6935,8 @@
     "symbol": "TAL",
     "name": "TAL Education Group American Depositary Shares",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "好未来"
   },
   {
     "symbol": "CRUS",
@@ -7887,7 +7980,8 @@
     "symbol": "LYFT",
     "name": "Lyft Inc.",
     "market": "US",
-    "sector": "Real Estate"
+    "sector": "Real Estate",
+    "alias": "Lyft"
   },
   {
     "symbol": "PSN",
@@ -9717,7 +9811,8 @@
     "symbol": "KC",
     "name": "Kingsoft Cloud Holdings Limited American Depositary Shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "金山云"
   },
   {
     "symbol": "UCB",
@@ -11673,7 +11768,8 @@
     "symbol": "VNET",
     "name": "VNET Group Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "世纪互联"
   },
   {
     "symbol": "ETOR",
@@ -12177,7 +12273,8 @@
     "symbol": "WB",
     "name": "Weibo Corporation American Depositary Share",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "微博"
   },
   {
     "symbol": "ADAML",
@@ -13011,7 +13108,8 @@
     "symbol": "QFIN",
     "name": "Qfin Holdings Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "奇富科技 360数科"
   },
   {
     "symbol": "MGNI",
@@ -14379,13 +14477,15 @@
     "symbol": "DQ",
     "name": "DAQO New Energy Corp. American Depositary Shares each representing five ordinary shares",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "大全新能源"
   },
   {
     "symbol": "FINV",
     "name": "FinVolution Group American Depositary Shares",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "信也科技"
   },
   {
     "symbol": "AIN",
@@ -14931,7 +15031,8 @@
     "symbol": "JKS",
     "name": "JinkoSolar Holding Company Limited American Depositary Shares (each representing 4 Common Shares)",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "晶科能源"
   },
   {
     "symbol": "HTZ",
@@ -15123,7 +15224,8 @@
     "symbol": "IQ",
     "name": "iQIYI Inc. American Depositary Shares",
     "market": "US",
-    "sector": "Consumer Discretionary"
+    "sector": "Consumer Discretionary",
+    "alias": "爱奇艺"
   },
   {
     "symbol": "NVGS",
@@ -15159,7 +15261,8 @@
     "symbol": "TIGR",
     "name": "UP Fintech Holding Ltd American Depositary Share representing fifteen",
     "market": "US",
-    "sector": "Finance"
+    "sector": "Finance",
+    "alias": "老虎证券"
   },
   {
     "symbol": "VIA",
@@ -17787,7 +17890,8 @@
     "symbol": "HUYA",
     "name": "HUYA Inc. American depositary shares each  representing one",
     "market": "US",
-    "sector": "Technology"
+    "sector": "Technology",
+    "alias": "虎牙"
   },
   {
     "symbol": "RILYG",

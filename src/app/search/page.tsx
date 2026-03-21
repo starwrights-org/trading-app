@@ -10,6 +10,7 @@ interface Stock {
   name: string;
   market: 'US' | 'HK';
   sector?: string;
+  alias?: string; // 中文别名
 }
 
 // 热门搜索
@@ -46,7 +47,8 @@ export default function SearchPage() {
     const q = query.toLowerCase();
     return allStocks.filter(stock => 
       stock.name.toLowerCase().includes(q) ||
-      stock.symbol.toLowerCase().includes(q)
+      stock.symbol.toLowerCase().includes(q) ||
+      (stock.alias && stock.alias.toLowerCase().includes(q))
     ).slice(0, 50);
   }, [query, allStocks]);
 
