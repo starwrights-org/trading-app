@@ -1,28 +1,28 @@
 import { Stock, Position, Order, AccountBalance, Kline } from './types';
 
-// 实时股票数据 - 2026-03-21 更新
+// 实时股票数据 - 长桥 API 更新 2026-03-21 14:48 UTC
 export const MOCK_STOCKS: Stock[] = [
-  // 港股 - Google Finance 实时数据
-  { symbol: '00700', name: '腾讯控股', nameEn: 'Tencent', market: 'HK', price: 508.00, change: -3.00, changePercent: -0.59, open: 511, high: 515, low: 506, prevClose: 511, volume: 12854094, pe: 19.2 },
-  { symbol: '09988', name: '阿里巴巴-SW', nameEn: 'Alibaba', market: 'HK', price: 123.70, change: -1.80, changePercent: -1.43, open: 125, high: 126.5, low: 122.8, prevClose: 125.5, volume: 28678432, pe: 15.8 },
-  { symbol: '03690', name: '美团-W', nameEn: 'Meituan', market: 'HK', price: 79.15, change: -2.35, changePercent: -2.88, open: 81, high: 82, low: 78.5, prevClose: 81.5, volume: 21234567, pe: 35.6 },
-  { symbol: '01810', name: '小米集团-W', nameEn: 'Xiaomi', market: 'HK', price: 33.20, change: -0.80, changePercent: -2.35, open: 34, high: 34.5, low: 32.9, prevClose: 34, volume: 95234567, pe: 22.4 },
-  { symbol: '00388', name: '香港交易所', nameEn: 'HKEX', market: 'HK', price: 396.00, change: 6.00, changePercent: 1.54, open: 390, high: 398, low: 388, prevClose: 390, volume: 4156789, pe: 38.5 },
-  { symbol: '02318', name: '中国平安', nameEn: 'Ping An', market: 'HK', price: 41.85, change: -0.65, changePercent: -1.53, open: 42.5, high: 43, low: 41.5, prevClose: 42.5, volume: 52678901, pe: 7.8 },
+  // 港股 - 长桥 API 实时数据 (15分钟延迟)
+  { symbol: '00700', name: '腾讯控股', nameEn: 'Tencent', market: 'HK', price: 508.00, change: -5.00, changePercent: -0.97, open: 505, high: 519, low: 505, prevClose: 513, volume: 24924662, pe: 19.2 },
+  { symbol: '09988', name: '阿里巴巴-SW', nameEn: 'Alibaba', market: 'HK', price: 123.70, change: -8.30, changePercent: -6.29, open: 123.5, high: 126.8, low: 122.4, prevClose: 132, volume: 206068855, pe: 15.8 },
+  { symbol: '03690', name: '美团-W', nameEn: 'Meituan', market: 'HK', price: 79.15, change: -1.55, changePercent: -1.92, open: 81.55, high: 82.65, low: 78.15, prevClose: 80.7, volume: 64632837, pe: 35.6 },
+  { symbol: '01810', name: '小米集团-W', nameEn: 'Xiaomi', market: 'HK', price: 33.20, change: -3.12, changePercent: -8.59, open: 35.5, high: 35.64, low: 33.2, prevClose: 36.32, volume: 396613712, pe: 22.4 },
+  { symbol: '00388', name: '香港交易所', nameEn: 'HKEX', market: 'HK', price: 396.00, change: -2.60, changePercent: -0.65, open: 398.6, high: 401, low: 395.2, prevClose: 398.6, volume: 4416051, pe: 38.5 },
+  { symbol: '02318', name: '中国平安', nameEn: 'Ping An', market: 'HK', price: 61.75, change: 0.10, changePercent: 0.16, open: 61.65, high: 62.6, low: 61.35, prevClose: 61.65, volume: 31221069, pe: 7.8 },
   
-  // 美股 - Google Finance 实时数据
-  { symbol: 'AAPL', name: '苹果', nameEn: 'Apple', market: 'US', price: 247.99, change: -0.97, changePercent: -0.39, open: 248.5, high: 250.2, low: 246.8, prevClose: 248.96, volume: 32428002, pe: 31.2 },
-  { symbol: 'NVDA', name: '英伟达', nameEn: 'NVIDIA', market: 'US', price: 172.93, change: -5.63, changePercent: -3.15, open: 176, high: 177.5, low: 171.5, prevClose: 178.56, volume: 168525509, pe: 35.1 },
-  { symbol: 'TSLA', name: '特斯拉', nameEn: 'Tesla', market: 'US', price: 367.96, change: -12.34, changePercent: -3.24, open: 378, high: 380, low: 365, prevClose: 380.30, volume: 85765432, pe: 142.5 },
-  { symbol: 'AMZN', name: '亚马逊', nameEn: 'Amazon', market: 'US', price: 205.37, change: -3.39, changePercent: -1.62, open: 207, high: 208.5, low: 204.2, prevClose: 208.76, volume: 38995364, pe: 28.5 },
-  { symbol: 'GOOGL', name: '谷歌', nameEn: 'Alphabet', market: 'US', price: 301.00, change: -6.13, changePercent: -2.00, open: 305, high: 306.5, low: 299.5, prevClose: 307.13, volume: 25623215, pe: 27.8 },
-  { symbol: 'META', name: 'Meta', nameEn: 'Meta Platforms', market: 'US', price: 593.66, change: -13.04, changePercent: -2.15, open: 602, high: 605, low: 590, prevClose: 606.70, volume: 13568305, pe: 20.2 },
+  // 美股 - 长桥 API Nasdaq Basic 实时数据
+  { symbol: 'AAPL', name: '苹果', nameEn: 'Apple', market: 'US', price: 247.99, change: -0.97, changePercent: -0.39, open: 247.975, high: 249.2, low: 246, prevClose: 248.96, volume: 88331081, pe: 31.2 },
+  { symbol: 'NVDA', name: '英伟达', nameEn: 'NVIDIA', market: 'US', price: 172.70, change: -5.86, changePercent: -3.28, open: 178, high: 178.26, low: 171.72, prevClose: 178.56, volume: 241323528, pe: 35.1 },
+  { symbol: 'TSLA', name: '特斯拉', nameEn: 'Tesla', market: 'US', price: 367.96, change: -12.34, changePercent: -3.24, open: 379.85, high: 379.89, low: 364.46, prevClose: 380.30, volume: 78628603, pe: 142.5 },
+  { symbol: 'AMZN', name: '亚马逊', nameEn: 'Amazon', market: 'US', price: 205.37, change: -3.39, changePercent: -1.62, open: 207.4, high: 207.54, low: 204.316, prevClose: 208.76, volume: 63694603, pe: 28.5 },
+  { symbol: 'GOOGL', name: '谷歌', nameEn: 'Alphabet', market: 'US', price: 301.00, change: -6.13, changePercent: -2.00, open: 305.46, high: 306, low: 298.27, prevClose: 307.13, volume: 44364079, pe: 27.8 },
+  { symbol: 'META', name: 'Meta', nameEn: 'Meta Platforms', market: 'US', price: 593.66, change: -13.04, changePercent: -2.15, open: 603.53, high: 603.955, low: 587.25, prevClose: 606.70, volume: 21214898, pe: 20.2 },
 ];
 
-// Mock 持仓数据 - 更新价格
+// Mock 持仓数据 - 长桥 API 实时价格更新
 export const MOCK_POSITIONS: Position[] = [
   { symbol: '00700', name: '腾讯控股', market: 'HK', quantity: 200, availableQuantity: 200, costPrice: 480.50, currentPrice: 508.00, marketValue: 101600, profitLoss: 5500, profitLossPercent: 5.72 },
-  { symbol: 'NVDA', name: '英伟达', market: 'US', quantity: 50, availableQuantity: 50, costPrice: 165.20, currentPrice: 172.93, marketValue: 8646.50, profitLoss: 386.50, profitLossPercent: 4.68 },
+  { symbol: 'NVDA', name: '英伟达', market: 'US', quantity: 50, availableQuantity: 50, costPrice: 165.20, currentPrice: 172.70, marketValue: 8635, profitLoss: 375, profitLossPercent: 4.54 },
   { symbol: 'AAPL', name: '苹果', market: 'US', quantity: 100, availableQuantity: 100, costPrice: 235.00, currentPrice: 247.99, marketValue: 24799, profitLoss: 1299, profitLossPercent: 5.53 },
 ];
 
@@ -94,7 +94,37 @@ export function getTopLosers(): Stock[] {
   return [...MOCK_STOCKS].sort((a, b) => a.changePercent - b.changePercent).slice(0, 5);
 }
 
-// ============ 预留 API 接口 ============
+// 获取成交额榜
+export function getTopVolume(): Stock[] {
+  return [...MOCK_STOCKS].sort((a, b) => (b.volume || 0) - (a.volume || 0)).slice(0, 5);
+}
+
+// 获取美股
+export function getUSStocks(): Stock[] {
+  return MOCK_STOCKS.filter(s => s.market === 'US');
+}
+
+// 获取港股
+export function getHKStocks(): Stock[] {
+  return MOCK_STOCKS.filter(s => s.market === 'HK');
+}
+
+// 搜索股票
+export function searchStocks(query: string): Stock[] {
+  const q = query.toUpperCase();
+  return MOCK_STOCKS.filter(s => 
+    s.symbol.toUpperCase().includes(q) || 
+    s.name.includes(query) ||
+    s.nameEn?.toUpperCase().includes(q)
+  );
+}
+
+// 获取实时股票（从 API 或缓存）
+export async function getStockRealtime(symbol: string): Promise<Stock | null> {
+  // TODO: 对接长桥 API 获取实时数据
+  console.log('📤 [预留接口] 获取实时行情:', symbol);
+  return getStock(symbol) || null;
+}
 
 // 下单接口（预留）
 export async function submitOrder(params: {
@@ -122,23 +152,14 @@ export async function cancelOrder(orderId: string): Promise<{ success: boolean; 
   
   return {
     success: true,
-    message: '撤单成功（模拟）',
+    message: '订单已撤销（模拟）',
   };
-}
-
-// 获取实时行情（预留）
-export async function getQuote(symbol: string): Promise<Stock | null> {
-  // TODO: 对接行情 API（长桥/Yahoo Finance）
-  console.log('📤 [预留接口] 获取行情:', symbol);
-  
-  return getStock(symbol) || null;
 }
 
 // 获取账户信息（预留）
 export async function getAccountInfo(): Promise<AccountBalance> {
   // TODO: 对接柜台 API
   console.log('📤 [预留接口] 获取账户信息');
-  
   return MOCK_ACCOUNT;
 }
 
@@ -146,14 +167,12 @@ export async function getAccountInfo(): Promise<AccountBalance> {
 export async function getPositions(): Promise<Position[]> {
   // TODO: 对接柜台 API
   console.log('📤 [预留接口] 获取持仓');
-  
   return MOCK_POSITIONS;
 }
 
 // 获取订单列表（预留）
 export async function getOrders(): Promise<Order[]> {
   // TODO: 对接柜台 API
-  console.log('📤 [预留接口] 获取订单');
-  
+  console.log('📤 [预留接口] 获取订单列表');
   return MOCK_ORDERS;
 }
