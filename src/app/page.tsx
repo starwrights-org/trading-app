@@ -31,6 +31,30 @@ function MiniChart({ trend, isUp }: { trend: number[]; isUp: boolean }) {
   );
 }
 
+// 静态迷你走势图（无需 hooks）
+function MiniChartStatic({ isUp, seed }: { isUp: boolean; seed: number }) {
+  // 基于 seed 生成固定的随机走势
+  const points = [];
+  let val = 100;
+  for (let i = 0; i < 20; i++) {
+    val += ((((seed + i) * 9301 + 49297) % 233280) / 233280 - 0.5) * 5;
+    const x = (i / 19) * 50;
+    const y = 18 - ((val - 95) / 10) * 14;
+    points.push(`${x.toFixed(1)},${Math.max(2, Math.min(18, y)).toFixed(1)}`);
+  }
+
+  return (
+    <svg width="50" height="20" className="flex-shrink-0">
+      <polyline
+        points={points.join(' ')}
+        fill="none"
+        stroke={isUp ? '#10b981' : '#ef4444'}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
 // 生成模拟走势数据
 function generateTrend(): number[] {
   const trend: number[] = [];
@@ -194,7 +218,6 @@ export default function WatchlistPage() {
         {/* 股票列表 */}
         {watchlist.map((stock, idx) => {
           const isUp = stock.changePercent >= 0;
-          const trend = useMemo(() => generateTrend(), []);
           
           return (
             <Link
@@ -214,7 +237,7 @@ export default function WatchlistPage() {
 
               {/* 迷你走势图 */}
               <div className="col-span-1 flex justify-center">
-                <MiniChart trend={trend} isUp={isUp} />
+                <MiniChartStatic isUp={isUp} seed={idx} />
               </div>
 
               {/* 最新价 / 前收 */}
