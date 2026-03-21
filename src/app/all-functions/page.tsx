@@ -21,7 +21,7 @@ const FUNCTION_CATEGORIES = [
   {
     title: '交易',
     items: [
-      { icon: '🏛', label: '交易大厅', href: '#', color: 'bg-blue-500' },
+      { icon: '🏛', label: '交易大厅', href: '/trading-hall', color: 'bg-blue-500' },
       { icon: '📰', label: '新股申购', href: '#', color: 'bg-red-500' },
     ],
   },
