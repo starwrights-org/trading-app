@@ -68,7 +68,6 @@ export default function SearchPage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setFocused(true)}
               placeholder="搜索股票代码、名称"
               autoFocus
               className={`flex-1 bg-transparent outline-none ${colors.text} placeholder-gray-500`}
