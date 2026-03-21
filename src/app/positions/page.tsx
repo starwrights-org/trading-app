@@ -101,16 +101,16 @@ export default function PositionsPage() {
         {/* 快捷功能入口 */}
         <div className="grid grid-cols-5 gap-2 px-4 py-4 border-t border-b border-gray-800">
           {[
-            { icon: '📋', label: '订单查询', color: 'text-yellow-500' },
-            { icon: '📊', label: '资金记录', color: 'text-blue-500' },
-            { icon: '🏛', label: '交易大厅', color: 'text-red-500' },
-            { icon: '💱', label: '货币兑换', color: 'text-green-500' },
-            { icon: '⚙️', label: '全部功能', color: 'text-purple-500' },
+            { icon: '📋', label: '订单查询', color: 'text-yellow-500', href: '/orders' },
+            { icon: '📊', label: '资金记录', color: 'text-blue-500', href: '#' },
+            { icon: '🏛', label: '交易大厅', color: 'text-red-500', href: '#' },
+            { icon: '💱', label: '货币兑换', color: 'text-green-500', href: '#' },
+            { icon: '⚙️', label: '全部功能', color: 'text-purple-500', href: '#' },
           ].map(item => (
-            <button key={item.label} className="flex flex-col items-center py-2">
+            <Link key={item.label} href={item.href} className="flex flex-col items-center py-2">
               <span className={`text-2xl mb-1 ${item.color}`}>{item.icon}</span>
               <span className="text-xs text-gray-400">{item.label}</span>
-            </button>
+            </Link>
           ))}
         </div>
 
