@@ -69,6 +69,39 @@ const EARNINGS_STOCKS = [
   { name: '美团-W', symbol: '03690', market: 'HK', price: 79.15, change: -2.88 },
 ];
 
+// 基金快捷入口
+const FUND_QUICK_LINKS = [
+  { icon: '💰', label: '盈和宝', color: 'bg-orange-500' },
+  { icon: '📋', label: '基金订单', color: 'bg-blue-500' },
+  { icon: '📊', label: '基金排行', color: 'bg-red-500' },
+  { icon: '📈', label: '债券基金', color: 'bg-orange-400' },
+  { icon: '⊞', label: '更多', color: 'bg-blue-600' },
+];
+
+// 收益最佳基金
+const TOP_FUNDS = [
+  { type: '股票型', return: '+124.86%', period: '近 3 年', name: '摩根日本（日圆）基金 - US...' },
+  { type: '债券型', return: '+28.88%', period: '近 5 年', name: '泰康开泰海外短期债券基金...' },
+  { type: '平衡型', return: '+79.96%', period: '近 3 年', name: '中银香港全天候环球投资基...' },
+  { type: '货币型', return: '+19.77%', period: '近 5 年', name: '易方达(香港)美元货币市场...' },
+];
+
+// 基金公司
+const FUND_COMPANIES = [
+  { name: '东亚联丰投资管理有限公司', logo: '东亞\n聯豐投', color: 'bg-red-600' },
+  { name: '泰康资产管理(香港)有限公司', logo: '泰康\nTaikan', color: 'bg-blue-600' },
+  { name: '大成国际资产管理有限公司', logo: '资产管', color: 'bg-blue-500' },
+  { name: '汇丰投资(香港)有限公司', logo: 'CA', color: 'bg-red-500' },
+];
+
+// 热销基金
+const HOT_FUNDS = [
+  { rank: 1, name: '博时美元货币市场基金 I USD Acc', return: '+4.28%', period: '近 1 年', tags: ['USD', '货币型', '低风险'] },
+  { rank: 2, name: '易方达(香港)美元货币市场基金 I US...', return: '+15.74%', period: '近 3 年', tags: ['USD', '货币型', '低风险'] },
+  { rank: 3, name: '博时美元货币市场基金A USD Acc', return: '+4.23%', period: '近 1 年', tags: ['USD', '货币型', '低风险'] },
+  { rank: 4, name: '华夏精选美元货币基金 Class I USD', return: '+4.44%', period: '近 1 年', tags: ['USD', '货币型', '低风险'] },
+];
+
 export default function MarketPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
@@ -409,10 +442,127 @@ export default function MarketPage() {
 
         {/* ==================== 基金 Tab ==================== */}
         {mainTab === 'fund' && (
-          <div className={`text-center py-20 ${colors.textMuted}`}>
-            <div className="text-4xl mb-4">📊</div>
-            <div>基金功能开发中</div>
-          </div>
+          <>
+            {/* 基金快捷入口 */}
+            <div className="py-4">
+              <div className="flex justify-between">
+                {FUND_QUICK_LINKS.map((link, idx) => (
+                  <button key={idx} className="flex flex-col items-center gap-2">
+                    <div className={`w-12 h-12 ${link.color} rounded-xl flex items-center justify-center text-white font-bold text-xl`}>
+                      {link.icon}
+                    </div>
+                    <span className={`text-xs ${colors.textSecondary}`}>{link.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 风险水平 + 优选 */}
+            <div className={`p-4 rounded-xl ${colors.bgCard} mb-4 flex items-center justify-between`}>
+              <div className="flex items-center gap-2">
+                <span className={colors.textSecondary}>您的风险水平</span>
+                <span className={colors.text}>待评测</span>
+                <svg className={`w-4 h-4 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs px-1.5 py-0.5 border border-orange-500 text-orange-500 rounded">优选</span>
+                  <span className={colors.textMuted}>--</span>
+                </div>
+                <div className="text-2xl font-bold text-orange-500">0.00%</div>
+              </div>
+            </div>
+
+            {/* 收益最佳 */}
+            <div className="py-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className={`text-lg font-bold ${colors.text}`}>收益最佳</h2>
+                <span className={`text-sm ${colors.textMuted}`}>更新日期 2026-03-21 &gt;</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {TOP_FUNDS.map((fund, idx) => (
+                  <div key={idx} className={`p-4 rounded-xl border ${colors.border} ${colors.bgCard}`}>
+                    <div className={`font-medium ${colors.text} mb-2`}>{fund.type}</div>
+                    <div className="text-orange-500 text-xl font-bold">{fund.return}</div>
+                    <div className={`text-xs ${colors.textMuted} mb-2`}>{fund.period}</div>
+                    <div className={`text-sm ${colors.textSecondary} truncate`}>{fund.name}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 基金公司 */}
+            <div className="py-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className={`text-lg font-bold ${colors.text}`}>基金公司</h2>
+                <span className={`text-sm ${colors.textMuted}`}>更多 &gt;</span>
+              </div>
+
+              <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4">
+                {FUND_COMPANIES.map((company, idx) => (
+                  <div key={idx} className="flex-shrink-0 w-28 flex flex-col items-center">
+                    <div className={`w-20 h-20 ${company.color} rounded-xl flex items-center justify-center text-white font-bold text-center text-sm leading-tight mb-2`}>
+                      {company.logo.split('\n').map((line, i) => (
+                        <span key={i}>{line}<br/></span>
+                      ))}
+                    </div>
+                    <span className={`text-xs ${colors.textSecondary} text-center leading-tight`}>{company.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 热销基金 */}
+            <div className="py-4">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className={`text-lg font-bold ${colors.text}`}>热销基金</h2>
+              </div>
+
+              <div className="space-y-4">
+                {HOT_FUNDS.map((fund, idx) => (
+                  <div key={idx} className={`flex gap-4 p-4 rounded-xl border ${colors.border} ${colors.bgCard}`}>
+                    {/* 排名 + 走势图 */}
+                    <div className="flex flex-col items-center">
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded ${fund.rank <= 3 ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                        TOP {fund.rank}
+                      </span>
+                      {/* 迷你走势 */}
+                      <div className="mt-2 w-16 h-8">
+                        <svg viewBox="0 0 60 30" className="w-full h-full">
+                          <path
+                            d={`M 0 25 Q 15 ${20 - fund.rank * 2} 30 ${15 + fund.rank} T 60 ${10 - fund.rank}`}
+                            fill="none"
+                            stroke="#f97316"
+                            strokeWidth="2"
+                            strokeDasharray="4 2"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {/* 基金信息 */}
+                    <div className="flex-1">
+                      <div className={`font-medium ${colors.text} mb-1`}>{fund.name}</div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-orange-500 font-bold">{fund.return}</span>
+                        <span className={`text-xs ${colors.textMuted}`}>{fund.period}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {fund.tags.map((tag, i) => (
+                          <span key={i} className={`text-xs px-2 py-0.5 rounded border ${colors.border} ${colors.textMuted}`}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </div>
 
