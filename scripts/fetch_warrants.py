@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-从长桥 API 获取热门港股的窝轮牛熊证数据
+从长桥 API 获取热门港股的窝轮牛熊证数据（分类型获取）
 """
-from longport.openapi import QuoteContext, Config, WarrantSortBy, SortOrderType
+from longport.openapi import QuoteContext, Config, WarrantSortBy, SortOrderType, WarrantType
 import json
 import os
 
@@ -20,6 +20,14 @@ HOT_STOCKS = [
     "09999", "09992", "01024", "02382", "00267", "00857",
 ]
 
+# 类型映射
+TYPE_LIST = [
+    (WarrantType.Call, 'call'),
+    (WarrantType.Put, 'put'),
+    (WarrantType.Bull, 'bull'),
+    (WarrantType.Bear, 'bear'),
+]
+
 ctx = QuoteContext(config)
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,50 +35,50 @@ output_dir = os.path.join(script_dir, '..', 'public', 'data', 'warrants')
 os.makedirs(output_dir, exist_ok=True)
 
 print(f"📊 获取 {len(HOT_STOCKS)} 只热门港股的窝轮数据...")
-print("=" * 60)
+print("=" * 70)
 
 for symbol in HOT_STOCKS:
-    try:
-        warrants = ctx.warrant_list(f"{symbol}.HK", WarrantSortBy.Volume, SortOrderType.Descending)
-        
-        # 转换为 JSON 格式
-        data = []
-        for w in warrants[:100]:  # 只取前 100 只
-            # 判断类型
-            wtype = str(w.warrant_type)
-            if 'Call' in wtype:
-                type_code = 'call'
-            elif 'Put' in wtype:
-                type_code = 'put'
-            elif 'Bull' in wtype:
-                type_code = 'bull'
-            elif 'Bear' in wtype:
-                type_code = 'bear'
-            else:
-                type_code = 'other'
+    all_warrants = []
+    counts = {}
+    
+    # 分别获取四种类型
+    for wtype, type_code in TYPE_LIST:
+        try:
+            warrants = ctx.warrant_list(
+                f"{symbol}.HK", 
+                WarrantSortBy.Volume, 
+                SortOrderType.Descending,
+                warrant_type=[wtype]
+            )
+            counts[type_code] = len(warrants)
             
-            data.append({
-                'symbol': w.symbol.replace('.HK', ''),
-                'name': str(w.name),
-                'lastDone': float(w.last_done) if w.last_done else 0,
-                'changePercent': round(float(w.change_rate) * 100, 2) if w.change_rate else 0,
-                'volume': int(w.volume) if w.volume else 0,
-                'strikePrice': float(w.strike_price) if w.strike_price else 0,
-                'expiryDate': str(w.expiry_date) if w.expiry_date else '',
-                'type': type_code,
-                'premium': round(float(w.premium) * 100, 2) if w.premium else 0,
-                'leverage': round(float(w.leverage_ratio), 1) if w.leverage_ratio else 0,
-            })
-        
-        # 保存文件
-        filepath = os.path.join(output_dir, f'{symbol}.json')
-        with open(filepath, 'w') as f:
-            json.dump(data, f, ensure_ascii=False)
-        
-        print(f"✓ {symbol} | 共 {len(warrants)} 只，保存前 {len(data)} 只")
-        
-    except Exception as e:
-        print(f"✗ {symbol} | 错误: {e}")
+            # 每种类型取前 30 只
+            for w in warrants[:30]:
+                all_warrants.append({
+                    'symbol': w.symbol.replace('.HK', ''),
+                    'name': str(w.name),
+                    'lastDone': float(w.last_done) if w.last_done else 0,
+                    'changePercent': round(float(w.change_rate) * 100, 2) if w.change_rate else 0,
+                    'volume': int(w.volume) if w.volume else 0,
+                    'strikePrice': float(w.strike_price) if w.strike_price else 0,
+                    'expiryDate': str(w.expiry_date) if w.expiry_date else '',
+                    'type': type_code,
+                    'premium': round(float(w.premium) * 100, 2) if w.premium else 0,
+                    'leverage': round(float(w.leverage_ratio), 1) if w.leverage_ratio else 0,
+                })
+        except Exception as e:
+            counts[type_code] = 0
+    
+    # 按成交量排序
+    all_warrants.sort(key=lambda x: x['volume'], reverse=True)
+    
+    # 保存文件
+    filepath = os.path.join(output_dir, f'{symbol}.json')
+    with open(filepath, 'w') as f:
+        json.dump(all_warrants, f, ensure_ascii=False)
+    
+    total = sum(counts.values())
+    print(f"✓ {symbol} | 总计 {total:4} 只 | 认购:{counts.get('call',0):3} 认沽:{counts.get('put',0):3} 牛证:{counts.get('bull',0):3} 熊证:{counts.get('bear',0):3} | 保存 {len(all_warrants)} 只")
 
-print("=" * 60)
+print("=" * 70)
 print(f"✅ 完成！保存到: {output_dir}")
