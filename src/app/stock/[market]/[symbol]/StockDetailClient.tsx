@@ -192,7 +192,11 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
           </div>
         ) : (
           filteredWarrants.map((w) => (
-            <div key={w.symbol} className="p-3">
+            <Link 
+              key={w.symbol} 
+              href={`/stock/HK/${w.symbol}/`}
+              className={`block p-3 ${colors.hover} transition-colors`}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -214,8 +218,12 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
                     {(w.volume / 100000000).toFixed(1)}亿
                   </div>
                 </div>
+                {/* 右箭头 */}
+                <svg className={`w-4 h-4 ml-2 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </div>
