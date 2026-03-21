@@ -74,14 +74,13 @@ export default function MarketPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
   
-  const [activeTab, setActiveTab] = useState<'discover' | 'market' | 'fund' | 'northbound'>('discover');
+  const [activeTab, setActiveTab] = useState<'discover' | 'market' | 'fund'>('discover');
   const [earningsTab, setEarningsTab] = useState<'forecast' | 'watchlist'>('forecast');
 
   const tabs = [
     { key: 'discover', label: '发现' },
     { key: 'market', label: '市场' },
     { key: 'fund', label: '基金' },
-    { key: 'northbound', label: '北向通' },
   ];
 
   return (
