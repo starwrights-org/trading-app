@@ -106,7 +106,7 @@ export default function PositionsPage() {
             { icon: '📋', label: '订单查询', color: 'text-yellow-500', href: '/orders' },
             { icon: '📊', label: '资金记录', color: 'text-blue-500', href: '/fund-records' },
             { icon: '🏛', label: '交易大厅', color: 'text-red-500', href: '#' },
-            { icon: '💱', label: '货币兑换', color: 'text-green-500', href: '#' },
+            { icon: '💱', label: '货币兑换', color: 'text-green-500', href: '/currency-exchange' },
             { icon: '⚙️', label: '全部功能', color: 'text-purple-500', href: '#' },
           ].map(item => (
             <Link key={item.label} href={item.href} className="flex flex-col items-center py-2">
