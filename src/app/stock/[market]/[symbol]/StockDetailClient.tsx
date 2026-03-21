@@ -2,8 +2,87 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { getStock, submitOrder, MOCK_STOCKS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
+
+// 动态加载 K 线图表组件（避免 SSR 问题）
+const KlineChart = dynamic(() => import('@/components/KlineChart'), { 
+  ssr: false,
+  loading: () => (
+    <div className="h-64 flex items-center justify-center">
+      <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+    </div>
+  )
+});
+
+// K 线数据类型
+interface KlineData {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+// K 线图表包装器
+function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: string; theme: 'dark' | 'light' }) {
+  const [klineData, setKlineData] = useState<KlineData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const colors = themeColors[theme];
+
+  useEffect(() => {
+    // 构造文件名: 00883.HK -> 00883_HK.json, AAPL.US -> AAPL_US.json
+    const suffix = market === 'HK' ? 'HK' : 'US';
+    const filename = `${symbol}_${suffix}.json`;
+    
+    fetch(`/trading-app/data/kline/${filename}?v=20260321`)
+      .then(res => {
+        if (!res.ok) throw new Error('K线数据不存在');
+        return res.json();
+      })
+      .then((data: KlineData[]) => {
+        setKlineData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('加载K线数据失败:', err);
+        setError('暂无K线数据');
+        setLoading(false);
+      });
+  }, [symbol, market]);
+
+  if (loading) {
+    return (
+      <div className={`${colors.bgCard} rounded-lg p-8`}>
+        <div className="h-64 flex items-center justify-center">
+          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || klineData.length === 0) {
+    return (
+      <div className={`${colors.bgCard} rounded-lg p-8 text-center`}>
+        <div className="text-4xl mb-2">📊</div>
+        <div className={colors.textMuted}>{error || '暂无K线数据'}</div>
+        <div className={`text-sm ${colors.textMuted} mt-1`}>热门股票已预加载K线</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${colors.bgCard} rounded-lg overflow-hidden`}>
+      <KlineChart data={klineData} symbol={symbol} theme={theme} />
+      <div className={`text-xs ${colors.textMuted} text-center py-2`}>
+        📊 长桥 API 日K线 | 双指缩放
+      </div>
+    </div>
+  );
+}
 
 // 股票完整信息（包含价格）
 interface StockFullInfo {
@@ -278,11 +357,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
         {/* 内容区 */}
         <div className="p-4">
           {activeTab === 'chart' && (
-            <div className={`${colors.bgCard} rounded-lg p-8 text-center`}>
-              <div className="text-4xl mb-2">📊</div>
-              <div className={colors.textMuted}>K线图表</div>
-              <div className={`text-sm ${colors.textMuted} mt-1`}>（集成 TradingView / ECharts）</div>
-            </div>
+            <KlineChartWrapper symbol={symbol} market={market} theme={theme} />
           )}
           
           {activeTab === 'info' && (
