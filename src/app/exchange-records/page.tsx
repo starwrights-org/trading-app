@@ -14,7 +14,7 @@ const MOCK_EXCHANGE_RECORDS = [
     fromAmount: 600.00, 
     toAmount: 76.98, 
     status: 'pending', // pending = 已提交, completed = 已兑换
-    date: '21 日 18:44:38',
+    date: '2026.03.21 18:44:38',
     month: '2026-03',
     isEstimate: true,
   },
@@ -25,7 +25,7 @@ const MOCK_EXCHANGE_RECORDS = [
     fromAmount: 779423.23, 
     toAmount: 100000.00, 
     status: 'completed',
-    date: '08 日 22:04:58',
+    date: '2026.03.08 22:04:58',
     month: '2026-03',
     isEstimate: false,
   },
@@ -128,7 +128,7 @@ export default function ExchangeRecordsPage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className={`font-medium ${colors.text}`}>
-                            {record.fromCurrency === 'HKD' ? '港元' : record.fromCurrency === 'USD' ? '美元' : '人民币'} ⊕ {record.toCurrency === 'USD' ? '美元' : record.toCurrency === 'HKD' ? '港元' : '人民币'}
+                            {record.fromCurrency === 'HKD' ? '港元' : record.fromCurrency === 'USD' ? '美元' : '人民币'} → {record.toCurrency === 'USD' ? '美元' : record.toCurrency === 'HKD' ? '港元' : '人民币'}
                           </div>
                           <div className={`text-sm ${colors.textMuted} mt-1`}>
                             {record.date} | {record.status === 'pending' ? '已提交' : '已兑换'}
