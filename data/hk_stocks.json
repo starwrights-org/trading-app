@@ -1,0 +1,942 @@
+[
+  {
+    "symbol": "00001",
+    "name": "长和",
+    "market": "HK"
+  },
+  {
+    "symbol": "00002",
+    "name": "中电控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00003",
+    "name": "香港中华煤气",
+    "market": "HK"
+  },
+  {
+    "symbol": "00005",
+    "name": "汇丰控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00006",
+    "name": "电能实业",
+    "market": "HK"
+  },
+  {
+    "symbol": "00011",
+    "name": "恒生银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "00012",
+    "name": "恒基地产",
+    "market": "HK"
+  },
+  {
+    "symbol": "00016",
+    "name": "新鸿基地产",
+    "market": "HK"
+  },
+  {
+    "symbol": "00017",
+    "name": "新世界发展",
+    "market": "HK"
+  },
+  {
+    "symbol": "00019",
+    "name": "太古股份公司A",
+    "market": "HK"
+  },
+  {
+    "symbol": "00020",
+    "name": "商汤-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "00023",
+    "name": "东亚银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "00027",
+    "name": "银河娱乐",
+    "market": "HK"
+  },
+  {
+    "symbol": "00066",
+    "name": "港铁公司",
+    "market": "HK"
+  },
+  {
+    "symbol": "00083",
+    "name": "信和置业",
+    "market": "HK"
+  },
+  {
+    "symbol": "00101",
+    "name": "恒隆地产",
+    "market": "HK"
+  },
+  {
+    "symbol": "00175",
+    "name": "吉利汽车",
+    "market": "HK"
+  },
+  {
+    "symbol": "00241",
+    "name": "阿里健康",
+    "market": "HK"
+  },
+  {
+    "symbol": "00267",
+    "name": "中信股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "00268",
+    "name": "金蝶国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "00285",
+    "name": "比亚迪电子",
+    "market": "HK"
+  },
+  {
+    "symbol": "00288",
+    "name": "万洲国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "00291",
+    "name": "华润啤酒",
+    "market": "HK"
+  },
+  {
+    "symbol": "00293",
+    "name": "国泰航空",
+    "market": "HK"
+  },
+  {
+    "symbol": "00316",
+    "name": "东方海外国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "00322",
+    "name": "康师傅控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00358",
+    "name": "江西铜业股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "00386",
+    "name": "中国石油化工股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "00388",
+    "name": "香港交易所",
+    "market": "HK"
+  },
+  {
+    "symbol": "00390",
+    "name": "中国中铁",
+    "market": "HK"
+  },
+  {
+    "symbol": "00392",
+    "name": "北京控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00489",
+    "name": "东风集团股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "00522",
+    "name": "华润医药",
+    "market": "HK"
+  },
+  {
+    "symbol": "00669",
+    "name": "创科实业",
+    "market": "HK"
+  },
+  {
+    "symbol": "00688",
+    "name": "中国海外发展",
+    "market": "HK"
+  },
+  {
+    "symbol": "00700",
+    "name": "腾讯控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00762",
+    "name": "中国联通",
+    "market": "HK"
+  },
+  {
+    "symbol": "00772",
+    "name": "阅文集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "00780",
+    "name": "同程旅行",
+    "market": "HK"
+  },
+  {
+    "symbol": "00788",
+    "name": "中国铁塔",
+    "market": "HK"
+  },
+  {
+    "symbol": "00799",
+    "name": "IGG",
+    "market": "HK"
+  },
+  {
+    "symbol": "00823",
+    "name": "领展房产基金",
+    "market": "HK"
+  },
+  {
+    "symbol": "00836",
+    "name": "华润电力",
+    "market": "HK"
+  },
+  {
+    "symbol": "00857",
+    "name": "中国石油股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "00868",
+    "name": "信义玻璃",
+    "market": "HK"
+  },
+  {
+    "symbol": "00881",
+    "name": "中升控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "00883",
+    "name": "中国海洋石油",
+    "market": "HK"
+  },
+  {
+    "symbol": "00909",
+    "name": "明源云",
+    "market": "HK"
+  },
+  {
+    "symbol": "00914",
+    "name": "海螺水泥",
+    "market": "HK"
+  },
+  {
+    "symbol": "00916",
+    "name": "龙源电力",
+    "market": "HK"
+  },
+  {
+    "symbol": "00939",
+    "name": "建设银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "00941",
+    "name": "中国移动",
+    "market": "HK"
+  },
+  {
+    "symbol": "00960",
+    "name": "龙湖集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "00966",
+    "name": "中国太平",
+    "market": "HK"
+  },
+  {
+    "symbol": "00968",
+    "name": "信义光能",
+    "market": "HK"
+  },
+  {
+    "symbol": "00981",
+    "name": "中芯国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "00992",
+    "name": "联想集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "00998",
+    "name": "中信银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "01024",
+    "name": "快手-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "01038",
+    "name": "长江基建集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "01044",
+    "name": "恒安国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "01066",
+    "name": "威高股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "01088",
+    "name": "中国神华",
+    "market": "HK"
+  },
+  {
+    "symbol": "01093",
+    "name": "石药集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "01099",
+    "name": "国药控股",
+    "market": "HK"
+  },
+  {
+    "symbol": "01109",
+    "name": "华润置地",
+    "market": "HK"
+  },
+  {
+    "symbol": "01113",
+    "name": "长实集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "01177",
+    "name": "中国生物制药",
+    "market": "HK"
+  },
+  {
+    "symbol": "01193",
+    "name": "华润燃气",
+    "market": "HK"
+  },
+  {
+    "symbol": "01209",
+    "name": "华润万象生活",
+    "market": "HK"
+  },
+  {
+    "symbol": "01211",
+    "name": "比亚迪股份",
+    "market": "HK"
+  },
+  {
+    "symbol": "01288",
+    "name": "农业银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "01299",
+    "name": "友邦保险",
+    "market": "HK"
+  },
+  {
+    "symbol": "01308",
+    "name": "海丰国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "01336",
+    "name": "新华保险",
+    "market": "HK"
+  },
+  {
+    "symbol": "01339",
+    "name": "中国人民保险集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "01347",
+    "name": "华虹半导体",
+    "market": "HK"
+  },
+  {
+    "symbol": "01378",
+    "name": "中国宏桥",
+    "market": "HK"
+  },
+  {
+    "symbol": "01398",
+    "name": "工商银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "01448",
+    "name": "福寿园",
+    "market": "HK"
+  },
+  {
+    "symbol": "01458",
+    "name": "周黑鸭",
+    "market": "HK"
+  },
+  {
+    "symbol": "01475",
+    "name": "日清食品",
+    "market": "HK"
+  },
+  {
+    "symbol": "01478",
+    "name": "丘钛科技",
+    "market": "HK"
+  },
+  {
+    "symbol": "01530",
+    "name": "三生制药",
+    "market": "HK"
+  },
+  {
+    "symbol": "01548",
+    "name": "金斯瑞生物科技",
+    "market": "HK"
+  },
+  {
+    "symbol": "01618",
+    "name": "中国中冶",
+    "market": "HK"
+  },
+  {
+    "symbol": "01658",
+    "name": "邮储银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "01766",
+    "name": "中国中车",
+    "market": "HK"
+  },
+  {
+    "symbol": "01772",
+    "name": "赣锋锂业",
+    "market": "HK"
+  },
+  {
+    "symbol": "01776",
+    "name": "广发证券",
+    "market": "HK"
+  },
+  {
+    "symbol": "01787",
+    "name": "山东黄金",
+    "market": "HK"
+  },
+  {
+    "symbol": "01797",
+    "name": "新东方在线",
+    "market": "HK"
+  },
+  {
+    "symbol": "01810",
+    "name": "小米集团-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "01816",
+    "name": "中广核电力",
+    "market": "HK"
+  },
+  {
+    "symbol": "01818",
+    "name": "招金矿业",
+    "market": "HK"
+  },
+  {
+    "symbol": "01833",
+    "name": "平安好医生",
+    "market": "HK"
+  },
+  {
+    "symbol": "01876",
+    "name": "百威亚太",
+    "market": "HK"
+  },
+  {
+    "symbol": "01898",
+    "name": "中煤能源",
+    "market": "HK"
+  },
+  {
+    "symbol": "01919",
+    "name": "中远海控",
+    "market": "HK"
+  },
+  {
+    "symbol": "01928",
+    "name": "金沙中国有限公司",
+    "market": "HK"
+  },
+  {
+    "symbol": "01929",
+    "name": "周大福",
+    "market": "HK"
+  },
+  {
+    "symbol": "01997",
+    "name": "九龙仓置业",
+    "market": "HK"
+  },
+  {
+    "symbol": "02007",
+    "name": "碧桂园",
+    "market": "HK"
+  },
+  {
+    "symbol": "02013",
+    "name": "微盟集团",
+    "market": "HK"
+  },
+  {
+    "symbol": "02015",
+    "name": "理想汽车-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "02018",
+    "name": "瑞声科技",
+    "market": "HK"
+  },
+  {
+    "symbol": "02020",
+    "name": "安踏体育",
+    "market": "HK"
+  },
+  {
+    "symbol": "02057",
+    "name": "中通快递-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "02202",
+    "name": "万科企业",
+    "market": "HK"
+  },
+  {
+    "symbol": "02269",
+    "name": "药明生物",
+    "market": "HK"
+  },
+  {
+    "symbol": "02313",
+    "name": "申洲国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "02318",
+    "name": "中国平安",
+    "market": "HK"
+  },
+  {
+    "symbol": "02319",
+    "name": "蒙牛乳业",
+    "market": "HK"
+  },
+  {
+    "symbol": "02331",
+    "name": "李宁",
+    "market": "HK"
+  },
+  {
+    "symbol": "02333",
+    "name": "长城汽车",
+    "market": "HK"
+  },
+  {
+    "symbol": "02359",
+    "name": "药明康德",
+    "market": "HK"
+  },
+  {
+    "symbol": "02378",
+    "name": "保诚",
+    "market": "HK"
+  },
+  {
+    "symbol": "02382",
+    "name": "舜宇光学科技",
+    "market": "HK"
+  },
+  {
+    "symbol": "02388",
+    "name": "中银香港",
+    "market": "HK"
+  },
+  {
+    "symbol": "02518",
+    "name": "汽车之家-S",
+    "market": "HK"
+  },
+  {
+    "symbol": "02600",
+    "name": "中国铝业",
+    "market": "HK"
+  },
+  {
+    "symbol": "02601",
+    "name": "中国太保",
+    "market": "HK"
+  },
+  {
+    "symbol": "02607",
+    "name": "上海医药",
+    "market": "HK"
+  },
+  {
+    "symbol": "02618",
+    "name": "京东物流",
+    "market": "HK"
+  },
+  {
+    "symbol": "02628",
+    "name": "中国人寿",
+    "market": "HK"
+  },
+  {
+    "symbol": "02669",
+    "name": "中海物业",
+    "market": "HK"
+  },
+  {
+    "symbol": "02688",
+    "name": "新奥能源",
+    "market": "HK"
+  },
+  {
+    "symbol": "02696",
+    "name": "复星国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "02799",
+    "name": "中国华融",
+    "market": "HK"
+  },
+  {
+    "symbol": "02899",
+    "name": "紫金矿业",
+    "market": "HK"
+  },
+  {
+    "symbol": "03319",
+    "name": "雅生活服务",
+    "market": "HK"
+  },
+  {
+    "symbol": "03320",
+    "name": "华润医疗",
+    "market": "HK"
+  },
+  {
+    "symbol": "03328",
+    "name": "交通银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "03331",
+    "name": "维达国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "03333",
+    "name": "中国恒大",
+    "market": "HK"
+  },
+  {
+    "symbol": "03347",
+    "name": "泰格医药",
+    "market": "HK"
+  },
+  {
+    "symbol": "03606",
+    "name": "福耀玻璃",
+    "market": "HK"
+  },
+  {
+    "symbol": "03618",
+    "name": "重庆农村商业银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "03668",
+    "name": "兖矿能源",
+    "market": "HK"
+  },
+  {
+    "symbol": "03690",
+    "name": "美团-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "03692",
+    "name": "翰森制药",
+    "market": "HK"
+  },
+  {
+    "symbol": "03800",
+    "name": "协鑫科技",
+    "market": "HK"
+  },
+  {
+    "symbol": "03808",
+    "name": "中国重汽",
+    "market": "HK"
+  },
+  {
+    "symbol": "03888",
+    "name": "金山软件",
+    "market": "HK"
+  },
+  {
+    "symbol": "03899",
+    "name": "中集安瑞科",
+    "market": "HK"
+  },
+  {
+    "symbol": "03968",
+    "name": "招商银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "03988",
+    "name": "中国银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "03993",
+    "name": "洛阳钼业",
+    "market": "HK"
+  },
+  {
+    "symbol": "06030",
+    "name": "中信证券",
+    "market": "HK"
+  },
+  {
+    "symbol": "06060",
+    "name": "众安在线",
+    "market": "HK"
+  },
+  {
+    "symbol": "06098",
+    "name": "碧桂园服务",
+    "market": "HK"
+  },
+  {
+    "symbol": "06110",
+    "name": "滔搏",
+    "market": "HK"
+  },
+  {
+    "symbol": "06160",
+    "name": "百济神州",
+    "market": "HK"
+  },
+  {
+    "symbol": "06185",
+    "name": "康龙化成",
+    "market": "HK"
+  },
+  {
+    "symbol": "06186",
+    "name": "中国飞鹤",
+    "market": "HK"
+  },
+  {
+    "symbol": "06618",
+    "name": "京东健康",
+    "market": "HK"
+  },
+  {
+    "symbol": "06690",
+    "name": "海尔智家",
+    "market": "HK"
+  },
+  {
+    "symbol": "06699",
+    "name": "时代电气",
+    "market": "HK"
+  },
+  {
+    "symbol": "06808",
+    "name": "高鑫零售",
+    "market": "HK"
+  },
+  {
+    "symbol": "06818",
+    "name": "中国光大银行",
+    "market": "HK"
+  },
+  {
+    "symbol": "06823",
+    "name": "香港电讯-SS",
+    "market": "HK"
+  },
+  {
+    "symbol": "06855",
+    "name": "亚洲水泥(中国)",
+    "market": "HK"
+  },
+  {
+    "symbol": "06862",
+    "name": "海底捞",
+    "market": "HK"
+  },
+  {
+    "symbol": "06865",
+    "name": "福莱特玻璃",
+    "market": "HK"
+  },
+  {
+    "symbol": "06881",
+    "name": "中国银河",
+    "market": "HK"
+  },
+  {
+    "symbol": "06886",
+    "name": "HTSC",
+    "market": "HK"
+  },
+  {
+    "symbol": "06969",
+    "name": "思摩尔国际",
+    "market": "HK"
+  },
+  {
+    "symbol": "09618",
+    "name": "京东集团-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09626",
+    "name": "哔哩哔哩-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09633",
+    "name": "农夫山泉",
+    "market": "HK"
+  },
+  {
+    "symbol": "09666",
+    "name": "金山云",
+    "market": "HK"
+  },
+  {
+    "symbol": "09698",
+    "name": "万国数据-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09868",
+    "name": "小鹏汽车-W",
+    "market": "HK"
+  },
+  {
+    "symbol": "09888",
+    "name": "百度集团-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09896",
+    "name": "名创优品",
+    "market": "HK"
+  },
+  {
+    "symbol": "09899",
+    "name": "云音乐",
+    "market": "HK"
+  },
+  {
+    "symbol": "09901",
+    "name": "新东方-S",
+    "market": "HK"
+  },
+  {
+    "symbol": "09961",
+    "name": "携程集团-S",
+    "market": "HK"
+  },
+  {
+    "symbol": "09966",
+    "name": "ASMPT",
+    "market": "HK"
+  },
+  {
+    "symbol": "09987",
+    "name": "百胜中国",
+    "market": "HK"
+  },
+  {
+    "symbol": "09988",
+    "name": "阿里巴巴-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09990",
+    "name": "珍酒李渡",
+    "market": "HK"
+  },
+  {
+    "symbol": "09991",
+    "name": "宝尊电商-SW",
+    "market": "HK"
+  },
+  {
+    "symbol": "09992",
+    "name": "泡泡玛特",
+    "market": "HK"
+  },
+  {
+    "symbol": "09995",
+    "name": "荣昌生物-B",
+    "market": "HK"
+  },
+  {
+    "symbol": "09996",
+    "name": "沛嘉医疗-B",
+    "market": "HK"
+  },
+  {
+    "symbol": "09997",
+    "name": "康基医疗",
+    "market": "HK"
+  },
+  {
+    "symbol": "09999",
+    "name": "网易-S",
+    "market": "HK"
+  }
+]
