@@ -335,7 +335,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
     }
     
     // 从完整数据库加载（包含长桥 API 更新的价格）
-    fetch('/trading-app/data/stocks.json?v=20260321v5')
+    fetch('/trading-app/data/stocks.json?v=20260321v6')
       .then(res => res.json())
       .then((data: StockFullInfo[]) => {
         const found = data.find(s => s.symbol === symbol);
@@ -395,6 +395,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
     name: stockInfo?.name || mockStock?.name || symbol,
     nameEn: mockStock?.nameEn || stockInfo?.alias || '',
     market: market as 'HK' | 'US',
+    lotSize: stockInfo?.lotSize,  // 每手股数
     ...priceData,
   };
 
