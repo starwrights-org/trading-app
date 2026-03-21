@@ -692,8 +692,8 @@ function TradeModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-end justify-center">
-      <div className={`w-full max-w-lg ${colors.bgCard} rounded-t-3xl`}>
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center">
+      <div className="w-full max-w-lg bg-gray-900 dark:bg-gray-900 rounded-t-3xl">
         {result ? (
           <div className="p-6 text-center">
             <div className={`text-5xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
