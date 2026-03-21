@@ -33,16 +33,23 @@ export const MOCK_ORDERS: Order[] = [
   { id: 'ORD003', symbol: 'TSLA', name: '特斯拉', market: 'US', side: 'sell', orderType: 'market', quantity: 20, filledQuantity: 20, filledPrice: 365.10, status: 'filled', createdAt: '2026-03-20T22:15:00Z', updatedAt: '2026-03-20T22:15:03Z' },
 ];
 
-// Mock 账户数据
+// Mock 账户数据 - 统一资产数据
 export const MOCK_ACCOUNT: AccountBalance = {
   currency: 'HKD',
-  totalAssets: 1250680.50,
-  cashBalance: 350000.00,
-  marketValue: 900680.50,
+  totalAssets: 799683.15,
+  cashBalance: 727183.29,
+  marketValue: 72499.86,
   buyingPower: 700000.00,
   frozenCash: 50000.00,
-  todayProfitLoss: 12580.00,
-  totalProfitLoss: 85600.00,
+  todayProfitLoss: -1667.20,
+  totalProfitLoss: -143.66,
+};
+
+// 分币种现金余额
+export const CASH_BALANCES = {
+  HKD: 20576.77,
+  USD: 90673.71,
+  CNH: 0,
 };
 
 // Mock K线数据生成

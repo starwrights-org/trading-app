@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
+import { CASH_BALANCES } from '@/lib/mockData';
 
 // 货币配置
 const CURRENCIES = {
-  HKD: { name: '港元', flag: '🇭🇰', balance: 20576.77 },
-  USD: { name: '美元', flag: '🇺🇸', balance: 90673.71 },
-  CNH: { name: '离岸人民币', flag: '🇨🇳', balance: 0 },
+  HKD: { name: '港元', flag: '🇭🇰', balance: CASH_BALANCES.HKD },
+  USD: { name: '美元', flag: '🇺🇸', balance: CASH_BALANCES.USD },
+  CNH: { name: '离岸人民币', flag: '🇨🇳', balance: CASH_BALANCES.CNH },
 };
 
 // 汇率

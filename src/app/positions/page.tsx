@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { MOCK_POSITIONS } from '@/lib/mockData';
+import { MOCK_POSITIONS, MOCK_ACCOUNT } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
 import BottomNav from '@/components/BottomNav';
 
@@ -68,7 +68,7 @@ export default function PositionsPage() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
               <span className="text-4xl font-bold">
-                {showAmount ? totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '******'}
+                {showAmount ? MOCK_ACCOUNT.totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2 }) : '******'}
               </span>
               <button onClick={() => setShowAmount(!showAmount)} className={colors.textMuted}>
                 {showAmount ? '👁' : '👁‍🗨'}
@@ -76,8 +76,8 @@ export default function PositionsPage() {
             </div>
             <div className="text-right">
               <div className={`text-xs ${colors.textMuted} mb-1`}>当日盈亏 ↗</div>
-              <div className={`text-xl font-medium ${todayPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {todayPL >= 0 ? '+' : ''}{todayPL.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              <div className={`text-xl font-medium ${MOCK_ACCOUNT.todayProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {MOCK_ACCOUNT.todayProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.todayProfitLoss.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </div>
             </div>
           </div>
@@ -85,17 +85,17 @@ export default function PositionsPage() {
           <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
             <div>
               <div className={`${colors.textMuted} mb-1`}>持仓总市值</div>
-              <div className="font-medium">{positionValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+              <div className="font-medium">{MOCK_ACCOUNT.marketValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
             </div>
             <div>
               <div className={`${colors.textMuted} mb-1`}>持仓总盈亏</div>
-              <div className={`font-medium ${positionPL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                {positionPL >= 0 ? '+' : ''}{positionPL.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              <div className={`font-medium ${MOCK_ACCOUNT.totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {MOCK_ACCOUNT.totalProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.totalProfitLoss.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </div>
             </div>
             <div className="text-right">
               <div className={`${colors.textMuted} mb-1`}>现金 &gt;</div>
-              <div className="font-medium">{cashBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+              <div className="font-medium">{MOCK_ACCOUNT.cashBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
             </div>
           </div>
         </div>
