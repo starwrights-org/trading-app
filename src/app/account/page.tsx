@@ -1,12 +1,31 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
 import BottomNav from '@/components/BottomNav';
+
+// 收藏工具函数
+const FAVORITES_KEY = 'trading_app_favorites';
+
+function getFavoritesCount(): number {
+  if (typeof window === 'undefined') return 0;
+  try {
+    const data = localStorage.getItem(FAVORITES_KEY);
+    return data ? JSON.parse(data).length : 0;
+  } catch {
+    return 0;
+  }
+}
 
 export default function AccountPage() {
   const { theme, toggleTheme } = useTheme();
   const colors = themeColors[theme];
+  const [favCount, setFavCount] = useState(0);
+
+  useEffect(() => {
+    setFavCount(getFavoritesCount());
+  }, []);
 
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
@@ -61,10 +80,10 @@ export default function AccountPage() {
             <div className="text-xl font-bold">0</div>
             <div className={`text-sm ${colors.textMuted}`}>关注者</div>
           </div>
-          <div className="text-center flex-1">
-            <div className="text-xl font-bold">1</div>
-            <div className={`text-sm ${colors.textMuted}`}>我的收藏</div>
-          </div>
+          <Link href="/favorites" className="text-center flex-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg py-1 transition-colors">
+            <div className="text-xl font-bold text-red-500">{favCount}</div>
+            <div className={`text-sm ${colors.textMuted}`}>我的收藏 ❤️</div>
+          </Link>
           <div className="text-center flex-1">
             <div className="text-xl font-bold">0</div>
             <div className={`text-sm ${colors.textMuted}`}>浏览记录</div>
