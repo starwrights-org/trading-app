@@ -1,39 +1,36 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
-import { MOCK_STOCKS } from '@/lib/mockData';
-import { Stock } from '@/lib/types';
+import { useState, useMemo, useEffect } from 'react';
 import { useTheme, themeColors } from '@/lib/theme';
 import BottomNav from '@/components/BottomNav';
 
-// 迷你走势图组件
-function MiniChart({ trend, isUp }: { trend: number[]; isUp: boolean }) {
-  const max = Math.max(...trend);
-  const min = Math.min(...trend);
-  const range = max - min || 1;
-  
-  const points = trend.map((val, i) => {
-    const x = (i / (trend.length - 1)) * 50;
-    const y = 18 - ((val - min) / range) * 14;
-    return `${x},${y}`;
-  }).join(' ');
+// 收藏工具函数
+const FAVORITES_KEY = 'trading_app_favorites';
 
-  return (
-    <svg width="50" height="20" className="flex-shrink-0">
-      <polyline
-        points={points}
-        fill="none"
-        stroke={isUp ? '#10b981' : '#ef4444'}
-        strokeWidth="1.2"
-      />
-    </svg>
-  );
+function getFavorites(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const data = localStorage.getItem(FAVORITES_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+// 股票信息类型
+interface StockInfo {
+  symbol: string;
+  name: string;
+  market: 'US' | 'HK';
+  price?: number;
+  change?: number;
+  changePercent?: number;
+  prevClose?: number;
 }
 
 // 静态迷你走势图（无需 hooks）
 function MiniChartStatic({ isUp, seed }: { isUp: boolean; seed: number }) {
-  // 基于 seed 生成固定的随机走势
   const points = [];
   let val = 100;
   for (let i = 0; i < 20; i++) {
@@ -55,36 +52,14 @@ function MiniChartStatic({ isUp, seed }: { isUp: boolean; seed: number }) {
   );
 }
 
-// 生成模拟走势数据
-function generateTrend(): number[] {
-  const trend: number[] = [];
-  let val = 100;
-  for (let i = 0; i < 20; i++) {
-    val += (Math.random() - 0.5) * 5;
-    trend.push(val);
-  }
-  return trend;
-}
-
-// 自选股数据（扩展）
-const WATCHLIST_US = [
-  { name: '投资组合标普 500 指...', symbol: 'SPYM', market: 'US', price: 76.330, prevClose: 76.920, change: -0.59, changePercent: -1.43, afterHoursChange: 0.77 },
-  { name: '纳斯达克 100 指数 ETF...', symbol: 'QQQM', market: 'US', price: 239.640, prevClose: 241.721, change: -2.08, changePercent: -1.87, afterHoursChange: 0.87 },
-  { name: '标普 500 ETF - SPDR', symbol: 'SPY', market: 'US', price: 648.570, prevClose: 653.400, change: -4.83, changePercent: -1.43, afterHoursChange: 0.74 },
-  { name: '美债市场指数 ETF - Va...', symbol: 'BND', market: 'US', price: 73.170, prevClose: 73.160, change: 0.01, changePercent: -0.80, afterHoursChange: -0.01 },
-  { name: '纳斯达克综合指数 ETF...', symbol: 'ONEQ', market: 'US', price: 85.160, prevClose: 86.080, change: -0.92, changePercent: -1.99, afterHoursChange: 1.08 },
-  { name: '纳指 100 ETF - Invesco', symbol: 'QQQ', market: 'US', price: 582.060, prevClose: 587.120, change: -5.06, changePercent: -1.85, afterHoursChange: 0.87 },
-  { name: '英伟达', symbol: 'NVDA', market: 'US', price: 172.700, prevClose: 174.870, change: -2.17, changePercent: -3.28, afterHoursChange: 1.26 },
-  { name: '阿里巴巴', symbol: 'BABA', market: 'US', price: 122.410, prevClose: 123.550, change: -1.14, changePercent: -1.99, afterHoursChange: 0.93 },
-];
-
-const WATCHLIST_HK = [
-  { name: '腾讯控股', symbol: '00700', market: 'HK', price: 508.000, prevClose: 511.000, change: -3.00, changePercent: -0.59, afterHoursChange: 0 },
-  { name: '阿里巴巴-SW', symbol: '09988', market: 'HK', price: 123.700, prevClose: 125.500, change: -1.80, changePercent: -1.43, afterHoursChange: 0 },
-  { name: '美团-W', symbol: '03690', market: 'HK', price: 79.150, prevClose: 81.500, change: -2.35, changePercent: -2.88, afterHoursChange: 0 },
-  { name: '小米集团-W', symbol: '01810', market: 'HK', price: 33.200, prevClose: 34.000, change: -0.80, changePercent: -2.35, afterHoursChange: 0 },
-  { name: '香港交易所', symbol: '00388', market: 'HK', price: 396.000, prevClose: 390.000, change: 6.00, changePercent: 1.54, afterHoursChange: 0 },
-  { name: '中国平安', symbol: '02318', market: 'HK', price: 41.850, prevClose: 42.500, change: -0.65, changePercent: -1.53, afterHoursChange: 0 },
+// 默认自选股（用户未添加收藏时显示）
+const DEFAULT_WATCHLIST = [
+  { symbol: 'NVDA', name: '英伟达', market: 'US' as const, price: 172.70, changePercent: -3.28, prevClose: 174.87 },
+  { symbol: 'BABA', name: '阿里巴巴', market: 'US' as const, price: 122.41, changePercent: -1.99, prevClose: 123.55 },
+  { symbol: 'SPY', name: '标普 500 ETF - SPDR', market: 'US' as const, price: 648.57, changePercent: -1.43, prevClose: 653.40 },
+  { symbol: '00700', name: '腾讯控股', market: 'HK' as const, price: 508.00, changePercent: -0.59, prevClose: 511.00 },
+  { symbol: '09988', name: '阿里巴巴-SW', market: 'HK' as const, price: 123.70, changePercent: -1.43, prevClose: 125.50 },
+  { symbol: '00005', name: '汇丰控股', market: 'HK' as const, price: 124.50, changePercent: 0.40, prevClose: 124.00 },
 ];
 
 export default function WatchlistPage() {
@@ -94,27 +69,70 @@ export default function WatchlistPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'us' | 'hk'>('all');
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'change'>('name');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [allStocks, setAllStocks] = useState<StockInfo[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // 根据 Tab 筛选数据
+  // 加载收藏列表和股票数据
+  useEffect(() => {
+    const favList = getFavorites();
+    setFavorites(favList);
+    
+    // 加载完整股票数据
+    fetch('/trading-app/data/stocks.json?v=20260322')
+      .then(res => res.json())
+      .then((data: StockInfo[]) => {
+        setAllStocks(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  // 根据收藏列表获取自选股
   const watchlist = useMemo(() => {
-    let list: typeof WATCHLIST_US = [];
-    if (activeTab === 'all') {
-      list = [...WATCHLIST_US, ...WATCHLIST_HK];
-    } else if (activeTab === 'us') {
-      list = WATCHLIST_US;
+    let list: StockInfo[] = [];
+    
+    if (favorites.length === 0) {
+      // 没有收藏，显示默认推荐
+      list = DEFAULT_WATCHLIST;
     } else {
-      list = WATCHLIST_HK;
+      // 从完整股票库中获取收藏的股票
+      list = favorites.map(symbol => {
+        const found = allStocks.find(s => s.symbol === symbol);
+        if (found) {
+          return {
+            ...found,
+            prevClose: found.price ? found.price * (1 - (found.changePercent || 0) / 100) : undefined,
+          };
+        }
+        // 找不到则创建占位
+        return {
+          symbol,
+          name: symbol,
+          market: symbol.match(/^\d/) ? 'HK' as const : 'US' as const,
+          price: undefined,
+          changePercent: undefined,
+          prevClose: undefined,
+        };
+      });
+    }
+
+    // 按 Tab 筛选
+    if (activeTab === 'us') {
+      list = list.filter(s => s.market === 'US');
+    } else if (activeTab === 'hk') {
+      list = list.filter(s => s.market === 'HK');
     }
 
     // 排序
     return [...list].sort((a, b) => {
       let cmp = 0;
       if (sortBy === 'name') cmp = a.name.localeCompare(b.name);
-      else if (sortBy === 'price') cmp = a.price - b.price;
-      else cmp = a.changePercent - b.changePercent;
+      else if (sortBy === 'price') cmp = (a.price || 0) - (b.price || 0);
+      else cmp = (a.changePercent || 0) - (b.changePercent || 0);
       return sortDir === 'asc' ? cmp : -cmp;
     });
-  }, [activeTab, sortBy, sortDir]);
+  }, [favorites, allStocks, activeTab, sortBy, sortDir]);
 
   const toggleSort = (field: typeof sortBy) => {
     if (sortBy === field) {
@@ -124,6 +142,15 @@ export default function WatchlistPage() {
       setSortDir('asc');
     }
   };
+
+  // 统计各市场数量
+  const usCount = favorites.length > 0 
+    ? favorites.filter(s => !s.match(/^\d/)).length 
+    : DEFAULT_WATCHLIST.filter(s => s.market === 'US').length;
+  const hkCount = favorites.length > 0 
+    ? favorites.filter(s => s.match(/^\d/)).length 
+    : DEFAULT_WATCHLIST.filter(s => s.market === 'HK').length;
+  const allCount = usCount + hkCount;
 
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
@@ -135,6 +162,11 @@ export default function WatchlistPage() {
             <Link href="/search" className={colors.textSecondary}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </Link>
+            <Link href="/favorites" className="text-red-500">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </Link>
             <button className={colors.textSecondary}>
@@ -156,7 +188,7 @@ export default function WatchlistPage() {
                   : theme === 'dark' ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'
               }`}
             >
-              全部
+              全部 ({allCount})
             </button>
             <button
               onClick={() => setActiveTab('us')}
@@ -166,7 +198,7 @@ export default function WatchlistPage() {
                   : theme === 'dark' ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'
               }`}
             >
-              美股
+              美股 ({usCount})
             </button>
             <button
               onClick={() => setActiveTab('hk')}
@@ -176,12 +208,24 @@ export default function WatchlistPage() {
                   : theme === 'dark' ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'
               }`}
             >
-              港股
+              港股 ({hkCount})
             </button>
             <div className="flex-1" />
-            <span className={colors.textMuted}>∨</span>
+            <Link href="/favorites" className="text-red-500 text-sm">
+              ❤️ 管理
+            </Link>
           </div>
         </div>
+
+        {/* 提示信息 */}
+        {favorites.length === 0 && (
+          <div className={`mx-4 mb-3 p-3 rounded-lg ${colors.bgCard} border ${colors.border}`}>
+            <div className="flex items-center gap-2 text-sm">
+              <span>💡</span>
+              <span className={colors.textMuted}>这是默认推荐，点击股票详情页的 ❤️ 添加自选</span>
+            </div>
+          </div>
+        )}
 
         {/* 工具栏 */}
         <div className={`px-4 py-2 flex items-center gap-4 border-b ${colors.border}`}>
@@ -215,47 +259,61 @@ export default function WatchlistPage() {
       </div>
 
       <div className="max-w-lg mx-auto">
+        {/* 加载状态 */}
+        {loading && (
+          <div className="flex items-center justify-center py-10">
+            <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+          </div>
+        )}
+
         {/* 股票列表 */}
-        {watchlist.map((stock, idx) => {
-          const isUp = stock.changePercent >= 0;
+        {!loading && watchlist.map((stock, idx) => {
+          const isUp = (stock.changePercent || 0) >= 0;
+          const price = stock.price || 0;
+          const prevClose = stock.prevClose || price;
+          const changePercent = stock.changePercent || 0;
           
           return (
             <Link
               key={`${stock.market}-${stock.symbol}`}
-              href={`/stock/${stock.market}/${stock.symbol}`}
+              href={`/stock/${stock.market}/${stock.symbol}/`}
               className={`grid grid-cols-12 gap-2 px-4 py-3 border-b ${colors.borderLight} ${colors.hover} transition items-center`}
             >
               {/* 名称/代码 */}
               <div className="col-span-5">
                 <div className={`font-medium ${colors.text} truncate`}>{stock.name}</div>
                 <div className={`text-xs ${colors.textMuted} flex items-center gap-1`}>
-                  <span className="text-blue-500">{stock.market}</span>
+                  <span className={stock.market === 'US' ? 'text-blue-500' : 'text-red-500'}>{stock.market}</span>
                   <span>{stock.symbol}</span>
-                  <span className="text-yellow-500">🏆</span>
+                  {favorites.includes(stock.symbol) && <span className="text-red-500">❤️</span>}
                 </div>
               </div>
 
               {/* 迷你走势图 */}
               <div className="col-span-1 flex justify-center">
-                <MiniChartStatic isUp={isUp} seed={idx} />
+                <MiniChartStatic isUp={isUp} seed={idx + stock.symbol.charCodeAt(0)} />
               </div>
 
               {/* 最新价 / 前收 */}
               <div className="col-span-2 text-right">
-                <div className={`font-medium ${colors.text}`}>{stock.price.toFixed(3)}</div>
-                <div className={`text-xs ${colors.textMuted}`}>{stock.prevClose.toFixed(3)}</div>
+                <div className={`font-medium ${colors.text}`}>
+                  {price > 0 ? price.toFixed(stock.market === 'HK' ? 3 : 2) : '--'}
+                </div>
+                <div className={`text-xs ${colors.textMuted}`}>
+                  {prevClose > 0 ? prevClose.toFixed(stock.market === 'HK' ? 3 : 2) : '--'}
+                </div>
               </div>
 
-              {/* 涨跌幅 / 盘后 */}
+              {/* 涨跌幅 */}
               <div className="col-span-4 text-right">
                 <div className={`inline-block px-2 py-0.5 rounded text-sm font-medium ${
                   isUp ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
                 }`}>
-                  {isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                  {changePercent !== 0 ? `${isUp ? '+' : ''}${changePercent.toFixed(2)}%` : '--'}
                 </div>
                 {stock.market === 'US' && (
                   <div className={`text-xs ${colors.textMuted} mt-1`}>
-                    {stock.afterHoursChange >= 0 ? '+' : ''}{stock.afterHoursChange.toFixed(2)}% <span className="text-cyan-500">盘后</span>
+                    <span className="text-cyan-500">盘后</span>
                   </div>
                 )}
               </div>
@@ -263,13 +321,33 @@ export default function WatchlistPage() {
           );
         })}
 
-        {/* 底部新闻提示 */}
-        <div className={`mx-4 mt-4 p-3 rounded-xl ${colors.bgCard} border ${colors.border}`}>
-          <div className="flex items-center gap-2">
-            <span className="text-red-500 font-bold text-sm">N</span>
-            <span className={`text-sm ${colors.text}`}>小鹏（4Q25 纪要）：IRON 机器人目标到 2026 年底...</span>
+        {/* 空状态 */}
+        {!loading && watchlist.length === 0 && (
+          <div className="text-center py-20">
+            <div className="text-5xl mb-4">📈</div>
+            <div className={`text-lg ${colors.textMuted}`}>
+              {activeTab === 'us' ? '暂无美股自选' : activeTab === 'hk' ? '暂无港股自选' : '暂无自选股票'}
+            </div>
+            <Link href="/search" className="inline-block mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg">
+              去发现股票
+            </Link>
           </div>
-        </div>
+        )}
+
+        {/* 底部提示 */}
+        {!loading && watchlist.length > 0 && (
+          <div className={`mx-4 mt-4 p-3 rounded-xl ${colors.bgCard} border ${colors.border}`}>
+            <div className="flex items-center gap-2">
+              <span className="text-red-500">❤️</span>
+              <span className={`text-sm ${colors.textMuted}`}>
+                {favorites.length > 0 
+                  ? `已收藏 ${favorites.length} 只股票，在详情页点击 ❤️ 管理收藏`
+                  : '点击股票详情页右上角 ❤️ 添加自选'
+                }
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav active="home" />
