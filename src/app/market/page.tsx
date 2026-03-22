@@ -108,7 +108,7 @@ export default function MarketPage() {
   const colors = themeColors[theme];
   
   // 底部大 Tab：发现/市场/基金
-  const [mainTab, setMainTab] = useState<'discover' | 'market' | 'fund'>('discover');
+  const [mainTab, setMainTab] = useState<'discover' | 'market' | 'fund' | 'bond' | 'structured' | 'insurance'>('discover');
   // 市场内的小 Tab：美股/港股
   const [marketTab, setMarketTab] = useState<'us' | 'hk'>('us');
   const [earningsTab, setEarningsTab] = useState<'forecast' | 'watchlist'>('forecast');
@@ -124,6 +124,9 @@ export default function MarketPage() {
     { key: 'discover', label: '发现' },
     { key: 'market', label: '市场' },
     { key: 'fund', label: '基金' },
+    { key: 'bond', label: '债券' },
+    { key: 'structured', label: '结构化产品' },
+    { key: 'insurance', label: '保险' },
   ];
 
   return (
@@ -131,13 +134,13 @@ export default function MarketPage() {
       {/* Header */}
       <div className={`${colors.bg} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
-          {/* 主 Tab：发现/市场/基金 */}
-          <div className="flex gap-4">
+          {/* 主 Tab：发现/市场/基金/债券/结构化产品/保险 */}
+          <div className="flex gap-4 overflow-x-auto flex-1 mr-4 scrollbar-hide">
             {mainTabs.map(tab => (
               <button
                 key={tab.key}
                 onClick={() => setMainTab(tab.key as typeof mainTab)}
-                className={`text-lg font-medium transition ${
+                className={`text-lg font-medium transition whitespace-nowrap ${
                   mainTab === tab.key ? `${colors.text} font-bold` : colors.textMuted
                 }`}
               >
@@ -145,7 +148,7 @@ export default function MarketPage() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-shrink-0">
             <Link href="/search" className={colors.textSecondary}>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -564,6 +567,99 @@ export default function MarketPage() {
               </div>
             </div>
           </>
+        )}
+
+        {/* ==================== 债券 Tab ==================== */}
+        {mainTab === 'bond' && (
+          <div className="py-8">
+            <div className="text-center">
+              <div className="text-6xl mb-4">📜</div>
+              <h2 className={`text-xl font-bold ${colors.text} mb-2`}>债券投资</h2>
+              <p className={`${colors.textMuted} mb-6`}>美国国债、企业债、高收益债券</p>
+              <div className={`${colors.bgCard} rounded-xl p-4 mx-4`}>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-green-500">4.25%</div>
+                    <div className={`text-xs ${colors.textMuted}`}>美国10年期国债</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-orange-500">5.50%</div>
+                    <div className={`text-xs ${colors.textMuted}`}>投资级企业债</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-red-500">7.80%</div>
+                    <div className={`text-xs ${colors.textMuted}`}>高收益债券</div>
+                  </div>
+                </div>
+              </div>
+              <p className={`text-sm ${colors.textMuted} mt-6`}>敬请期待，功能开发中...</p>
+            </div>
+          </div>
+        )}
+
+        {/* ==================== 结构化产品 Tab ==================== */}
+        {mainTab === 'structured' && (
+          <div className="py-8">
+            <div className="text-center">
+              <div className="text-6xl mb-4">🏗️</div>
+              <h2 className={`text-xl font-bold ${colors.text} mb-2`}>结构化产品</h2>
+              <p className={`${colors.textMuted} mb-6`}>ELN、FCN、雪球等结构化票据</p>
+              <div className={`${colors.bgCard} rounded-xl p-4 mx-4`}>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className={colors.text}>股票挂钩票据 (ELN)</span>
+                    <span className="text-orange-500 font-bold">年化 8-15%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className={colors.text}>固定派息票据 (FCN)</span>
+                    <span className="text-orange-500 font-bold">年化 10-20%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className={colors.text}>雪球结构</span>
+                    <span className="text-orange-500 font-bold">年化 15-25%</span>
+                  </div>
+                </div>
+              </div>
+              <p className={`text-sm ${colors.textMuted} mt-6`}>敬请期待，功能开发中...</p>
+            </div>
+          </div>
+        )}
+
+        {/* ==================== 保险 Tab ==================== */}
+        {mainTab === 'insurance' && (
+          <div className="py-8">
+            <div className="text-center">
+              <div className="text-6xl mb-4">🛡️</div>
+              <h2 className={`text-xl font-bold ${colors.text} mb-2`}>保险产品</h2>
+              <p className={`${colors.textMuted} mb-6`}>储蓄险、人寿险、医疗险</p>
+              <div className={`${colors.bgCard} rounded-xl p-4 mx-4`}>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">💰</span>
+                      <span className={colors.text}>储蓄分红险</span>
+                    </div>
+                    <span className="text-green-500 font-bold">稳定增值</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">❤️</span>
+                      <span className={colors.text}>人寿保障险</span>
+                    </div>
+                    <span className="text-blue-500 font-bold">保障全面</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🏥</span>
+                      <span className={colors.text}>高端医疗险</span>
+                    </div>
+                    <span className="text-purple-500 font-bold">全球理赔</span>
+                  </div>
+                </div>
+              </div>
+              <p className={`text-sm ${colors.textMuted} mt-6`}>敬请期待，功能开发中...</p>
+            </div>
+          </div>
         )}
       </div>
 
