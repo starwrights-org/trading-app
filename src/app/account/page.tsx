@@ -20,6 +20,8 @@ function getFavoritesCount(): number {
 export default function AccountPage() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark' || theme === 'midnight';
+  const isMidnight = theme === 'midnight';
+  const bgColor = isMidnight ? 'bg-[#0d1421]' : isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const [favCount, setFavCount] = useState(0);
 
   useEffect(() => {

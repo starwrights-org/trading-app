@@ -18,7 +18,9 @@ const HISTORY_KEY = 'trading_search_history';
 
 export default function SearchPage() {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === 'dark' || theme === 'midnight';
+  const isMidnight = theme === 'midnight';
+  const bgColor = isMidnight ? 'bg-[#0d1421]' : isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   
   const [query, setQuery] = useState('');
   const [allStocks, setAllStocks] = useState<Stock[]>([]);

@@ -438,7 +438,7 @@ function isFavorite(symbol: string): boolean {
 export default function StockDetailClient({ market, symbol }: { market: string; symbol: string }) {
   const { theme } = useTheme();
   const colors = themeColors[theme];
-  const isDark = theme === 'dark';
+  const isDark = theme === 'dark' || theme === 'midnight';
   
   const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);

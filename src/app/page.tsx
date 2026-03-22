@@ -79,7 +79,9 @@ const DEFAULT_WATCHLIST = [
 export default function WatchlistPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
-  const isDark = theme === 'dark';
+  const isDark = theme === 'dark' || theme === 'midnight';
+  const isMidnight = theme === 'midnight';
+  const bgColor = isMidnight ? 'bg-[#0d1421]' : isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   
   const [activeTab, setActiveTab] = useState<'all' | 'us' | 'hk'>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -120,9 +122,9 @@ export default function WatchlistPage() {
   };
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} ${colors.text} pb-20`}>
+    <main className={`min-h-screen ${bgColor} ${colors.text} pb-20`}>
       {/* Header - 简洁现代 */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+      <div className={`${bgColor} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold tracking-tight">自选</h1>
