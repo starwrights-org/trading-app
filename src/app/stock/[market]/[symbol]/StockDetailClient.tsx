@@ -541,195 +541,131 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const turnover = (stock.volume * stock.price / 100000000).toFixed(2);
 
   return (
-    <main className={`min-h-screen ${colors.bg} ${colors.text} pb-24`}>
-      {/* Header - 长桥风格 */}
-      <div className={`${colors.bg} sticky top-0 z-10`}>
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center">
-          <Link href="/search" className={`mr-4 ${colors.textSecondary}`}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <div className="flex-1 text-center">
-            <div className="font-bold">{stock.symbol} {stock.name}</div>
-            <div className={`text-xs ${colors.textMuted} flex items-center justify-center gap-2`}>
-              <span>{market === 'HK' ? '港股' : '美股'}</span>
-              <span className={marketStatus.color}>● {marketStatus.status}</span>
-              <span>{marketStatus.settlement}</span>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} ${colors.text} pb-24`}>
+      {/* Header - 现代简洁 */}
+      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+        <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
+          <div className="flex items-center">
+            <Link href="/" className={`p-2 -ml-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+              <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <div className="flex-1 text-center">
+              <div className="font-semibold">{stock.name}</div>
+              <div className={`text-xs ${colors.textMuted} flex items-center justify-center gap-2`}>
+                <span className={`px-1.5 py-0.5 rounded ${market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                  {market}
+                </span>
+                <span>{stock.symbol}</span>
+                <span className={marketStatus.color}>• {marketStatus.status}</span>
+              </div>
             </div>
-          </div>
-          <button onClick={handleToggleFavorite} className="flex flex-col items-center text-red-500 hover:scale-110 transition-transform">
-            {favorited ? (
-              /* 实心爱心 - 已收藏 */
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <button onClick={handleToggleFavorite} className={`p-2 -mr-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+              <svg className={`w-5 h-5 ${favorited ? 'text-rose-500' : 'opacity-40'}`} fill={favorited ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
-            ) : (
-              /* 空心爱心 - 未收藏 */
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            )}
-            <span className="text-xs">258k</span>
-          </button>
-        </div>
-        
-        {/* 行情/全景/财务 Tab */}
-        <div className="max-w-lg mx-auto flex border-b border-gray-200 dark:border-gray-700">
-          {['行情', '全景', '财务'].map((tab, i) => (
-            <button key={tab} className={`flex-1 py-2 text-center ${i === 0 ? 'border-b-2 border-black dark:border-white font-bold' : colors.textMuted}`}>
-              {tab}
             </button>
-          ))}
+          </div>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto">
-        {/* 价格信息 - 长桥风格 */}
-        <div className="px-4 pt-4">
-          <div className="flex items-start justify-between">
+      <div className="max-w-lg mx-auto px-5">
+        {/* 价格卡片 */}
+        <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
+          <div className="flex items-end justify-between mb-4">
             <div>
-              <div className="flex items-baseline gap-2">
-                <span className={`text-4xl font-bold ${isUp ? 'text-green-500' : 'text-red-500'}`}>
-                  {stock.price.toFixed(3)}
-                </span>
-                <span className={`text-sm ${isUp ? 'text-green-500' : 'text-red-500'}`}>
-                  {isUp ? '+' : ''}{stock.change.toFixed(3)}
-                </span>
-              </div>
-              <div className={`text-sm ${isUp ? 'text-green-500' : 'text-red-500'}`}>
-                {isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'bg-white/10' : 'bg-gray-100'}`}>
-                {market === 'US' ? '🇺🇸' : '🇭🇰'}
+              <span className={`text-4xl font-bold tabular-nums ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                {stock.price.toFixed(market === 'HK' ? 3 : 2)}
               </span>
+              <div className={`text-sm font-medium mt-1 ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
+              </div>
+            </div>
+            <div className={`text-xs ${colors.textMuted}`}>{marketStatus.settlement}</div>
+          </div>
+          
+          {/* 简化的数据网格 */}
+          <div className="grid grid-cols-4 gap-4 pt-4 border-t border-white/10">
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>最高</div>
+              <div className="font-medium text-red-500 tabular-nums">{stock.high.toFixed(2)}</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>最低</div>
+              <div className="font-medium text-green-500 tabular-nums">{stock.low.toFixed(2)}</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>今开</div>
+              <div className="font-medium tabular-nums">{stock.open.toFixed(2)}</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>昨收</div>
+              <div className="font-medium tabular-nums">{stock.prevClose.toFixed(2)}</div>
             </div>
           </div>
-          <div className="mt-2">
-            <span className={`text-xs px-2 py-0.5 rounded-full ${colors.bgCard} ${colors.textMuted}`}>
-              今日成交额 Top 14
-            </span>
+          
+          <div className="grid grid-cols-4 gap-4 mt-3">
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>成交量</div>
+              <div className="font-medium tabular-nums">{(stock.volume/10000).toFixed(0)}万</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>成交额</div>
+              <div className="font-medium tabular-nums">{turnover}亿</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>振幅</div>
+              <div className="font-medium tabular-nums">{amplitude}%</div>
+            </div>
+            <div>
+              <div className={`text-xs ${colors.textMuted}`}>每手</div>
+              <div className="font-medium tabular-nums">{lotSize}股</div>
+            </div>
           </div>
         </div>
-        
-        {/* 详细数据表格 - 长桥风格 4列布局 */}
-        <div className="px-4 py-3">
-          <div className="grid grid-cols-4 gap-x-2 gap-y-2 text-sm">
-            <div><div className={`text-xs ${colors.textMuted}`}>最高</div><div className="text-red-500">{stock.high.toFixed(3)}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>今开</div><div>{stock.open.toFixed(3)}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>换手率</div><div>{turnoverRate}%</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>市盈率<sup>TTM</sup></div><div>--</div></div>
-            
-            <div><div className={`text-xs ${colors.textMuted}`}>最低</div><div className="text-green-500">{stock.low.toFixed(3)}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>昨收</div><div>{stock.prevClose.toFixed(3)}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>成交额</div><div>{turnover}亿</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>总市值</div><div>--</div></div>
-            
-            <div><div className={`text-xs ${colors.textMuted}`}>52周高</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>委比</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>成交量</div><div>{(stock.volume/10000).toFixed(0)}万股</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>总股本</div><div>--</div></div>
-            
-            <div><div className={`text-xs ${colors.textMuted}`}>52周低</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>量比</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>振幅</div><div>{amplitude}%</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>流通量</div><div>--</div></div>
-            
-            <div><div className={`text-xs ${colors.textMuted}`}>流通市值</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>每股收益</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>市净率</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>股息率</div><div>--</div></div>
-            
-            <div><div className={`text-xs ${colors.textMuted}`}>均价</div><div>{avgPrice}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>每股净资产</div><div>--</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>每手</div><div>{lotSize}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>货币</div><div>{market === 'HK' ? 'HKD' : 'USD'}</div></div>
-          </div>
-        </div>
-        
-        {/* 大笔买入提示 */}
-        <div className={`mx-4 px-4 py-3 rounded-2xl flex items-center justify-between ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            <span className="text-sm">大笔买入</span>
-            <span className="text-green-500 text-sm font-medium">1,760 股 ↑</span>
-          </div>
-          <span className={`text-xs ${colors.textMuted}`}>15:49 {market === 'HK' ? '港股' : '美东'}</span>
-        </div>
-        
+
         {/* 盘后价格（仅美股） */}
         {market === 'US' && (
-          <div className={`mx-4 mt-2 px-3 py-2 ${colors.bgCard} rounded-lg flex items-center justify-between`}>
+          <div className={`mt-3 p-4 rounded-2xl flex items-center justify-between ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
             <div className="flex items-center gap-2">
-              <span className={`text-xs ${colors.textMuted}`}>盘后</span>
-              <span className="text-green-500 text-sm">{(stock.price * 1.008).toFixed(3)} +{(stock.price * 0.008).toFixed(3)} (+0.84%)</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-50 text-cyan-600'}`}>盘后</span>
+              <span className="text-green-500 font-medium tabular-nums">{(stock.price * 1.008).toFixed(2)}</span>
+              <span className="text-green-500 text-sm">+0.84%</span>
             </div>
-            <span className={`text-xs ${colors.textMuted}`}>19:59:57 美东 ›</span>
+            <span className={`text-xs ${colors.textMuted}`}>19:59 ET</span>
           </div>
         )}
         
-        {/* K线时间Tab */}
-        <div className={`mt-4 border-t ${colors.border}`}>
-          <div className="flex items-center gap-3 px-4 py-2 overflow-x-auto text-sm">
-            {['盘后', '5日', '日K', '周K', '月K', '年K', '1分'].map((t, i) => (
-              <button key={t} className={i === 2 ? 'font-bold' : colors.textMuted}>{t}</button>
+        {/* K线图 */}
+        <div className="mt-4">
+          <div className={`flex items-center gap-2 mb-3 overflow-x-auto`}>
+            {['日K', '周K', '月K', '5分', '15分', '60分'].map((t, i) => (
+              <button key={t} className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition ${
+                i === 0 
+                  ? isDark ? 'bg-white text-black' : 'bg-black text-white'
+                  : isDark ? 'bg-white/5 text-white/60' : 'bg-gray-100 text-gray-600'
+              }`}>{t}</button>
             ))}
           </div>
-          <div className="px-4"><KlineChartWrapper symbol={symbol} market={market} theme={theme} /></div>
+          <KlineChartWrapper symbol={symbol} market={market} theme={theme} />
         </div>
         
-        {/* 底部 Tab - 港股多一个窝轮Tab */}
-        <div className={`flex border-t ${colors.border} mt-4`}>
-          {(market === 'HK' ? ['资讯', '窝轮', '讨论', '公告'] : ['资讯', '讨论', '公告']).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab === '窝轮' ? 'warrant' : tab === '资讯' ? 'news' : 'info')}
-              className={`flex-1 py-3 text-center text-sm ${
-                (activeTab === 'warrant' && tab === '窝轮') || 
-                (activeTab === 'news' && tab === '资讯') ||
-                (activeTab === 'info' && (tab === '讨论' || tab === '公告'))
-                  ? `${colors.text} font-bold`
-                  : colors.textMuted
-              }`}
-            >
-              {tab}{tab === '资讯' && <span className="text-orange-500 ml-0.5">•</span>}
-            </button>
-          ))}
-        </div>
-        
-        {/* 内容区 */}
-        <div className="p-4">
-          {activeTab === 'warrant' && market === 'HK' && (
-            <WarrantListWrapper symbol={symbol} theme={theme} colors={colors} />
-          )}
-          
-          {activeTab === 'news' && (
-            <div className={`${colors.bgCard} rounded-lg p-4 space-y-3`}>
-              <div className={`pb-3 border-b ${colors.border}`}>
-                <div className="text-sm">{stock.name}发布最新财报，营收超预期</div>
-                <div className={`text-xs ${colors.textMuted} mt-1`}>今天 09:30</div>
+        {/* 资讯 Tab */}
+        <div className="mt-6">
+          <h3 className="font-semibold mb-3">相关资讯</h3>
+          <div className="space-y-3">
+            {[
+              { title: `${stock.name}发布最新财报，营收超预期`, time: '今天 09:30' },
+              { title: `分析师上调${stock.name}目标价至${(stock.price * 1.2).toFixed(0)}`, time: '昨天 15:20' },
+              { title: `机构增持${stock.name}，看好长期发展`, time: '3天前' },
+            ].map((news, idx) => (
+              <div key={idx} className={`p-4 rounded-2xl ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
+                <div className="text-sm">{news.title}</div>
+                <div className={`text-xs mt-2 ${colors.textMuted}`}>{news.time}</div>
               </div>
-              <div className={`pb-3 border-b ${colors.border}`}>
-                <div className="text-sm">分析师上调{stock.name}目标价至{(stock.price * 1.2).toFixed(0)}</div>
-                <div className={`text-xs ${colors.textMuted} mt-1`}>昨天 15:20</div>
-              </div>
-              <div>
-                <div className="text-sm">机构增持{stock.name}，看好长期发展</div>
-                <div className={`text-xs ${colors.textMuted} mt-1`}>3天前</div>
-              </div>
-            </div>
-          )}
-          
-          {activeTab === 'info' && (
-            <div className={`${colors.bgCard} rounded-lg p-4 text-center py-8`}>
-              <div className="text-4xl mb-2">💬</div>
-              <div className={colors.textMuted}>暂无讨论</div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </div>
       
