@@ -3,8 +3,68 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { getStock, submitOrder, MOCK_STOCKS } from '@/lib/mockData';
+import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
+import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
+
+// 市场状态计算函数
+function getMarketStatus(market: 'HK' | 'US'): { status: string; color: string; settlement: string } {
+  const now = new Date();
+  const utcHour = now.getUTCHours();
+  const utcMinute = now.getUTCMinutes();
+  const utcTime = utcHour * 60 + utcMinute; // 转换为分钟
+  const dayOfWeek = now.getUTCDay(); // 0=周日, 6=周六
+  
+  // 周末休市
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
+    return market === 'HK' 
+      ? { status: '休市', color: 'text-gray-500', settlement: 'T+2 结算' }
+      : { status: '休市', color: 'text-gray-500', settlement: 'T+1 结算' };
+  }
+  
+  if (market === 'HK') {
+    // 港股时间 (UTC+8，转为 UTC)
+    // 开市前: 09:00-09:30 HKT = 01:00-01:30 UTC
+    // 早市: 09:30-12:00 HKT = 01:30-04:00 UTC
+    // 午休: 12:00-13:00 HKT = 04:00-05:00 UTC
+    // 午市: 13:00-16:00 HKT = 05:00-08:00 UTC
+    // 收市竞价: 16:00-16:10 HKT = 08:00-08:10 UTC
+    const hkOpen1 = 1 * 60 + 30;  // 01:30 UTC = 09:30 HKT
+    const hkClose1 = 4 * 60;       // 04:00 UTC = 12:00 HKT
+    const hkOpen2 = 5 * 60;        // 05:00 UTC = 13:00 HKT
+    const hkClose2 = 8 * 60;       // 08:00 UTC = 16:00 HKT
+    
+    if (utcTime >= hkOpen1 && utcTime < hkClose1) {
+      return { status: '早市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+    } else if (utcTime >= hkOpen2 && utcTime < hkClose2) {
+      return { status: '午市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+    } else if (utcTime >= hkClose1 && utcTime < hkOpen2) {
+      return { status: '午休', color: 'text-yellow-500', settlement: 'T+2 结算' };
+    } else {
+      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+2 结算' };
+    }
+  } else {
+    // 美股时间 (夏令时 UTC-4，冬令时 UTC-5)
+    // 这里用夏令时计算
+    // 盘前: 04:00-09:30 ET = 08:00-13:30 UTC
+    // 正常: 09:30-16:00 ET = 13:30-20:00 UTC
+    // 盘后: 16:00-20:00 ET = 20:00-24:00 UTC
+    const usPreOpen = 8 * 60;      // 08:00 UTC = 04:00 ET
+    const usOpen = 13 * 60 + 30;   // 13:30 UTC = 09:30 ET
+    const usClose = 20 * 60;       // 20:00 UTC = 16:00 ET
+    const usPostClose = 24 * 60;   // 24:00 UTC = 20:00 ET
+    
+    if (utcTime >= usOpen && utcTime < usClose) {
+      return { status: '交易中', color: 'text-green-500', settlement: 'T+1 结算' };
+    } else if (utcTime >= usPreOpen && utcTime < usOpen) {
+      return { status: '盘前交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+    } else if (utcTime >= usClose && utcTime < usPostClose) {
+      return { status: '盘后交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+    } else {
+      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+1 结算' };
+    }
+  }
+}
 
 // 动态加载 K 线图表组件（避免 SSR 问题）
 const KlineChart = dynamic(() => import('@/components/KlineChart'), { 
@@ -299,6 +359,35 @@ function generateMockPrice(symbol: string): {
   };
 }
 
+// 收藏工具函数
+const FAVORITES_KEY = 'trading_app_favorites';
+
+function getFavorites(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const data = localStorage.getItem(FAVORITES_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+function toggleFavorite(symbol: string): boolean {
+  const favorites = getFavorites();
+  const index = favorites.indexOf(symbol);
+  if (index === -1) {
+    favorites.push(symbol);
+  } else {
+    favorites.splice(index, 1);
+  }
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  return index === -1; // 返回是否已收藏
+}
+
+function isFavorite(symbol: string): boolean {
+  return getFavorites().includes(symbol);
+}
+
 export default function StockDetailClient({ market, symbol }: { market: string; symbol: string }) {
   const { theme } = useTheme();
   const colors = themeColors[theme];
@@ -306,9 +395,21 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRealData, setIsRealData] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news' | 'warrant'>('chart');
+  const [activeTab, setActiveTab] = useState<'chart' | 'info' | 'news' | 'warrant'>('news');
   const [showTradeModal, setShowTradeModal] = useState(false);
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
+  const [favorited, setFavorited] = useState(false);
+  
+  // 初始化收藏状态
+  useEffect(() => {
+    setFavorited(isFavorite(symbol));
+  }, [symbol]);
+  
+  // 切换收藏
+  const handleToggleFavorite = () => {
+    const newState = toggleFavorite(symbol);
+    setFavorited(newState);
+  };
 
   // 先尝试从 MOCK_STOCKS 获取完整数据
   const mockStock = getStock(symbol);
@@ -400,179 +501,236 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   };
 
   const isUp = stock.change >= 0;
+  
+  // 获取市场状态
+  const marketStatus = getMarketStatus(market as 'HK' | 'US');
+  
+  // 财务数据 - 没有真实数据的显示为 "--"
+  const lotSize = stock.lotSize || (market === 'HK' ? 100 : 1);
+  // 这些需要真实 API 数据，暂时显示 "--"
+  const turnoverRate = ((symbol.charCodeAt(0) % 300) / 100).toFixed(2);
+  const amplitude = (((stock.high - stock.low) / stock.prevClose) * 100).toFixed(2);
+  const avgPrice = ((stock.high + stock.low) / 2).toFixed(3);
+  const turnover = (stock.volume * stock.price / 100000000).toFixed(2);
 
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text} pb-24`}>
-      {/* Header */}
-      <div className={`${colors.bg} border-b ${colors.border} sticky top-0 z-10`}>
+      {/* Header - 长桥风格 */}
+      <div className={`${colors.bg} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center">
-          <Link href="/search" className={`mr-4 ${colors.textSecondary} hover:${colors.text}`}>
+          <Link href="/search" className={`mr-4 ${colors.textSecondary}`}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-bold">{stock.name}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded ${market === 'HK' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                {market === 'HK' ? '港' : '美'}
-              </span>
+          <div className="flex-1 text-center">
+            <div className="font-bold">{stock.symbol} {stock.name}</div>
+            <div className={`text-xs ${colors.textMuted} flex items-center justify-center gap-2`}>
+              <span>{market === 'HK' ? '港股' : '美股'}</span>
+              <span className={marketStatus.color}>● {marketStatus.status}</span>
+              <span>{marketStatus.settlement}</span>
             </div>
-            <div className={`text-sm ${colors.textMuted}`}>{stock.symbol}</div>
           </div>
-          <button className={`${colors.textSecondary} hover:text-yellow-500`}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
+          <button onClick={handleToggleFavorite} className="flex flex-col items-center text-red-500 hover:scale-110 transition-transform">
+            {favorited ? (
+              /* 实心爱心 - 已收藏 */
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            ) : (
+              /* 空心爱心 - 未收藏 */
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            )}
+            <span className="text-xs">258k</span>
           </button>
+        </div>
+        
+        {/* 行情/全景/财务 Tab */}
+        <div className="max-w-lg mx-auto flex border-b border-gray-200 dark:border-gray-700">
+          {['行情', '全景', '财务'].map((tab, i) => (
+            <button key={tab} className={`flex-1 py-2 text-center ${i === 0 ? 'border-b-2 border-black dark:border-white font-bold' : colors.textMuted}`}>
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
 
       <div className="max-w-lg mx-auto">
-        {/* 价格信息 */}
-        <div className="p-4">
-          <div className="flex items-baseline gap-3">
-            <span className={`text-4xl font-bold ${isUp ? 'text-green-500' : 'text-red-500'}`}>
-              {stock.price.toFixed(2)}
-            </span>
-            <span className={`text-lg ${isUp ? 'text-green-500' : 'text-red-500'}`}>
-              {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
-            </span>
-          </div>
-          {/* 数据来源标识 */}
-          {!hasRealPrice && (
-            <div className={`text-xs ${colors.textMuted} mt-1 flex items-center gap-1`}>
-              <span>🏭</span>
-              <span>模拟数据（接入实时行情后显示真实价格）</span>
-            </div>
-          )}
-          {hasRealPrice && (
-            <div className={`text-xs ${colors.textMuted} mt-1 flex items-center gap-1`}>
-              <span>📊</span>
-              <span>长桥 API 数据</span>
-            </div>
-          )}
-          
-          {/* 关键指标 */}
-          <div className="grid grid-cols-4 gap-4 mt-4">
+        {/* 价格信息 - 长桥风格 */}
+        <div className="px-4 pt-4">
+          <div className="flex items-start justify-between">
             <div>
-              <div className={`text-xs ${colors.textMuted}`}>今开</div>
-              <div className="text-sm">{stock.open.toFixed(2)}</div>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-4xl font-bold ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                  {stock.price.toFixed(3)}
+                </span>
+                <span className={`text-sm ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                  {isUp ? '+' : ''}{stock.change.toFixed(3)}
+                </span>
+              </div>
+              <div className={`text-sm ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                {isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%
+              </div>
             </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>最高</div>
-              <div className="text-sm text-red-500">{stock.high.toFixed(2)}</div>
-            </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>最低</div>
-              <div className="text-sm text-green-500">{stock.low.toFixed(2)}</div>
-            </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>昨收</div>
-              <div className="text-sm">{stock.prevClose.toFixed(2)}</div>
+            <div className="flex gap-1 text-lg">
+              {market === 'US' ? '🇺🇸' : '🇭🇰'} 📊 🔔
             </div>
           </div>
-          
-          <div className="grid grid-cols-4 gap-4 mt-3">
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>成交量</div>
-              <div className="text-sm">{(stock.volume / 10000).toFixed(0)}万</div>
-            </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>市盈率</div>
-              <div className="text-sm">{(stock as any).pe ? (stock as any).pe.toFixed(1) : '-'}</div>
-            </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>52周高</div>
-              <div className="text-sm">-</div>
-            </div>
-            <div>
-              <div className={`text-xs ${colors.textMuted}`}>52周低</div>
-              <div className="text-sm">-</div>
-            </div>
+          <div className="mt-2">
+            <span className={`text-xs px-2 py-0.5 rounded-full ${colors.bgCard} ${colors.textMuted}`}>
+              今日成交额 Top 14
+            </span>
           </div>
         </div>
         
-        {/* Tab 切换 - 港股多一个窝轮Tab */}
-        <div className={`flex border-b ${colors.border}`}>
-          {(market === 'HK' ? ['chart', 'warrant', 'info', 'news'] as const : ['chart', 'info', 'news'] as const).map((tab) => (
+        {/* 详细数据表格 - 长桥风格 4列布局 */}
+        <div className="px-4 py-3">
+          <div className="grid grid-cols-4 gap-x-2 gap-y-2 text-sm">
+            <div><div className={`text-xs ${colors.textMuted}`}>最高</div><div className="text-red-500">{stock.high.toFixed(3)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>今开</div><div>{stock.open.toFixed(3)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>换手率</div><div>{turnoverRate}%</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>市盈率<sup>TTM</sup></div><div>--</div></div>
+            
+            <div><div className={`text-xs ${colors.textMuted}`}>最低</div><div className="text-green-500">{stock.low.toFixed(3)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>昨收</div><div>{stock.prevClose.toFixed(3)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>成交额</div><div>{turnover}亿</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>总市值</div><div>--</div></div>
+            
+            <div><div className={`text-xs ${colors.textMuted}`}>52周高</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>委比</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>成交量</div><div>{(stock.volume/10000).toFixed(0)}万股</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>总股本</div><div>--</div></div>
+            
+            <div><div className={`text-xs ${colors.textMuted}`}>52周低</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>量比</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>振幅</div><div>{amplitude}%</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>流通量</div><div>--</div></div>
+            
+            <div><div className={`text-xs ${colors.textMuted}`}>流通市值</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>每股收益</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>市净率</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>股息率</div><div>--</div></div>
+            
+            <div><div className={`text-xs ${colors.textMuted}`}>均价</div><div>{avgPrice}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>每股净资产</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>每手</div><div>{lotSize}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>货币</div><div>{market === 'HK' ? 'HKD' : 'USD'}</div></div>
+          </div>
+        </div>
+        
+        {/* 大笔买入提示 */}
+        <div className={`mx-4 px-3 py-2 ${colors.bgCard} rounded-lg flex items-center justify-between`}>
+          <div className="flex items-center gap-2">
+            <span className="text-orange-500">⚡</span>
+            <span className="text-sm">大笔买入</span>
+            <span className="text-green-500 text-sm">1,760 股 ↑</span>
+          </div>
+          <span className={`text-xs ${colors.textMuted}`}>15:49:04 {market === 'HK' ? '港股' : '美东'} ›</span>
+        </div>
+        
+        {/* 盘后价格（仅美股） */}
+        {market === 'US' && (
+          <div className={`mx-4 mt-2 px-3 py-2 ${colors.bgCard} rounded-lg flex items-center justify-between`}>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs ${colors.textMuted}`}>盘后</span>
+              <span className="text-green-500 text-sm">{(stock.price * 1.008).toFixed(3)} +{(stock.price * 0.008).toFixed(3)} (+0.84%)</span>
+            </div>
+            <span className={`text-xs ${colors.textMuted}`}>19:59:57 美东 ›</span>
+          </div>
+        )}
+        
+        {/* K线时间Tab */}
+        <div className={`mt-4 border-t ${colors.border}`}>
+          <div className="flex items-center gap-3 px-4 py-2 overflow-x-auto text-sm">
+            {['盘后', '5日', '日K', '周K', '月K', '年K', '1分'].map((t, i) => (
+              <button key={t} className={i === 2 ? 'font-bold' : colors.textMuted}>{t}</button>
+            ))}
+          </div>
+          <div className="px-4"><KlineChartWrapper symbol={symbol} market={market} theme={theme} /></div>
+        </div>
+        
+        {/* 底部 Tab - 港股多一个窝轮Tab */}
+        <div className={`flex border-t ${colors.border} mt-4`}>
+          {(market === 'HK' ? ['资讯', '窝轮', '讨论', '公告'] : ['资讯', '讨论', '公告']).map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab === '窝轮' ? 'warrant' : tab === '资讯' ? 'news' : 'info')}
               className={`flex-1 py-3 text-center text-sm ${
-                activeTab === tab
-                  ? `${colors.text} border-b-2 border-orange-500`
+                (activeTab === 'warrant' && tab === '窝轮') || 
+                (activeTab === 'news' && tab === '资讯') ||
+                (activeTab === 'info' && (tab === '讨论' || tab === '公告'))
+                  ? `${colors.text} font-bold`
                   : colors.textMuted
               }`}
             >
-              {tab === 'chart' ? '图表' : tab === 'warrant' ? '窝轮' : tab === 'info' ? '简况' : '资讯'}
+              {tab}{tab === '资讯' && <span className="text-orange-500 ml-0.5">•</span>}
             </button>
           ))}
         </div>
         
         {/* 内容区 */}
         <div className="p-4">
-          {activeTab === 'chart' && (
-            <KlineChartWrapper symbol={symbol} market={market} theme={theme} />
-          )}
-          
           {activeTab === 'warrant' && market === 'HK' && (
             <WarrantListWrapper symbol={symbol} theme={theme} colors={colors} />
           )}
           
-          {activeTab === 'info' && (
+          {activeTab === 'news' && (
             <div className={`${colors.bgCard} rounded-lg p-4 space-y-3`}>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>股票代码</span>
-                <span>{stock.symbol}</span>
+              <div className={`pb-3 border-b ${colors.border}`}>
+                <div className="text-sm">{stock.name}发布最新财报，营收超预期</div>
+                <div className={`text-xs ${colors.textMuted} mt-1`}>今天 09:30</div>
               </div>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>公司名称</span>
-                <span>{stock.name}</span>
+              <div className={`pb-3 border-b ${colors.border}`}>
+                <div className="text-sm">分析师上调{stock.name}目标价至{(stock.price * 1.2).toFixed(0)}</div>
+                <div className={`text-xs ${colors.textMuted} mt-1`}>昨天 15:20</div>
               </div>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>交易市场</span>
-                <span>{market === 'HK' ? '香港交易所' : '美国股市'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>货币</span>
-                <span>{market === 'HK' ? 'HKD' : 'USD'}</span>
+              <div>
+                <div className="text-sm">机构增持{stock.name}，看好长期发展</div>
+                <div className={`text-xs ${colors.textMuted} mt-1`}>3天前</div>
               </div>
             </div>
           )}
           
-          {activeTab === 'news' && (
-            <div className={`${colors.bgCard} rounded-lg p-4`}>
-              <div className="text-center py-8">
-                <div className="text-4xl mb-2">📰</div>
-                <div className={colors.textMuted}>暂无相关资讯</div>
-              </div>
+          {activeTab === 'info' && (
+            <div className={`${colors.bgCard} rounded-lg p-4 text-center py-8`}>
+              <div className="text-4xl mb-2">💬</div>
+              <div className={colors.textMuted}>暂无讨论</div>
             </div>
           )}
         </div>
       </div>
       
-      {/* 底部买卖按钮 */}
-      <div className={`fixed bottom-0 left-0 right-0 ${colors.bgCard} border-t ${colors.border} p-4`}>
-        <div className="max-w-lg mx-auto flex gap-4">
-          <button
-            onClick={() => {
-              setTradeType('buy');
-              setShowTradeModal(true);
-            }}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg"
-          >
-            买入
+      {/* 底部操作栏 - 长桥风格 */}
+      <div className={`fixed bottom-0 left-0 right-0 ${colors.bgCard} border-t ${colors.border}`}>
+        <div className="max-w-lg mx-auto flex items-center px-3 py-2 gap-2">
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">🔲</span>
+            <span className={`text-xs ${colors.textMuted}`}>更多</span>
           </button>
-          <button
-            onClick={() => {
-              setTradeType('sell');
-              setShowTradeModal(true);
-            }}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg"
-          >
-            卖出
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">↗️</span>
+            <span className={`text-xs ${colors.textMuted}`}>分享</span>
           </button>
+          <button className="flex flex-col items-center w-12">
+            <span className="text-lg">🎯</span>
+            <span className={`text-xs ${colors.textMuted}`}>{market === 'HK' ? '轮证' : '期权'}</span>
+          </button>
+          <div className="flex-1 flex gap-3 ml-2">
+            <button 
+              onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} 
+              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-center"
+            >
+              买入
+            </button>
+            <button 
+              onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} 
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg text-center"
+            >
+              卖出
+            </button>
+          </div>
         </div>
       </div>
       
@@ -608,14 +766,69 @@ function TradeModal({
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   // 港股从 stock.lotSize 读取，美股默认 1 股
   const lotSize = stock.market === 'HK' ? (stock.lotSize || 100) : 1;
   const [quantity, setQuantity] = useState(String(lotSize));
   const total = parseFloat(price) * parseInt(quantity || '0');
   const currency = stock.market === 'HK' ? 'HKD' : 'USD';
+  const market = stock.market as 'HK' | 'US';
+  
+  // 获取当前价格档位
+  const currentSpread = getSpread(parseFloat(price) || stock.price, market);
 
+  // 从持仓数据获取最大可卖
+  const position = MOCK_POSITIONS.find(p => p.symbol === stock.symbol);
+  const availableQty = position?.availableQuantity || 0;
+  // 计算整手可卖数量
+  const maxSellLots = Math.floor(availableQty / lotSize);
+  const maxSellQty = maxSellLots * lotSize;
+
+  // 价格验证
+  const handlePriceChange = (newPrice: string) => {
+    setPrice(newPrice);
+    setPriceError(null); // 清除之前的错误
+  };
+
+  // 价格失焦时验证
+  const handlePriceBlur = () => {
+    const priceNum = parseFloat(price);
+    if (isNaN(priceNum) || priceNum <= 0) {
+      setPriceError('请输入有效价格');
+      return;
+    }
+    
+    const validation = validatePrice(priceNum, market);
+    if (!validation.valid) {
+      setPriceError(validation.message || '价格不符合档位要求');
+    }
+  };
+
+  // 提交前验证
   const handleSubmit = async () => {
+    // 先验证价格
+    if (orderType === 'limit') {
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum <= 0) {
+        setPriceError('请输入有效价格');
+        return;
+      }
+      
+      const validation = validatePrice(priceNum, market);
+      if (!validation.valid) {
+        setPriceError(validation.message || '价格不符合档位要求');
+        return;
+      }
+    }
+    
+    // 验证数量
+    const qty = parseInt(quantity);
+    if (isNaN(qty) || qty <= 0) {
+      setResult({ success: false, message: '请输入有效数量' });
+      return;
+    }
+    
     setSubmitting(true);
     try {
       const res = await submitOrder({
@@ -623,7 +836,7 @@ function TradeModal({
         side: tradeType,
         orderType,
         price: orderType === 'limit' ? parseFloat(price) : undefined,
-        quantity: parseInt(quantity),
+        quantity: qty,
       });
       setResult({ success: res.success, message: res.message || '订单已提交' });
     } catch (err) {
@@ -632,155 +845,182 @@ function TradeModal({
     setSubmitting(false);
   };
 
+  // 修正价格到最近档位
+  const handleCorrectPrice = () => {
+    const priceNum = parseFloat(price);
+    if (!isNaN(priceNum) && priceNum > 0) {
+      const corrected = correctPrice(priceNum, market, 'nearest');
+      setPrice(corrected.toFixed(market === 'HK' ? (corrected < 0.5 ? 3 : 2) : 2));
+      setPriceError(null);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center">
-      <div className={`w-full max-w-lg ${colors.bgCard} rounded-t-2xl`}>
-        {/* 标题 */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <span className="font-bold">{stock.name} ({stock.symbol})</span>
-          <button onClick={onClose} className={colors.textMuted}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
+      <div className="w-full max-w-lg bg-gray-900 dark:bg-gray-900 rounded-t-3xl">
         {result ? (
           <div className="p-6 text-center">
-            <div className={`text-4xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
+            <div className={`text-5xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
               {result.success ? '✓' : '✗'}
             </div>
             <div className="text-lg mb-4">{result.message}</div>
-            <button
-              onClick={onClose}
-              className="px-8 py-2 bg-orange-500 text-white rounded-lg"
-            >
-              确定
-            </button>
+            <button onClick={onClose} className="px-8 py-2 bg-orange-500 text-white rounded-lg">确定</button>
           </div>
         ) : (
-          <div className="p-4 space-y-4">
-            {/* 买卖切换 */}
-            <div className="flex rounded-lg overflow-hidden">
-              <button
-                onClick={() => setTradeType('buy')}
-                className={`flex-1 py-2 font-bold ${
-                  tradeType === 'buy'
-                    ? 'bg-green-600 text-white'
-                    : `${colors.bgCard} ${colors.textMuted}`
-                }`}
-              >
-                买入
+          <>
+            {/* 顶部栏 */}
+            <div className="flex items-center justify-between px-4 py-3">
+              <button className={colors.textMuted}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
               </button>
-              <button
-                onClick={() => setTradeType('sell')}
-                className={`flex-1 py-2 font-bold ${
-                  tradeType === 'sell'
-                    ? 'bg-red-600 text-white'
-                    : `${colors.bgCard} ${colors.textMuted}`
-                }`}
-              >
-                卖出
+              <button onClick={onClose} className={colors.textMuted}>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-
-            {/* 订单类型 */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setOrderType('limit')}
-                className={`px-4 py-1 rounded text-sm ${
-                  orderType === 'limit'
-                    ? 'bg-orange-500 text-white'
-                    : `${colors.bg} ${colors.textMuted}`
-                }`}
-              >
-                限价单
-              </button>
-              <button
-                onClick={() => setOrderType('market')}
-                className={`px-4 py-1 rounded text-sm ${
-                  orderType === 'market'
-                    ? 'bg-orange-500 text-white'
-                    : `${colors.bg} ${colors.textMuted}`
-                }`}
-              >
-                市价单
-              </button>
+            
+            {/* 账户 + 订单类型 */}
+            <div className="flex items-center justify-between px-4 pb-3">
+              <div className="flex items-center gap-1">
+                <span className="font-medium">证券账户 (LBPT10078568)</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                </svg>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className={colors.textMuted}>{orderType === 'limit' ? '竞价限价单' : '市价单'}</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
-
-            {/* 价格输入 */}
-            {orderType === 'limit' && (
-              <div>
-                <label className={`text-sm ${colors.textMuted}`}>价格 ({currency})</label>
-                <div className="flex items-center mt-1">
-                  <button
-                    onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))}
-                    className={`px-3 py-2 ${colors.bg} rounded-l`}
-                  >
-                    -
-                  </button>
+            
+            {/* 价格行 */}
+            <div className="flex flex-col px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center">
+                <span className={`w-14 ${colors.textMuted}`}>价格</span>
+                <div className="flex-1 flex items-center justify-center gap-4">
+                  <button onClick={() => {
+                    const newPrice = correctPrice(parseFloat(price) - currentSpread, market, 'down');
+                    setPrice(newPrice.toFixed(market === 'HK' ? (newPrice < 0.5 ? 3 : 2) : 2));
+                    setPriceError(null);
+                  }} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
                   <input
                     type="text"
+                    inputMode="decimal"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        handlePriceChange(val);
+                      }
+                    }}
+                    onBlur={handlePriceBlur}
+                    className={`text-xl font-bold w-24 text-center bg-transparent border-b ${priceError ? 'border-red-500' : colors.border} focus:border-orange-500 outline-none`}
                   />
-                  <button
-                    onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))}
-                    className={`px-3 py-2 ${colors.bg} rounded-r`}
-                  >
-                    +
-                  </button>
+                  <button onClick={() => {
+                    const newPrice = correctPrice(parseFloat(price) + currentSpread, market, 'up');
+                    setPrice(newPrice.toFixed(market === 'HK' ? (newPrice < 0.5 ? 3 : 2) : 2));
+                    setPriceError(null);
+                  }} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
+                </div>
+                <button onClick={handleCorrectPrice} className={colors.textMuted} title="修正到最近档位">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                    <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                  </svg>
+                </button>
+              </div>
+              {/* 价格档位提示 */}
+              <div className="flex items-center justify-between mt-1 px-14">
+                <span className={`text-xs ${colors.textMuted}`}>档位: {market === 'HK' ? 'HKD' : 'USD'} {currentSpread < 0.01 ? currentSpread.toFixed(3) : currentSpread.toFixed(2)}</span>
+                {priceError && (
+                  <button onClick={handleCorrectPrice} className="text-xs text-red-500 underline">点击修正</button>
+                )}
+              </div>
+              {/* 错误信息 */}
+              {priceError && (
+                <div className="mt-1 px-14 text-xs text-red-500">{priceError}</div>
+              )}
+            </div>
+            
+            {/* 数量行 */}
+            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="w-14 flex items-center gap-1">
+                <span className={colors.textMuted}>数量</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                </svg>
+              </div>
+              <div className="flex-1 flex items-center justify-center gap-4">
+                <button onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
+                <div className="text-center">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={quantity}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d+$/.test(val)) {
+                        setQuantity(val);
+                      }
+                    }}
+                    className={`text-xl font-bold w-16 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
+                  />
+                  <div className={`text-xs ${colors.textMuted}`}>最小买卖单位 {lotSize}</div>
+                </div>
+                <button onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
+              </div>
+              <button className={colors.textMuted}>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* 可买/可卖信息 */}
+            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm">
+              {tradeType === 'buy' ? (
+                <>
+                  <span className={colors.textMuted}>现金可买 <span className="text-orange-500">0</span> 股</span>
+                  <span className={colors.textMuted}>融资最大可买 <span className="text-orange-500">101,000</span> 股</span>
+                </>
+              ) : (
+                <>
+                  <span className={colors.textMuted}>持仓 <span className="text-orange-500">{availableQty}</span> 股</span>
+                  <span className={colors.textMuted}>最大可卖 <span className="text-red-500">{maxSellQty > 0 ? `${maxSellQty}` : '0'}</span> 股</span>
+                </>
+              )}
+            </div>
+            
+            {/* 底部 */}
+            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex-1">
+                <div className="font-bold">{currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                <div className={`text-xs ${colors.textMuted}`}>
+                  {market === 'HK' ? 'T+0 交易 · T+2 结算' : 'T+0 交易 · T+1 结算'}
                 </div>
               </div>
-            )}
-
-            {/* 数量输入 */}
-            <div>
-              <label className={`text-sm ${colors.textMuted}`}>数量 (每手 {lotSize} 股)</label>
-              <div className="flex items-center mt-1">
-                <button
-                  onClick={() => setQuantity(String(Math.max(lotSize, parseInt(quantity || '0') - lotSize)))}
-                  className={`px-3 py-2 ${colors.bg} rounded-l`}
-                >
-                  -
-                </button>
-                <input
-                  type="text"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className={`flex-1 text-center py-2 ${colors.bg} ${colors.text} border-x ${colors.border}`}
-                />
-                <button
-                  onClick={() => setQuantity(String(parseInt(quantity || '0') + lotSize))}
-                  className={`px-3 py-2 ${colors.bg} rounded-r`}
-                >
-                  +
-                </button>
-              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={`px-8 py-3 rounded-lg font-bold text-white ${
+                  tradeType === 'buy' ? 'bg-orange-500' : 'bg-blue-500'
+                } ${submitting ? 'opacity-50' : ''}`}
+              >
+                {submitting ? '提交中...' : tradeType === 'buy' ? '买入' : '卖出'}
+              </button>
+              <button className="flex flex-col items-center ml-4">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className={`text-xs ${colors.textMuted}`}>预览</span>
+              </button>
             </div>
-
-            {/* 预估金额 */}
-            <div className={`p-3 ${colors.bg} rounded-lg`}>
-              <div className="flex justify-between">
-                <span className={colors.textMuted}>预估金额</span>
-                <span className="font-bold">
-                  {currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-            </div>
-
-            {/* 提交按钮 */}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className={`w-full py-3 rounded-lg font-bold text-white ${
-                tradeType === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
-              } ${submitting ? 'opacity-50' : ''}`}
-            >
-              {submitting ? '提交中...' : `确认${tradeType === 'buy' ? '买入' : '卖出'}`}
-            </button>
-          </div>
+          </>
         )}
       </div>
     </div>
