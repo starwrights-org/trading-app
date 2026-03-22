@@ -110371,5 +110371,181 @@
     "price": 0.44,
     "change": 0,
     "changePercent": 0
+  },
+  {
+    "symbol": "NTDOY",
+    "name": "任天堂",
+    "market": "US",
+    "price": 14.7,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "NSANY",
+    "name": "日产汽车",
+    "market": "US",
+    "price": 4.21,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "FUJIY",
+    "name": "富士胶片",
+    "market": "US",
+    "price": 9.02,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "KYOCY",
+    "name": "京瓷",
+    "market": "US",
+    "price": 14.74,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "MRAAY",
+    "name": "村田制作所",
+    "market": "US",
+    "price": 11.22,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "TOELY",
+    "name": "东京电子",
+    "market": "US",
+    "price": 115.89,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "HESAY",
+    "name": "爱马仕",
+    "market": "US",
+    "price": 189.41,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "LVMUY",
+    "name": "LVMH",
+    "market": "US",
+    "price": 105.17,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "LRLCY",
+    "name": "欧莱雅",
+    "market": "US",
+    "price": 79.68,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "BNPQY",
+    "name": "法国巴黎银行",
+    "market": "US",
+    "price": 47.2,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "AXAHY",
+    "name": "安盛保险",
+    "market": "US",
+    "price": 43.49,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "DSNKY",
+    "name": "达能",
+    "market": "US",
+    "price": 17.99,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "SNYNF",
+    "name": "赛诺菲",
+    "market": "US",
+    "price": 88.77,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "VWAGY",
+    "name": "大众汽车",
+    "market": "US",
+    "price": 9.94,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "SIEGY",
+    "name": "西门子",
+    "market": "US",
+    "price": 116.31,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "BASFY",
+    "name": "巴斯夫",
+    "market": "US",
+    "price": 13.25,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "BAYRY",
+    "name": "拜耳",
+    "market": "US",
+    "price": 10.97,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "ADDYY",
+    "name": "阿迪达斯",
+    "market": "US",
+    "price": 76.53,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "NSRGY",
+    "name": "雀巢",
+    "market": "US",
+    "price": 95.6,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "RHHBY",
+    "name": "罗氏",
+    "market": "US",
+    "price": 47.39,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "ERIXF",
+    "name": "爱立信",
+    "market": "US",
+    "price": 11.7,
+    "change": 0,
+    "changePercent": 0
+  },
+  {
+    "symbol": "SSNLF",
+    "name": "三星电子ADR",
+    "market": "US",
+    "price": 65.21,
+    "change": 0,
+    "changePercent": 0
   }
 ]
