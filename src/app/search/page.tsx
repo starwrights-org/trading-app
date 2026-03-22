@@ -184,11 +184,6 @@ export default function SearchPage() {
         ) : (
           /* 默认显示 */
           <div>
-            {/* 股票数量提示 */}
-            <div className={`text-xs ${colors.textMuted} text-center py-2`}>
-              已加载 {stockCount.toLocaleString()} 只股票（美股+港股）
-            </div>
-            
             {/* 热门搜索 */}
             <div className="py-4">
               <h3 className={`text-sm ${colors.textMuted} mb-3`}>热门搜索</h3>
