@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockData';
 import { useTheme, themeColors } from '@/lib/theme';
+import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
 
 // 动态加载 K 线图表组件（避免 SSR 问题）
 const KlineChart = dynamic(() => import('@/components/KlineChart'), { 
@@ -660,12 +661,17 @@ function TradeModal({
   const [orderType, setOrderType] = useState<'limit' | 'market'>('limit');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   // 港股从 stock.lotSize 读取，美股默认 1 股
   const lotSize = stock.market === 'HK' ? (stock.lotSize || 100) : 1;
   const [quantity, setQuantity] = useState(String(lotSize));
   const total = parseFloat(price) * parseInt(quantity || '0');
   const currency = stock.market === 'HK' ? 'HKD' : 'USD';
+  const market = stock.market as 'HK' | 'US';
+  
+  // 获取当前价格档位
+  const currentSpread = getSpread(parseFloat(price) || stock.price, market);
 
   // 从持仓数据获取最大可卖
   const position = MOCK_POSITIONS.find(p => p.symbol === stock.symbol);
@@ -674,7 +680,50 @@ function TradeModal({
   const maxSellLots = Math.floor(availableQty / lotSize);
   const maxSellQty = maxSellLots * lotSize;
 
+  // 价格验证
+  const handlePriceChange = (newPrice: string) => {
+    setPrice(newPrice);
+    setPriceError(null); // 清除之前的错误
+  };
+
+  // 价格失焦时验证
+  const handlePriceBlur = () => {
+    const priceNum = parseFloat(price);
+    if (isNaN(priceNum) || priceNum <= 0) {
+      setPriceError('请输入有效价格');
+      return;
+    }
+    
+    const validation = validatePrice(priceNum, market);
+    if (!validation.valid) {
+      setPriceError(validation.message || '价格不符合档位要求');
+    }
+  };
+
+  // 提交前验证
   const handleSubmit = async () => {
+    // 先验证价格
+    if (orderType === 'limit') {
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum <= 0) {
+        setPriceError('请输入有效价格');
+        return;
+      }
+      
+      const validation = validatePrice(priceNum, market);
+      if (!validation.valid) {
+        setPriceError(validation.message || '价格不符合档位要求');
+        return;
+      }
+    }
+    
+    // 验证数量
+    const qty = parseInt(quantity);
+    if (isNaN(qty) || qty <= 0) {
+      setResult({ success: false, message: '请输入有效数量' });
+      return;
+    }
+    
     setSubmitting(true);
     try {
       const res = await submitOrder({
@@ -682,13 +731,23 @@ function TradeModal({
         side: tradeType,
         orderType,
         price: orderType === 'limit' ? parseFloat(price) : undefined,
-        quantity: parseInt(quantity),
+        quantity: qty,
       });
       setResult({ success: res.success, message: res.message || '订单已提交' });
     } catch (err) {
       setResult({ success: false, message: '提交失败' });
     }
     setSubmitting(false);
+  };
+
+  // 修正价格到最近档位
+  const handleCorrectPrice = () => {
+    const priceNum = parseFloat(price);
+    if (!isNaN(priceNum) && priceNum > 0) {
+      const corrected = correctPrice(priceNum, market, 'nearest');
+      setPrice(corrected.toFixed(market === 'HK' ? (corrected < 0.5 ? 3 : 2) : 2));
+      setPriceError(null);
+    }
   };
 
   return (
@@ -735,30 +794,52 @@ function TradeModal({
             </div>
             
             {/* 价格行 */}
-            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-              <span className={`w-14 ${colors.textMuted}`}>价格</span>
-              <div className="flex-1 flex items-center justify-center gap-4">
-                <button onClick={() => setPrice((parseFloat(price) - 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  value={price}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                      setPrice(val);
-                    }
-                  }}
-                  className={`text-xl font-bold w-24 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
-                />
-                <button onClick={() => setPrice((parseFloat(price) + 0.01).toFixed(2))} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
+            <div className="flex flex-col px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center">
+                <span className={`w-14 ${colors.textMuted}`}>价格</span>
+                <div className="flex-1 flex items-center justify-center gap-4">
+                  <button onClick={() => {
+                    const newPrice = correctPrice(parseFloat(price) - currentSpread, market, 'down');
+                    setPrice(newPrice.toFixed(market === 'HK' ? (newPrice < 0.5 ? 3 : 2) : 2));
+                    setPriceError(null);
+                  }} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>−</button>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={price}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        handlePriceChange(val);
+                      }
+                    }}
+                    onBlur={handlePriceBlur}
+                    className={`text-xl font-bold w-24 text-center bg-transparent border-b ${priceError ? 'border-red-500' : colors.border} focus:border-orange-500 outline-none`}
+                  />
+                  <button onClick={() => {
+                    const newPrice = correctPrice(parseFloat(price) + currentSpread, market, 'up');
+                    setPrice(newPrice.toFixed(market === 'HK' ? (newPrice < 0.5 ? 3 : 2) : 2));
+                    setPriceError(null);
+                  }} className={`w-8 h-8 rounded-full ${colors.bg} flex items-center justify-center`}>+</button>
+                </div>
+                <button onClick={handleCorrectPrice} className={colors.textMuted} title="修正到最近档位">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" strokeWidth={2} />
+                    <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                  </svg>
+                </button>
               </div>
-              <button className={colors.textMuted}>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" strokeWidth={2} />
-                  <circle cx="12" cy="12" r="3" strokeWidth={2} />
-                </svg>
-              </button>
+              {/* 价格档位提示 */}
+              <div className="flex items-center justify-between mt-1 px-14">
+                <span className={`text-xs ${colors.textMuted}`}>档位: {market === 'HK' ? 'HKD' : 'USD'} {currentSpread < 0.01 ? currentSpread.toFixed(3) : currentSpread.toFixed(2)}</span>
+                {priceError && (
+                  <button onClick={handleCorrectPrice} className="text-xs text-red-500 underline">点击修正</button>
+                )}
+              </div>
+              {/* 错误信息 */}
+              {priceError && (
+                <div className="mt-1 px-14 text-xs text-red-500">{priceError}</div>
+              )}
             </div>
             
             {/* 数量行 */}
