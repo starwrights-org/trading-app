@@ -7,6 +7,65 @@ import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockDa
 import { useTheme, themeColors } from '@/lib/theme';
 import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
 
+// 市场状态计算函数
+function getMarketStatus(market: 'HK' | 'US'): { status: string; color: string; settlement: string } {
+  const now = new Date();
+  const utcHour = now.getUTCHours();
+  const utcMinute = now.getUTCMinutes();
+  const utcTime = utcHour * 60 + utcMinute; // 转换为分钟
+  const dayOfWeek = now.getUTCDay(); // 0=周日, 6=周六
+  
+  // 周末休市
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
+    return market === 'HK' 
+      ? { status: '休市', color: 'text-gray-500', settlement: 'T+2 结算' }
+      : { status: '休市', color: 'text-gray-500', settlement: 'T+1 结算' };
+  }
+  
+  if (market === 'HK') {
+    // 港股时间 (UTC+8，转为 UTC)
+    // 开市前: 09:00-09:30 HKT = 01:00-01:30 UTC
+    // 早市: 09:30-12:00 HKT = 01:30-04:00 UTC
+    // 午休: 12:00-13:00 HKT = 04:00-05:00 UTC
+    // 午市: 13:00-16:00 HKT = 05:00-08:00 UTC
+    // 收市竞价: 16:00-16:10 HKT = 08:00-08:10 UTC
+    const hkOpen1 = 1 * 60 + 30;  // 01:30 UTC = 09:30 HKT
+    const hkClose1 = 4 * 60;       // 04:00 UTC = 12:00 HKT
+    const hkOpen2 = 5 * 60;        // 05:00 UTC = 13:00 HKT
+    const hkClose2 = 8 * 60;       // 08:00 UTC = 16:00 HKT
+    
+    if (utcTime >= hkOpen1 && utcTime < hkClose1) {
+      return { status: '早市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+    } else if (utcTime >= hkOpen2 && utcTime < hkClose2) {
+      return { status: '午市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+    } else if (utcTime >= hkClose1 && utcTime < hkOpen2) {
+      return { status: '午休', color: 'text-yellow-500', settlement: 'T+2 结算' };
+    } else {
+      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+2 结算' };
+    }
+  } else {
+    // 美股时间 (夏令时 UTC-4，冬令时 UTC-5)
+    // 这里用夏令时计算
+    // 盘前: 04:00-09:30 ET = 08:00-13:30 UTC
+    // 正常: 09:30-16:00 ET = 13:30-20:00 UTC
+    // 盘后: 16:00-20:00 ET = 20:00-24:00 UTC
+    const usPreOpen = 8 * 60;      // 08:00 UTC = 04:00 ET
+    const usOpen = 13 * 60 + 30;   // 13:30 UTC = 09:30 ET
+    const usClose = 20 * 60;       // 20:00 UTC = 16:00 ET
+    const usPostClose = 24 * 60;   // 24:00 UTC = 20:00 ET
+    
+    if (utcTime >= usOpen && utcTime < usClose) {
+      return { status: '交易中', color: 'text-green-500', settlement: 'T+1 结算' };
+    } else if (utcTime >= usPreOpen && utcTime < usOpen) {
+      return { status: '盘前交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+    } else if (utcTime >= usClose && utcTime < usPostClose) {
+      return { status: '盘后交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+    } else {
+      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+1 结算' };
+    }
+  }
+}
+
 // 动态加载 K 线图表组件（避免 SSR 问题）
 const KlineChart = dynamic(() => import('@/components/KlineChart'), { 
   ssr: false,
@@ -443,6 +502,9 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
 
   const isUp = stock.change >= 0;
   
+  // 获取市场状态
+  const marketStatus = getMarketStatus(market as 'HK' | 'US');
+  
   // 财务数据 - 没有真实数据的显示为 "--"
   const lotSize = stock.lotSize || (market === 'HK' ? 100 : 1);
   // 这些需要真实 API 数据，暂时显示 "--"
@@ -463,8 +525,10 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           </Link>
           <div className="flex-1 text-center">
             <div className="font-bold">{stock.symbol} {stock.name}</div>
-            <div className={`text-xs ${colors.textMuted}`}>
-              {market === 'HK' ? '港股' : '美股'} {new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })}
+            <div className={`text-xs ${colors.textMuted} flex items-center justify-center gap-2`}>
+              <span>{market === 'HK' ? '港股' : '美股'}</span>
+              <span className={marketStatus.color}>● {marketStatus.status}</span>
+              <span>{marketStatus.settlement}</span>
             </div>
           </div>
           <button onClick={handleToggleFavorite} className="flex flex-col items-center text-red-500 hover:scale-110 transition-transform">
@@ -936,7 +1000,9 @@ function TradeModal({
             <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex-1">
                 <div className="font-bold">{currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-                <div className={`text-xs ${colors.textMuted}`}>预估成交后成本 --</div>
+                <div className={`text-xs ${colors.textMuted}`}>
+                  {market === 'HK' ? 'T+0 交易 · T+2 结算' : 'T+0 交易 · T+1 结算'}
+                </div>
               </div>
               <button
                 onClick={handleSubmit}
