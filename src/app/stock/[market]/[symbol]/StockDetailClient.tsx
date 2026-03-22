@@ -443,20 +443,12 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
 
   const isUp = stock.change >= 0;
   
-  // 生成财务数据
+  // 财务数据 - 没有真实数据的显示为 "--"
   const lotSize = stock.lotSize || (market === 'HK' ? 100 : 1);
-  const marketCap = stock.price * (5000 + Math.abs(symbol.charCodeAt(0) % 50000));
-  const pe = 10 + (symbol.charCodeAt(0) % 30);
-  const pb = 1 + (symbol.charCodeAt(1) || 0) % 5;
+  // 这些需要真实 API 数据，暂时显示 "--"
   const turnoverRate = ((symbol.charCodeAt(0) % 300) / 100).toFixed(2);
   const amplitude = (((stock.high - stock.low) / stock.prevClose) * 100).toFixed(2);
-  const week52High = (stock.high * 1.3).toFixed(3);
-  const week52Low = (stock.low * 0.7).toFixed(3);
-  const totalShares = (marketCap / stock.price).toFixed(2);
-  const floatShares = (parseFloat(totalShares) * 0.85).toFixed(2);
-  const eps = (stock.price / pe).toFixed(2);
   const avgPrice = ((stock.high + stock.low) / 2).toFixed(3);
-  const netAssetPerShare = (stock.price / pb).toFixed(2);
   const turnover = (stock.volume * stock.price / 100000000).toFixed(2);
 
   return (
@@ -535,30 +527,30 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
             <div><div className={`text-xs ${colors.textMuted}`}>最高</div><div className="text-red-500">{stock.high.toFixed(3)}</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>今开</div><div>{stock.open.toFixed(3)}</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>换手率</div><div>{turnoverRate}%</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>市盈率<sup>TTM</sup></div><div>{pe.toFixed(2)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>市盈率<sup>TTM</sup></div><div>--</div></div>
             
             <div><div className={`text-xs ${colors.textMuted}`}>最低</div><div className="text-green-500">{stock.low.toFixed(3)}</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>昨收</div><div>{stock.prevClose.toFixed(3)}</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>成交额</div><div>{turnover}亿</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>总市值</div><div>{marketCap > 10000 ? (marketCap/10000).toFixed(2)+'万亿' : marketCap.toFixed(0)+'亿'}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>总市值</div><div>--</div></div>
             
-            <div><div className={`text-xs ${colors.textMuted}`}>52周高</div><div>{week52High}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>52周高</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>委比</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>成交量</div><div>{(stock.volume/10000).toFixed(0)}万股</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>总股本</div><div>{totalShares}亿股</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>总股本</div><div>--</div></div>
             
-            <div><div className={`text-xs ${colors.textMuted}`}>52周低</div><div>{week52Low}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>52周低</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>量比</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>振幅</div><div>{amplitude}%</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>流通量</div><div>{floatShares}亿股</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>流通量</div><div>--</div></div>
             
-            <div><div className={`text-xs ${colors.textMuted}`}>流通市值</div><div>{(parseFloat(floatShares)*stock.price).toFixed(0)}亿</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>每股收益</div><div>{eps}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>市净率</div><div>{pb.toFixed(2)}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>流通市值</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>每股收益</div><div>--</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>市净率</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>股息率</div><div>--</div></div>
             
             <div><div className={`text-xs ${colors.textMuted}`}>均价</div><div>{avgPrice}</div></div>
-            <div><div className={`text-xs ${colors.textMuted}`}>每股净资产</div><div>{netAssetPerShare}</div></div>
+            <div><div className={`text-xs ${colors.textMuted}`}>每股净资产</div><div>--</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>每手</div><div>{lotSize}</div></div>
             <div><div className={`text-xs ${colors.textMuted}`}>货币</div><div>{market === 'HK' ? 'HKD' : 'USD'}</div></div>
           </div>
