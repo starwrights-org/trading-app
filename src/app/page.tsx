@@ -324,20 +324,6 @@ export default function WatchlistPage() {
           </div>
         )}
 
-        {/* 底部提示 */}
-        {!loading && watchlist.length > 0 && (
-          <div className={`mx-4 mt-4 p-3 rounded-xl ${colors.bgCard} border ${colors.border}`}>
-            <div className="flex items-center gap-2">
-              <span className="text-red-500">❤️</span>
-              <span className={`text-sm ${colors.textMuted}`}>
-                {favorites.length > 0 
-                  ? `已收藏 ${favorites.length} 只股票，在详情页点击 ❤️ 管理收藏`
-                  : '点击股票详情页右上角 ❤️ 添加自选'
-                }
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
       <BottomNav active="home" />
