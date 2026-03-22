@@ -219,17 +219,17 @@ export default function CurrencyExchangePage() {
           <div className="mb-4">
             <div className={`text-sm ${colors.textMuted} mb-2`}>兑出</div>
             <div className="flex items-center justify-between">
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold">{fromCurrency}</span>
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className="text-2xl font-bold flex-shrink-0">{fromCurrency}</span>
                 <input
                   type="number"
                   value={fromAmount}
                   onChange={(e) => setFromAmount(e.target.value)}
                   placeholder="输入兑出金额"
-                  className={`text-2xl font-bold bg-transparent outline-none w-32 ${colors.text}`}
+                  className={`text-2xl font-bold bg-transparent outline-none flex-1 min-w-0 ${colors.text} placeholder:${colors.textMuted}`}
                 />
               </div>
-              <button onClick={handleAll} className="text-blue-500 text-sm">
+              <button onClick={handleAll} className="text-blue-500 text-sm flex-shrink-0 ml-2">
                 全部
               </button>
             </div>
