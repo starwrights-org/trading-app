@@ -217,16 +217,6 @@ export default function WatchlistPage() {
           </div>
         </div>
 
-        {/* 提示信息 */}
-        {favorites.length === 0 && (
-          <div className={`mx-4 mb-3 p-3 rounded-lg ${colors.bgCard} border ${colors.border}`}>
-            <div className="flex items-center gap-2 text-sm">
-              <span>💡</span>
-              <span className={colors.textMuted}>这是默认推荐，点击股票详情页的 ❤️ 添加自选</span>
-            </div>
-          </div>
-        )}
-
         {/* 工具栏 */}
         <div className={`px-4 py-2 flex items-center gap-4 border-b ${colors.border}`}>
           <button className={colors.textMuted}>⚙️</button>
