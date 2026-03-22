@@ -7,7 +7,17 @@ import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockDa
 import { useTheme } from '@/lib/theme';
 
 // 简化的颜色系统
-const themeColors = {
+const themeColors: Record<string, {
+  bg: string;
+  bgCard: string;
+  text: string;
+  textMuted: string;
+  textSecondary: string;
+  border: string;
+  borderLight: string;
+  hover: string;
+  navBg: string;
+}> = {
   dark: {
     bg: 'bg-[#0a0a0a]',
     bgCard: 'bg-white/[0.03]',
@@ -29,6 +39,17 @@ const themeColors = {
     borderLight: 'border-gray-100',
     hover: 'hover:bg-gray-50',
     navBg: 'bg-white/95',
+  },
+  midnight: {
+    bg: 'bg-[#0d1421]',
+    bgCard: 'bg-[#1a2744]',
+    text: 'text-white',
+    textMuted: 'text-blue-300/50',
+    textSecondary: 'text-blue-200',
+    border: 'border-blue-900/50',
+    borderLight: 'border-blue-900/30',
+    hover: 'hover:bg-blue-900/30',
+    navBg: 'bg-[#0d1421]/95',
   },
 };
 import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
@@ -113,7 +134,7 @@ interface KlineData {
 }
 
 // K 线图表包装器
-function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: string; theme: 'dark' | 'light' }) {
+function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: string; theme: string }) {
   const [klineData, setKlineData] = useState<KlineData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -185,7 +206,7 @@ interface WarrantData {
 }
 
 // 窝轮列表组件
-function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 'dark' | 'light'; colors: typeof themeColors.dark }) {
+function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: string; colors: typeof themeColors.dark }) {
   const [warrants, setWarrants] = useState<WarrantData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

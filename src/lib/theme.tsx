@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = 'dark' | 'light';
+type Theme = 'dark' | 'light' | 'midnight';
 
 interface ThemeContextType {
   theme: Theme;
@@ -33,7 +33,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme, mounted]);
 
   const toggleTheme = () => {
-    setThemeState(prev => prev === 'dark' ? 'light' : 'dark');
+    setThemeState(prev => {
+      if (prev === 'dark') return 'light';
+      if (prev === 'light') return 'midnight';
+      return 'dark';
+    });
   };
 
   const setTheme = (newTheme: Theme) => {
@@ -59,26 +63,26 @@ export function useTheme() {
   return context;
 }
 
-// 主题颜色配置
+// 主题颜色配置 - 现代设计系统
 export const themeColors = {
   dark: {
-    bg: 'bg-gray-900',
-    bgSecondary: 'bg-gray-800',
-    bgCard: 'bg-gray-800/50',
+    bg: 'bg-[#0a0a0a]',
+    bgSecondary: 'bg-[#111]',
+    bgCard: 'bg-white/[0.03]',
     text: 'text-white',
-    textSecondary: 'text-gray-400',
-    textMuted: 'text-gray-500',
-    border: 'border-gray-800',
-    borderLight: 'border-gray-700',
-    hover: 'hover:bg-gray-800',
-    input: 'bg-gray-800',
-    navBg: 'bg-gray-900',
-    cardGradient: 'from-blue-900/50 to-purple-900/50',
+    textSecondary: 'text-white/60',
+    textMuted: 'text-white/40',
+    border: 'border-white/[0.06]',
+    borderLight: 'border-white/[0.04]',
+    hover: 'hover:bg-white/[0.06]',
+    input: 'bg-white/5',
+    navBg: 'bg-[#0a0a0a]/95',
+    cardGradient: 'from-white/[0.08] to-white/[0.03]',
   },
   light: {
-    bg: 'bg-white',
-    bgSecondary: 'bg-gray-50',
-    bgCard: 'bg-gray-100',
+    bg: 'bg-gray-50',
+    bgSecondary: 'bg-white',
+    bgCard: 'bg-white',
     text: 'text-gray-900',
     textSecondary: 'text-gray-600',
     textMuted: 'text-gray-400',
@@ -86,7 +90,21 @@ export const themeColors = {
     borderLight: 'border-gray-100',
     hover: 'hover:bg-gray-100',
     input: 'bg-gray-100',
-    navBg: 'bg-white',
-    cardGradient: 'from-blue-50 to-purple-50',
+    navBg: 'bg-white/95',
+    cardGradient: 'from-gray-100 to-white',
+  },
+  midnight: {
+    bg: 'bg-[#0d1421]',
+    bgSecondary: 'bg-[#131c2e]',
+    bgCard: 'bg-[#1a2744]',
+    text: 'text-white',
+    textSecondary: 'text-blue-200',
+    textMuted: 'text-blue-300/50',
+    border: 'border-blue-900/50',
+    borderLight: 'border-blue-900/30',
+    hover: 'hover:bg-blue-900/30',
+    input: 'bg-blue-900/30',
+    navBg: 'bg-[#0d1421]/95',
+    cardGradient: 'from-blue-900/50 to-indigo-900/30',
   },
 };

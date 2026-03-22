@@ -15,7 +15,7 @@ interface KlineData {
 interface KlineChartProps {
   data: KlineData[];
   symbol: string;
-  theme?: 'dark' | 'light';
+  theme?: string;
 }
 
 export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartProps) {

@@ -19,7 +19,7 @@ function getFavoritesCount(): number {
 
 export default function AccountPage() {
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === 'dark' || theme === 'midnight';
   const [favCount, setFavCount] = useState(0);
 
   useEffect(() => {
@@ -149,21 +149,32 @@ export default function AccountPage() {
         </div>
 
         {/* 主题切换 */}
-        <div className={`mt-6 p-4 rounded-2xl flex items-center justify-between ${
+        <div className={`mt-6 p-4 rounded-2xl ${
           isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
         }`}>
-          <div className="flex items-center gap-3">
-            <svg className="w-5 h-5 opacity-50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-            <span>深色模式</span>
+          <div className={`text-sm font-medium mb-3 ${isDark ? 'text-white/60' : 'text-gray-600'}`}>外观主题</div>
+          <div className="flex gap-2">
+            {[
+              { key: 'dark', label: '深黑' },
+              { key: 'light', label: '浅白' },
+              { key: 'midnight', label: '午夜蓝' },
+            ].map(t => (
+              <button
+                key={t.key}
+                onClick={() => {
+                  localStorage.setItem('theme', t.key);
+                  window.location.reload();
+                }}
+                className={`flex-1 py-3 rounded-xl text-sm font-medium transition ${
+                  theme === t.key
+                    ? 'bg-green-500 text-white'
+                    : isDark ? 'bg-white/5 text-white/60' : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
-          <button 
-            onClick={toggleTheme}
-            className={`relative w-12 h-7 rounded-full transition-colors ${isDark ? 'bg-green-500' : 'bg-gray-300'}`}
-          >
-            <div className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-transform ${isDark ? 'translate-x-6' : 'translate-x-1'}`} />
-          </button>
         </div>
 
         {/* 版本信息 */}
