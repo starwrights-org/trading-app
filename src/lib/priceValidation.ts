@@ -7,6 +7,7 @@
 
 /**
  * 获取港股最小变动价位
+ * 根据港交所最新规则 (2024年更新)
  * @param price 当前价格
  * @returns 最小变动价位
  */
@@ -14,14 +15,12 @@ export function getHKSpread(price: number): number {
   if (price < 0.25) return 0.001;
   if (price < 0.50) return 0.005;
   if (price < 10) return 0.01;
-  if (price < 20) return 0.02;
-  if (price < 100) return 0.05;
+  if (price < 20) return 0.01;   // 10-20: 0.01 (原0.02已调整)
+  if (price < 50) return 0.02;   // 20-50: 0.02 (原0.05已调整)
+  if (price < 100) return 0.05;  // 50-100: 0.05
   if (price < 200) return 0.10;
-  if (price < 500) return 0.20;
-  if (price < 1000) return 0.50;
-  if (price < 2000) return 1.00;
-  if (price < 5000) return 2.00;
-  return 5.00;
+  if (price < 1000) return 0.50; // 200-1000: 0.50
+  return 2.50;                   // 1000+: 2.50
 }
 
 /**
@@ -160,17 +159,16 @@ function getDecimals(num: number): number {
 
 /**
  * 港股价格档位表（用于显示参考）
+ * 根据港交所最新规则 (2024年更新)
  */
 export const HK_SPREAD_TABLE = [
   { min: 0.01, max: 0.25, spread: 0.001 },
   { min: 0.25, max: 0.50, spread: 0.005 },
   { min: 0.50, max: 10, spread: 0.01 },
-  { min: 10, max: 20, spread: 0.02 },
-  { min: 20, max: 100, spread: 0.05 },
+  { min: 10, max: 20, spread: 0.01 },    // 原0.02已调整
+  { min: 20, max: 50, spread: 0.02 },    // 原0.05已调整
+  { min: 50, max: 100, spread: 0.05 },
   { min: 100, max: 200, spread: 0.10 },
-  { min: 200, max: 500, spread: 0.20 },
-  { min: 500, max: 1000, spread: 0.50 },
-  { min: 1000, max: 2000, spread: 1.00 },
-  { min: 2000, max: 5000, spread: 2.00 },
-  { min: 5000, max: 9995, spread: 5.00 },
+  { min: 200, max: 1000, spread: 0.50 },
+  { min: 1000, max: 9995, spread: 2.50 },
 ];
