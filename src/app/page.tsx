@@ -80,8 +80,8 @@ const DEFAULT_WATCHLIST = [
 export default function WatchlistPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
-  const isDark = theme === 'dark' || theme === 'midnight';
-  const isMidnight = theme === 'midnight';
+  const isDark = theme === 'midnight';
+  const isMidnight = false;
   const bgColor = isMidnight ? 'bg-[#0d1421]' : isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   
   const [activeTab, setActiveTab] = useState<'all' | 'us' | 'hk'>('all');

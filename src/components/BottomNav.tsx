@@ -50,7 +50,7 @@ function IconProfile({ active }: { active: boolean }) {
 
 export default function BottomNav({ active }: BottomNavProps) {
   const { theme } = useTheme();
-  const isDark = theme === 'dark' || theme === 'midnight';
+  const isDark = theme === 'midnight';
 
   const navItems = [
     { key: 'home', Icon: IconWatchlist, label: '关注', href: '/' },
