@@ -71,10 +71,10 @@ export default function MarketPage() {
                 <button
                   key={tab.key}
                   onClick={() => setMainTab(tab.key as typeof mainTab)}
-                  className={`text-lg font-medium transition whitespace-nowrap ${
+                  className={`text-xl font-bold transition whitespace-nowrap ${
                     mainTab === tab.key 
                       ? isDark ? 'text-white' : 'text-black' 
-                      : isDark ? 'text-white/40' : 'text-gray-400'
+                      : isDark ? 'text-white/30' : 'text-gray-300'
                   }`}
                 >
                   {tab.label}
@@ -119,9 +119,9 @@ export default function MarketPage() {
           <div className="space-y-6 pt-2">
             {/* 热股异动 */}
             <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-black'}`}>热股异动</h2>
-                <span className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>实时更新</span>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-black'}`}>热股异动</h2>
+                <span className={`text-[11px] ${isDark ? 'text-white/40' : 'text-gray-400'}`}>实时更新</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {HOT_STOCKS.map((stock, idx) => (
@@ -140,7 +140,7 @@ export default function MarketPage() {
                         stock.market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'
                       }`}>{stock.market}</span>
                     </div>
-                    <div className={`text-xl font-semibold tabular-nums ${stock.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-xl font-semibold tabular-nums ${stock.change >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                       {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
                     </div>
                   </Link>
@@ -150,8 +150,8 @@ export default function MarketPage() {
 
             {/* 新股申购 */}
             <section>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-black'}`}>新股申购</h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-black'}`}>新股申购</h2>
                 <svg className="w-5 h-5 opacity-40" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -200,11 +200,11 @@ export default function MarketPage() {
                       ? 'bg-white/[0.03] border border-white/[0.06]' 
                       : 'bg-white border border-gray-100 shadow-sm'
                   }`}>
-                    <div className={`text-xs mb-1 ${isDark ? 'text-white/50' : 'text-gray-500'}`}>{index.name}</div>
-                    <div className={`text-base font-semibold tabular-nums ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-[11px] mb-1 ${isDark ? 'text-white/50' : 'text-gray-500'}`}>{index.name}</div>
+                    <div className={`text-base font-semibold tabular-nums ${isUp ? 'text-red-500' : 'text-green-500'}`}>
                       {index.price.toLocaleString()}
                     </div>
-                    <div className={`text-xs tabular-nums ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-xs tabular-nums ${isUp ? 'text-red-500' : 'text-green-500'}`}>
                       {isUp ? '+' : ''}{index.change.toFixed(2)}%
                     </div>
                   </div>
@@ -218,16 +218,16 @@ export default function MarketPage() {
                 ? 'bg-white/[0.03] border border-white/[0.06]' 
                 : 'bg-white border border-gray-100 shadow-sm'
             }`}>
-              <h3 className={`text-sm font-medium mb-4 ${isDark ? 'text-white' : 'text-black'}`}>涨跌分布</h3>
+              <h3 className={`text-sm font-semibold mb-3 ${isDark ? 'text-white' : 'text-black'}`}>涨跌分布</h3>
               <div className="flex items-center gap-1 h-8">
-                <div className="flex-1 h-full bg-red-500/80 rounded-l-lg"></div>
+                <div className="flex-1 h-full bg-green-500/80 rounded-l-lg"></div>
                 <div className="w-8 h-full bg-gray-500/50"></div>
-                <div className="flex-[0.3] h-full bg-green-500/80 rounded-r-lg"></div>
+                <div className="flex-[0.3] h-full bg-red-500/80 rounded-r-lg"></div>
               </div>
               <div className="flex justify-between mt-2 text-xs">
-                <span className="text-red-500">跌 70%</span>
+                <span className="text-green-500">跌 70%</span>
                 <span className={isDark ? 'text-white/40' : 'text-gray-400'}>平 16%</span>
-                <span className="text-green-500">涨 14%</span>
+                <span className="text-red-500">涨 14%</span>
               </div>
             </section>
           </div>
@@ -237,7 +237,7 @@ export default function MarketPage() {
         {mainTab === 'fund' && (
           <div className="space-y-6 pt-2">
             <section>
-              <h2 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-black'}`}>收益排行</h2>
+              <h2 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-black'}`}>收益排行</h2>
               <div className="space-y-3">
                 {TOP_FUNDS.map((fund, idx) => (
                   <div key={idx} className={`p-4 rounded-2xl ${

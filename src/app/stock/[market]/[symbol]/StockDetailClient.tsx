@@ -318,7 +318,7 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
                 </div>
                 <div className="text-right">
                   <div className="font-medium">{w.lastDone.toFixed(3)}</div>
-                  <div className={`text-xs ${w.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <div className={`text-xs ${w.changePercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {w.changePercent >= 0 ? '+' : ''}{w.changePercent.toFixed(1)}%
                   </div>
                   <div className={`text-xs ${colors.textMuted}`}>
@@ -573,8 +573,8 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
               </svg>
             </Link>
             <div className="flex-1 text-center">
-              <div className="font-semibold">{stock.name}</div>
-              <div className={`text-xs ${colors.textMuted} flex items-center justify-center gap-2`}>
+              <div className="font-bold text-base">{stock.name}</div>
+              <div className={`text-[11px] ${colors.textMuted} flex items-center justify-center gap-1.5`}>
                 <span className={`px-1.5 py-0.5 rounded ${market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
                   {market}
                 </span>
@@ -596,10 +596,10 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
         <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
           <div className="flex items-end justify-between mb-4">
             <div>
-              <span className={`text-4xl font-bold tabular-nums ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+              <span className={`text-4xl font-bold tabular-nums ${isUp ? 'text-red-500' : 'text-green-500'}`}>
                 {stock.price.toFixed(market === 'HK' ? 3 : 2)}
               </span>
-              <div className={`text-sm font-medium mt-1 ${isUp ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`text-sm font-medium mt-1 ${isUp ? 'text-red-500' : 'text-green-500'}`}>
                 {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
               </div>
             </div>
@@ -651,8 +651,8 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className={`mt-3 p-4 rounded-2xl flex items-center justify-between ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
             <div className="flex items-center gap-2">
               <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-50 text-cyan-600'}`}>盘后</span>
-              <span className="text-green-500 font-medium tabular-nums">{(stock.price * 1.008).toFixed(2)}</span>
-              <span className="text-green-500 text-sm">+0.84%</span>
+              <span className="text-red-500 font-medium tabular-nums">{(stock.price * 1.008).toFixed(2)}</span>
+              <span className="text-red-500 text-sm">+0.84%</span>
             </div>
             <span className={`text-xs ${colors.textMuted}`}>19:59 ET</span>
           </div>
@@ -706,13 +706,13 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className="flex-1 flex gap-3">
             <button 
               onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} 
-              className="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-3.5 rounded-xl text-center transition"
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl text-center transition"
             >
               买入
             </button>
             <button 
               onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} 
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl text-center transition"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl text-center transition"
             >
               卖出
             </button>

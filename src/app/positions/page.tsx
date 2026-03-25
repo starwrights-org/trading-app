@@ -37,7 +37,7 @@ export default function PositionsPage() {
       <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight">资产</h1>
+            <h1 className="text-[28px] font-bold tracking-tight">资产</h1>
             <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
               <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -71,7 +71,7 @@ export default function PositionsPage() {
             </div>
             <div className="text-right">
               <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>当日盈亏</div>
-              <div className={`text-xl font-semibold tabular-nums ${MOCK_ACCOUNT.todayProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`text-xl font-semibold tabular-nums ${MOCK_ACCOUNT.todayProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                 {MOCK_ACCOUNT.todayProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.todayProfitLoss.toLocaleString()}
               </div>
             </div>
@@ -84,7 +84,7 @@ export default function PositionsPage() {
             </div>
             <div>
               <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>持仓盈亏</div>
-              <div className={`font-medium tabular-nums ${MOCK_ACCOUNT.totalProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`font-medium tabular-nums ${MOCK_ACCOUNT.totalProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                 {MOCK_ACCOUNT.totalProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.totalProfitLoss.toLocaleString()}
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function PositionsPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="font-semibold tabular-nums">{usTotal.toLocaleString()}</div>
-                <div className={`text-sm tabular-nums ${usProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <div className={`text-sm tabular-nums ${usProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                   {usProfitLoss >= 0 ? '+' : ''}{usProfitLoss.toFixed(2)}
                 </div>
               </div>
@@ -162,7 +162,7 @@ export default function PositionsPage() {
                   </div>
                   <div className="text-right">
                     <div className="font-medium tabular-nums">{position.currentPrice.toFixed(2)}</div>
-                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                       {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                     </div>
                   </div>
@@ -194,7 +194,7 @@ export default function PositionsPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="font-semibold tabular-nums">{hkTotal.toLocaleString()}</div>
-                <div className={`text-sm tabular-nums ${hkProfitLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <div className={`text-sm tabular-nums ${hkProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                   {hkProfitLoss >= 0 ? '+' : ''}{hkProfitLoss.toFixed(2)}
                 </div>
               </div>
@@ -218,7 +218,7 @@ export default function PositionsPage() {
                   </div>
                   <div className="text-right">
                     <div className="font-medium tabular-nums">{position.currentPrice.toFixed(3)}</div>
-                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                       {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                     </div>
                   </div>

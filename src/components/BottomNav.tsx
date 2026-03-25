@@ -50,7 +50,7 @@ function IconProfile({ active }: { active: boolean }) {
 
 export default function BottomNav({ active }: BottomNavProps) {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === 'dark' || theme === 'midnight';
 
   const navItems = [
     { key: 'home', Icon: IconWatchlist, label: '关注', href: '/' },
@@ -61,7 +61,10 @@ export default function BottomNav({ active }: BottomNavProps) {
   ];
 
   return (
-    <nav className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#0a0a0a]/95 border-white/5' : 'bg-white/95 border-gray-200'} border-t backdrop-blur-xl`}>
+    <nav className={`fixed bottom-0 left-0 right-0 ${
+      theme === 'midnight' ? 'bg-[#0d1421]/95 border-blue-900/30' :
+      isDark ? 'bg-[#0a0a0a]/95 border-white/5' : 'bg-white/95 border-gray-200'
+    } border-t backdrop-blur-xl`}>
       <div className="max-w-lg mx-auto flex">
         {navItems.map(item => {
           const isActive = active === item.key;
@@ -76,7 +79,7 @@ export default function BottomNav({ active }: BottomNavProps) {
               }`}
             >
               <item.Icon active={isActive} />
-              <span className={`text-[10px] mt-1 font-medium ${isActive ? '' : 'opacity-80'}`}>{item.label}</span>
+              <span className={`text-[11px] mt-1 font-medium ${isActive ? '' : 'opacity-70'}`}>{item.label}</span>
             </Link>
           );
         })}

@@ -27,7 +27,9 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
 
     // 初始化图表
     if (!chartInstance.current) {
-      chartInstance.current = echarts.init(chartRef.current, theme);
+      chartInstance.current = echarts.init(chartRef.current, undefined, {
+        renderer: 'canvas',
+      });
     }
 
     const chart = chartInstance.current;
@@ -35,56 +37,78 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
     // 准备数据
     const dates = data.map(d => d.time);
     const ohlc = data.map(d => [d.open, d.close, d.low, d.high]);
-    const volumes = data.map((d, i) => {
+    // HK convention: red=up, green=down
+    const upColor = '#ef4444';
+    const downColor = '#22c55e';
+    const volumes = data.map((d) => {
       const isUp = d.close >= d.open;
       return {
         value: d.volume,
         itemStyle: {
-          color: isUp ? '#22c55e' : '#ef4444',
+          color: isUp ? upColor + '99' : downColor + '99',
         }
       };
     });
 
-    // 颜色配置（绿涨红跌）
-    const upColor = '#22c55e';
-    const downColor = '#ef4444';
-    const bgColor = theme === 'dark' ? '#1a1a1a' : '#ffffff';
-    const textColor = theme === 'dark' ? '#9ca3af' : '#6b7280';
-    const gridColor = theme === 'dark' ? '#333333' : '#e5e7eb';
+    const isDarkTheme = theme === 'dark' || theme === 'midnight';
+    const textColor = isDarkTheme ? '#9ca3af' : '#6b7280';
+    const gridColor = isDarkTheme ? '#333333' : '#e5e7eb';
+    const crosshairLabelBg = isDarkTheme ? '#374151' : '#1f2937';
 
-    const option = {
+    const option: echarts.EChartsOption = {
       backgroundColor: 'transparent',
       animation: false,
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'cross',
+          crossStyle: {
+            color: isDarkTheme ? '#ffffff60' : '#00000040',
+            width: 0.5,
+          },
+          lineStyle: {
+            color: isDarkTheme ? '#ffffff40' : '#00000030',
+            width: 0.5,
+            type: 'dashed',
+          },
+          label: {
+            backgroundColor: crosshairLabelBg,
+            color: '#f3f4f6',
+            fontSize: 10,
+            padding: [4, 6],
+          },
         },
-        backgroundColor: theme === 'dark' ? '#1f2937' : '#ffffff',
+        confine: true,
+        backgroundColor: isDarkTheme ? '#1f2937ee' : '#ffffffee',
         borderColor: gridColor,
+        borderWidth: 1,
+        padding: [8, 12],
         textStyle: {
-          color: theme === 'dark' ? '#f3f4f6' : '#1f2937',
+          color: isDarkTheme ? '#f3f4f6' : '#1f2937',
+          fontSize: 12,
         },
-        formatter: (params: any) => {
-          const candlestick = params.find((p: any) => p.seriesType === 'candlestick');
-          const volume = params.find((p: any) => p.seriesName === '成交量');
+        extraCssText: 'border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);',
+        formatter: (params: unknown) => {
+          const paramArr = params as Array<{ seriesType: string; seriesName: string; axisValue: string; data: number[] | { value: number } }>;
+          const candlestick = paramArr.find((p) => p.seriesType === 'candlestick');
+          const volume = paramArr.find((p) => p.seriesName === '成交量');
           if (!candlestick) return '';
           
-          const [open, close, low, high] = candlestick.data;
+          const [open, close, low, high] = candlestick.data as number[];
           const change = close - open;
           const changePercent = ((change / open) * 100).toFixed(2);
           const isUp = change >= 0;
           const color = isUp ? upColor : downColor;
           
           return `
-            <div style="padding: 8px;">
-              <div style="font-weight: bold; margin-bottom: 8px;">${candlestick.axisValue}</div>
-              <div>开: <span style="color: ${textColor}">${open.toFixed(2)}</span></div>
-              <div>高: <span style="color: ${upColor}">${high.toFixed(2)}</span></div>
-              <div>低: <span style="color: ${downColor}">${low.toFixed(2)}</span></div>
-              <div>收: <span style="color: ${color}">${close.toFixed(2)}</span></div>
-              <div>涨跌: <span style="color: ${color}">${isUp ? '+' : ''}${change.toFixed(2)} (${isUp ? '+' : ''}${changePercent}%)</span></div>
-              ${volume ? `<div>成交量: ${(volume.data.value / 10000).toFixed(0)}万</div>` : ''}
+            <div style="font-size:12px;line-height:1.6;">
+              <div style="font-weight:600;margin-bottom:4px;">${candlestick.axisValue}</div>
+              <div>开: ${open.toFixed(2)}</div>
+              <div>高: <span style="color:${upColor}">${high.toFixed(2)}</span></div>
+              <div>低: <span style="color:${downColor}">${low.toFixed(2)}</span></div>
+              <div>收: <span style="color:${color}">${close.toFixed(2)}</span></div>
+              <div>涨跌: <span style="color:${color}">${isUp ? '+' : ''}${change.toFixed(2)} (${isUp ? '+' : ''}${changePercent}%)</span></div>
+              ${volume ? `<div>成交量: ${((volume.data as { value: number }).value / 10000).toFixed(0)}万</div>` : ''}
             </div>
           `;
         }
@@ -92,43 +116,46 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
       axisPointer: {
         link: [{ xAxisIndex: 'all' }],
         label: {
-          backgroundColor: '#777',
+          backgroundColor: crosshairLabelBg,
         }
       },
       grid: [
         {
-          left: '10%',
-          right: '5%',
-          top: '5%',
+          left: 48,
+          right: 12,
+          top: 12,
           height: '55%',
         },
         {
-          left: '10%',
-          right: '5%',
-          top: '70%',
-          height: '20%',
+          left: 48,
+          right: 12,
+          top: '72%',
+          height: '18%',
         }
       ],
       xAxis: [
         {
           type: 'category',
           data: dates,
-          scale: true,
           boundaryGap: true,
           axisLine: { lineStyle: { color: gridColor } },
-          axisLabel: { color: textColor, fontSize: 10 },
+          axisLabel: { color: textColor, fontSize: 10, margin: 8 },
           splitLine: { show: false },
           min: 'dataMin',
           max: 'dataMax',
+          axisPointer: {
+            show: true,
+            label: { show: true },
+          },
         },
         {
           type: 'category',
           gridIndex: 1,
           data: dates,
-          scale: true,
           boundaryGap: true,
           axisLine: { lineStyle: { color: gridColor } },
           axisLabel: { show: false },
+          axisTick: { show: false },
           splitLine: { show: false },
           min: 'dataMin',
           max: 'dataMax',
@@ -138,9 +165,14 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
         {
           scale: true,
           splitArea: { show: false },
-          axisLine: { lineStyle: { color: gridColor } },
-          axisLabel: { color: textColor, fontSize: 10 },
-          splitLine: { lineStyle: { color: gridColor, type: 'dashed' } },
+          axisLine: { show: false },
+          axisTick: { show: false },
+          axisLabel: { color: textColor, fontSize: 10, margin: 4 },
+          splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.5 } },
+          axisPointer: {
+            show: true,
+            label: { show: true },
+          },
         },
         {
           scale: true,
@@ -148,6 +180,7 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
           splitNumber: 2,
           axisLabel: { show: false },
           axisLine: { show: false },
+          axisTick: { show: false },
           splitLine: { show: false },
         }
       ],
@@ -155,17 +188,15 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
         {
           type: 'inside',
           xAxisIndex: [0, 1],
-          start: 50,
+          start: 60,
           end: 100,
+          zoomOnMouseWheel: true,
+          moveOnMouseMove: true,
+          preventDefaultMouseMove: false,
+          // Better touch feel on mobile
+          minSpan: 10,
+          maxSpan: 100,
         },
-        {
-          show: false,
-          xAxisIndex: [0, 1],
-          type: 'slider',
-          bottom: '5%',
-          start: 50,
-          end: 100,
-        }
       ],
       series: [
         {
@@ -173,11 +204,13 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
           type: 'candlestick',
           data: ohlc,
           itemStyle: {
-            color: upColor,      // 涨（绿）
-            color0: downColor,   // 跌（红）
+            color: upColor,        // 涨（红 - 港股惯例）
+            color0: downColor,     // 跌（绿 - 港股惯例）
             borderColor: upColor,
             borderColor0: downColor,
           },
+          barMaxWidth: 12,
+          barMinWidth: 2,
         },
         {
           name: '成交量',
@@ -185,6 +218,8 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
           xAxisIndex: 1,
           yAxisIndex: 1,
           data: volumes,
+          barMaxWidth: 12,
+          barMinWidth: 2,
         }
       ]
     };
@@ -219,6 +254,9 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
   }
 
   return (
-    <div ref={chartRef} style={{ width: '100%', height: '350px' }} />
+    <div 
+      ref={chartRef} 
+      style={{ width: '100%', height: '350px', touchAction: 'pan-y' }} 
+    />
   );
 }

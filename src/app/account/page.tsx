@@ -48,7 +48,7 @@ export default function AccountPage() {
       <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight">我的</h1>
+            <h1 className="text-[28px] font-bold tracking-tight">我的</h1>
             <button 
               onClick={toggleTheme}
               className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}

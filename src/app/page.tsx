@@ -40,7 +40,8 @@ function MiniChart({ isUp, seed }: { isUp: boolean; seed: number }) {
     points.push(`${x.toFixed(1)},${Math.max(2, Math.min(14, y)).toFixed(1)}`);
   }
 
-  const color = isUp ? '#22c55e' : '#ef4444';
+  // HK convention: red=up, green=down
+  const color = isUp ? '#ef4444' : '#22c55e';
   
   return (
     <svg width="56" height="16" className="flex-shrink-0">
@@ -127,7 +128,7 @@ export default function WatchlistPage() {
       <div className={`${bgColor} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold tracking-tight">自选</h1>
+            <h1 className="text-[28px] font-bold tracking-tight">自选</h1>
             <div className="flex items-center gap-3">
               <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
                 <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -167,10 +168,31 @@ export default function WatchlistPage() {
       </div>
 
       <div className="max-w-lg mx-auto px-5">
-        {/* 加载状态 */}
+        {/* 加载骨架屏 */}
         {loading && (
-          <div className="flex items-center justify-center py-16">
-            <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className={`p-4 rounded-2xl ${
+                  isDark 
+                    ? 'bg-white/[0.03] border border-white/[0.06]' 
+                    : 'bg-white border border-gray-100'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className={`h-4 w-20 rounded ${isDark ? 'bg-white/[0.08]' : 'bg-gray-200'} animate-pulse`} />
+                    <div className={`h-3 w-14 rounded mt-2 ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                  </div>
+                  <div className={`h-4 w-14 mx-4 rounded ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                  <div className="text-right">
+                    <div className={`h-4 w-16 rounded ml-auto ${isDark ? 'bg-white/[0.08]' : 'bg-gray-200'} animate-pulse`} />
+                    <div className={`h-3 w-12 rounded mt-2 ml-auto ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -196,7 +218,7 @@ export default function WatchlistPage() {
                     {/* 左侧：股票信息 */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className={`font-semibold ${colors.text}`}>{stock.name}</span>
+                        <span className={`font-semibold truncate ${colors.text}`}>{stock.name}</span>
                         <span className={`text-xs px-1.5 py-0.5 rounded ${
                           stock.market === 'US' 
                             ? 'bg-blue-500/10 text-blue-500' 
@@ -219,7 +241,7 @@ export default function WatchlistPage() {
                         {price > 0 ? price.toFixed(stock.market === 'HK' ? 2 : 2) : '--'}
                       </div>
                       <div className={`text-sm font-medium tabular-nums ${
-                        isUp ? 'text-green-500' : 'text-red-500'
+                        isUp ? 'text-red-500' : 'text-green-500'
                       }`}>
                         {changePercent !== 0 ? `${isUp ? '+' : ''}${changePercent.toFixed(2)}%` : '--'}
                       </div>

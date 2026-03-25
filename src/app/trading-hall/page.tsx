@@ -488,10 +488,10 @@ export default function TradingHallPage() {
                   <div className={`text-xs ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>{position.costPrice.toFixed(3)}</div>
                 </div>
                 <div className="text-right">
-                  <div className={position.profitLoss >= 0 ? 'text-green-500' : 'text-red-500'}>
+                  <div className={position.profitLoss >= 0 ? 'text-red-500' : 'text-green-500'}>
                     {position.profitLoss >= 0 ? '+' : ''}{position.profitLoss.toFixed(2)}
                   </div>
-                  <div className={`text-xs ${position.profitLossPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <div className={`text-xs ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                     {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                   </div>
                 </div>

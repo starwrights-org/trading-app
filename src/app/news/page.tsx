@@ -102,7 +102,7 @@ export default function NewsPage() {
                         isDark ? 'bg-white/5' : 'bg-gray-100'
                       }`}>
                         <span className={isDark ? 'text-white/70' : 'text-gray-700'}>{tag.name}</span>
-                        <span className={`ml-1.5 ${tag.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        <span className={`ml-1.5 ${tag.change >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                           {tag.change >= 0 ? '+' : ''}{tag.change.toFixed(2)}%
                         </span>
                       </span>

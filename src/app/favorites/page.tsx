@@ -100,7 +100,7 @@ export default function FavoritesPage() {
                       {stock.price ? stock.price.toFixed(stock.market === 'HK' ? 3 : 2) : '--'}
                     </div>
                     {stock.changePercent !== undefined && (
-                      <div className={`text-sm ${stock.changePercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      <div className={`text-sm ${stock.changePercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
                         {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
                       </div>
                     )}
