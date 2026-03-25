@@ -9,35 +9,35 @@ const FUNCTION_CATEGORIES = [
   {
     title: '资产',
     items: [
-      { icon: '💳', label: '存入资金', href: '#', color: 'bg-blue-500' },
-      { icon: '💸', label: '提取资金', href: '#', color: 'bg-blue-500' },
-      { icon: '💱', label: '货币兑换', href: '/currency-exchange', color: 'bg-amber-500' },
-      { icon: '📥', label: '转入股票', href: '#', color: 'bg-blue-500' },
-      { icon: '🔄', label: '资金划转', href: '#', color: 'bg-blue-500' },
-      { icon: '💳', label: '银行卡', href: '#', color: 'bg-blue-500' },
-      { icon: '📤', label: '转出股票', href: '#', color: 'bg-blue-500' },
+      { icon: '💳', label: '存入资金', href: '#', color: 'bg-[#5B8FA8]' },
+      { icon: '💸', label: '提取资金', href: '#', color: 'bg-[#5B8FA8]' },
+      { icon: '💱', label: '货币兑换', href: '/currency-exchange', color: 'bg-[#C9A55C]' },
+      { icon: '📥', label: '转入股票', href: '#', color: 'bg-[#5B8FA8]' },
+      { icon: '🔄', label: '资金划转', href: '#', color: 'bg-[#5B8FA8]' },
+      { icon: '💳', label: '银行卡', href: '#', color: 'bg-[#5B8FA8]' },
+      { icon: '📤', label: '转出股票', href: '#', color: 'bg-[#5B8FA8]' },
     ],
   },
   {
     title: '交易',
     items: [
-      { icon: '🏛', label: '交易大厅', href: '/trading-hall', color: 'bg-indigo-500' },
-      { icon: '📰', label: '新股申购', href: '#', color: 'bg-red-500' },
+      { icon: '🏛', label: '交易大厅', href: '/trading-hall', color: 'bg-[#5B8FA8]' },
+      { icon: '📰', label: '新股申购', href: '#', color: 'bg-[#e74c3c]' },
     ],
   },
   {
     title: '记录',
     items: [
-      { icon: '📋', label: '订单查询', href: '/orders', color: 'bg-teal-500' },
-      { icon: '📊', label: '资金记录', href: '/fund-records', color: 'bg-teal-500' },
+      { icon: '📋', label: '订单查询', href: '/orders', color: 'bg-[#5B8FA8]' },
+      { icon: '📊', label: '资金记录', href: '/fund-records', color: 'bg-[#5B8FA8]' },
     ],
   },
   {
     title: '账户',
     items: [
-      { icon: '📈', label: '基金风险水平', href: '#', color: 'bg-violet-500' },
-      { icon: '💎', label: 'PI 专区', href: '#', color: 'bg-violet-500' },
-      { icon: '📄', label: '更新文件', href: '#', color: 'bg-red-500' },
+      { icon: '📈', label: '基金风险水平', href: '#', color: 'bg-[#C9A55C]' },
+      { icon: '💎', label: 'PI 专区', href: '#', color: 'bg-[#C9A55C]' },
+      { icon: '📄', label: '更新文件', href: '#', color: 'bg-[#e74c3c]' },
     ],
   },
 ];
@@ -58,7 +58,7 @@ export default function AllFunctionsPage() {
             </svg>
           </Link>
           <h1 className="flex-1 text-center text-lg font-semibold">全部功能</h1>
-          <button className="text-blue-500 text-sm font-medium">管理</button>
+          <button className="text-[#5B8FA8] text-sm font-medium">管理</button>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function AllFunctionsPage() {
             <h2 className={`text-xs font-medium uppercase tracking-wider ${colors.textMuted} mb-3`}>{category.title}</h2>
             
             {/* 功能网格 - 改进间距和圆角一致性 */}
-            <div className={`grid grid-cols-4 gap-2 p-3 rounded-2xl ${isDark ? 'bg-white/[0.02] border border-white/[0.04]' : 'bg-white border border-gray-100 shadow-sm'}`}>
+            <div className={`grid grid-cols-4 gap-2 p-3 rounded-xl ${isDark ? 'bg-[#161b26] border border-[#232b3b]' : 'bg-white border border-[#f0ede8] shadow-sm'}`}>
               {category.items.map((item, itemIndex) => (
                 <Link
                   key={itemIndex}

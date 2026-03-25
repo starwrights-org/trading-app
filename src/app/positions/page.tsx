@@ -9,7 +9,7 @@ import BottomNav from '@/components/BottomNav';
 export default function PositionsPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-    const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
+    const bgColor = isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]';
   
   const [showAmount, setShowAmount] = useState(true);
   const [expandedMarket, setExpandedMarket] = useState<'US' | 'HK' | null>('US');
@@ -31,13 +31,13 @@ export default function PositionsPage() {
   ];
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a] text-white' : 'bg-gray-50 text-black'} pb-20`}>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0f1219] text-[#edf0f5]' : 'bg-[#faf9f7] text-[#1a1d23]'} pb-20`}>
       {/* Header */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+      <div className={`${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <h1 className="text-[28px] font-bold tracking-tight">资产</h1>
-            <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+            <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-[#1e2636]' : 'hover:bg-[#1a1d23]/5'} transition`}>
               <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -48,9 +48,9 @@ export default function PositionsPage() {
 
       <div className="max-w-lg mx-auto px-5 animate-page-enter">
         {/* 总资产卡片 */}
-        <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
+        <div className={`p-5 rounded-2xl ${isDark ? 'bg-gradient-to-br from-[#1e2636] to-[#161b26] border border-[#2a3344]' : 'bg-white shadow-lg'}`}>
           <div className="flex items-center gap-2 mb-3">
-            <span className={`text-sm ${isDark ? 'text-white/50' : 'text-gray-500'}`}>总资产 (HKD)</span>
+            <span className={`text-sm ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>总资产 (HKD)</span>
             <button onClick={() => setShowAmount(!showAmount)} className="opacity-50 hover:opacity-80">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 {showAmount ? (
@@ -69,26 +69,26 @@ export default function PositionsPage() {
               </span>
             </div>
             <div className="text-right">
-              <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>当日盈亏</div>
-              <div className={`text-xl font-semibold tabular-nums ${MOCK_ACCOUNT.todayProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+              <div className={`text-xs mb-1 ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>当日盈亏</div>
+              <div className={`text-xl font-semibold tabular-nums ${MOCK_ACCOUNT.todayProfitLoss >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                 {MOCK_ACCOUNT.todayProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.todayProfitLoss.toLocaleString()}
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-6 pt-5 border-t border-white/10">
+          <div className="grid grid-cols-3 gap-4 mt-6 pt-5 border-t border-[#2a3344]">
             <div>
-              <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>持仓市值</div>
+              <div className={`text-xs mb-1 ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>持仓市值</div>
               <div className="font-medium tabular-nums">{MOCK_ACCOUNT.marketValue.toLocaleString()}</div>
             </div>
             <div>
-              <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>持仓盈亏</div>
-              <div className={`font-medium tabular-nums ${MOCK_ACCOUNT.totalProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+              <div className={`text-xs mb-1 ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>持仓盈亏</div>
+              <div className={`font-medium tabular-nums ${MOCK_ACCOUNT.totalProfitLoss >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                 {MOCK_ACCOUNT.totalProfitLoss >= 0 ? '+' : ''}{MOCK_ACCOUNT.totalProfitLoss.toLocaleString()}
               </div>
             </div>
             <div className="text-right">
-              <div className={`text-xs mb-1 ${isDark ? 'text-white/40' : 'text-gray-400'}`}>现金</div>
+              <div className={`text-xs mb-1 ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>现金</div>
               <div className="font-medium tabular-nums">{MOCK_ACCOUNT.cashBalance.toLocaleString()}</div>
             </div>
           </div>
@@ -98,14 +98,14 @@ export default function PositionsPage() {
         <div className="flex justify-between py-6">
           {quickLinks.map(item => (
             <Link key={item.label} href={item.href} className="flex flex-col items-center">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${
-                isDark ? 'bg-white/5' : 'bg-gray-100'
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${
+                isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'
               }`}>
                 <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                 </svg>
               </div>
-              <span className={`text-xs ${isDark ? 'text-white/60' : 'text-gray-500'}`}>{item.label}</span>
+              <span className={`text-xs ${isDark ? 'text-[#edf0f5]/60' : 'text-[#1a1d23]/50'}`}>{item.label}</span>
             </Link>
           ))}
         </div>
@@ -116,20 +116,20 @@ export default function PositionsPage() {
         </div>
 
         {/* 美股持仓 */}
-        <div className={`rounded-2xl overflow-hidden mb-3 ${
-          isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
+        <div className={`rounded-xl overflow-hidden mb-3 ${
+          isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'
         }`}>
           <button 
             onClick={() => setExpandedMarket(expandedMarket === 'US' ? null : 'US')}
             className="w-full flex items-center justify-between p-4"
           >
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-blue-500/20' : 'bg-blue-50'}`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-[#5B8FA8]/20' : 'bg-[#5B8FA8]/10'}`}>
                 <span className="text-lg">🇺🇸</span>
               </div>
               <div className="text-left">
                 <div className="font-semibold">美股</div>
-                <div className={`text-sm ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
+                <div className={`text-sm ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>
                   {usPositions.length} 只股票
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function PositionsPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="font-semibold tabular-nums">{usTotal.toLocaleString()}</div>
-                <div className={`text-sm tabular-nums ${usProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                <div className={`text-sm tabular-nums ${usProfitLoss >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                   {usProfitLoss >= 0 ? '+' : ''}{usProfitLoss.toFixed(2)}
                 </div>
               </div>
@@ -148,20 +148,20 @@ export default function PositionsPage() {
           </button>
 
           {expandedMarket === 'US' && (
-            <div className={`border-t ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+            <div className={`border-t ${isDark ? 'border-[#232b3b]' : 'border-[#f0ede8]'}`}>
               {usPositions.map(position => (
                 <Link
                   key={position.symbol}
                   href={`/stock/${position.market}/${position.symbol}`}
-                  className={`flex items-center justify-between p-4 ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition`}
+                  className={`flex items-center justify-between p-4 ${isDark ? 'hover:bg-[#1a2030]' : 'hover:bg-[#faf9f7]'} transition`}
                 >
                   <div>
                     <div className="font-medium">{position.name}</div>
-                    <div className={`text-sm ${isDark ? 'text-white/40' : 'text-gray-400'}`}>{position.symbol}</div>
+                    <div className={`text-sm ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>{position.symbol}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium tabular-nums">{position.currentPrice.toFixed(2)}</div>
-                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                       {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                     </div>
                   </div>
@@ -172,20 +172,20 @@ export default function PositionsPage() {
         </div>
 
         {/* 港股持仓 */}
-        <div className={`rounded-2xl overflow-hidden mb-3 ${
-          isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
+        <div className={`rounded-xl overflow-hidden mb-3 ${
+          isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'
         }`}>
           <button 
             onClick={() => setExpandedMarket(expandedMarket === 'HK' ? null : 'HK')}
             className="w-full flex items-center justify-between p-4"
           >
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-rose-500/20' : 'bg-rose-50'}`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-[#C9A55C]/15' : 'bg-[#C9A55C]/8'}`}>
                 <span className="text-lg">🇭🇰</span>
               </div>
               <div className="text-left">
                 <div className="font-semibold">港股</div>
-                <div className={`text-sm ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
+                <div className={`text-sm ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>
                   {hkPositions.length} 只股票
                 </div>
               </div>
@@ -193,7 +193,7 @@ export default function PositionsPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="font-semibold tabular-nums">{hkTotal.toLocaleString()}</div>
-                <div className={`text-sm tabular-nums ${hkProfitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                <div className={`text-sm tabular-nums ${hkProfitLoss >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                   {hkProfitLoss >= 0 ? '+' : ''}{hkProfitLoss.toFixed(2)}
                 </div>
               </div>
@@ -204,20 +204,20 @@ export default function PositionsPage() {
           </button>
 
           {expandedMarket === 'HK' && (
-            <div className={`border-t ${isDark ? 'border-white/5' : 'border-gray-100'}`}>
+            <div className={`border-t ${isDark ? 'border-[#232b3b]' : 'border-[#f0ede8]'}`}>
               {hkPositions.map(position => (
                 <Link
                   key={position.symbol}
                   href={`/stock/${position.market}/${position.symbol}`}
-                  className={`flex items-center justify-between p-4 ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition`}
+                  className={`flex items-center justify-between p-4 ${isDark ? 'hover:bg-[#1a2030]' : 'hover:bg-[#faf9f7]'} transition`}
                 >
                   <div>
                     <div className="font-medium">{position.name}</div>
-                    <div className={`text-sm ${isDark ? 'text-white/40' : 'text-gray-400'}`}>{position.symbol}</div>
+                    <div className={`text-sm ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>{position.symbol}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium tabular-nums">{position.currentPrice.toFixed(3)}</div>
-                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                    <div className={`text-sm tabular-nums ${position.profitLossPercent >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                       {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                     </div>
                   </div>
@@ -233,16 +233,16 @@ export default function PositionsPage() {
           { icon: '📜', name: '债券', value: '0.00' },
           { icon: '🏗️', name: '结构化产品', value: '0.00' },
         ].map(item => (
-          <div key={item.name} className={`flex items-center justify-between p-4 rounded-2xl mb-3 ${
-            isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
+          <div key={item.name} className={`flex items-center justify-between p-4 rounded-xl mb-3 ${
+            isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'
           }`}>
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-gray-50'}`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-[#1a2030]' : 'bg-[#faf9f7]'}`}>
                 <span className="text-lg">{item.icon}</span>
               </div>
               <span className="font-medium">{item.name}</span>
             </div>
-            <span className={`font-medium tabular-nums ${isDark ? 'text-white/40' : 'text-gray-400'}`}>{item.value}</span>
+            <span className={`font-medium tabular-nums ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>{item.value}</span>
           </div>
         ))}
       </div>

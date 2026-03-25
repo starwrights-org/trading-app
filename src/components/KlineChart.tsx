@@ -38,8 +38,8 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
     const dates = data.map(d => d.time);
     const ohlc = data.map(d => [d.open, d.close, d.low, d.high]);
     // HK convention: red=up, green=down
-    const upColor = '#ef4444';
-    const downColor = '#22c55e';
+    const upColor = '#e74c3c';
+    const downColor = '#27ae60';
     const volumes = data.map((d) => {
       const isUp = d.close >= d.open;
       return {
@@ -51,9 +51,9 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
     });
 
     const isDarkTheme = theme === 'dark';
-    const textColor = isDarkTheme ? '#9ca3af' : '#6b7280';
-    const gridColor = isDarkTheme ? '#333333' : '#e5e7eb';
-    const crosshairLabelBg = isDarkTheme ? '#374151' : '#1f2937';
+    const textColor = isDarkTheme ? '#8891a5' : '#6b7280';
+    const gridColor = isDarkTheme ? '#2a3344' : '#e8e5df';
+    const crosshairLabelBg = isDarkTheme ? '#1a2030' : '#1f2937';
 
     const option: echarts.EChartsOption = {
       backgroundColor: 'transparent',
@@ -79,12 +79,12 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
           },
         },
         confine: true,
-        backgroundColor: isDarkTheme ? '#1f2937ee' : '#ffffffee',
+        backgroundColor: isDarkTheme ? '#161b26ee' : '#ffffffee',
         borderColor: gridColor,
         borderWidth: 1,
         padding: [8, 12],
         textStyle: {
-          color: isDarkTheme ? '#f3f4f6' : '#1f2937',
+          color: isDarkTheme ? '#edf0f5' : '#1f2937',
           fontSize: 12,
         },
         extraCssText: 'border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);',
@@ -247,7 +247,7 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
 
   if (data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
+      <div className="h-64 flex items-center justify-center text-[#1a1d23]/50">
         暂无K线数据
       </div>
     );

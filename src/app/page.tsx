@@ -41,7 +41,7 @@ function MiniChart({ isUp, seed }: { isUp: boolean; seed: number }) {
   }
 
   // HK convention: red=up, green=down
-  const color = isUp ? '#ef4444' : '#22c55e';
+  const color = isUp ? '#e74c3c' : '#27ae60';
   
   return (
     <svg width="56" height="16" className="flex-shrink-0">
@@ -81,7 +81,6 @@ export default function WatchlistPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
   const isDark = theme === 'dark';
-    const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   
   const [activeTab, setActiveTab] = useState<'all' | 'us' | 'hk'>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -122,20 +121,20 @@ export default function WatchlistPage() {
   };
 
   return (
-    <main className={`min-h-screen ${bgColor} ${colors.text} pb-20`}>
+    <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
       {/* Header - 简洁现代 */}
-      <div className={`${bgColor} sticky top-0 z-10`}>
+      <div className={`${colors.bg} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <h1 className="text-[28px] font-bold tracking-tight">自选</h1>
             <div className="flex items-center gap-3">
-              <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+              <Link href="/search" className={`p-2 rounded-full ${colors.hover} transition`}>
                 <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </Link>
-              <Link href="/favorites" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
-                <svg className="w-5 h-5 text-rose-500" fill="currentColor" viewBox="0 0 24 24">
+              <Link href="/favorites" className={`p-2 rounded-full ${colors.hover} transition`}>
+                <svg className="w-5 h-5 text-[#C9A55C]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                 </svg>
               </Link>
@@ -145,7 +144,7 @@ export default function WatchlistPage() {
 
           {/* Pull-to-refresh hint */}
         <div className="max-w-lg mx-auto flex justify-center py-1">
-          <div className={`pull-to-refresh-hint ${isDark ? 'text-white/20' : 'text-black/15'}`}>
+          <div className={`pull-to-refresh-hint ${colors.textMuted}`}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -154,19 +153,19 @@ export default function WatchlistPage() {
 
         {/* Tab 切换 - 胶囊式设计 */}
         <div className="max-w-lg mx-auto px-5 pb-4">
-          <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-white/5' : 'bg-black/5'}`}>
+          <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'}`}>
             {(['all', 'us', 'hk'] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeTab === tab
-                    ? isDark ? 'bg-white text-black' : 'bg-black text-white'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? isDark ? 'bg-[#C9A55C] text-[#0f1219]' : 'bg-[#A8862E] text-white'
+                    : isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'
                 }`}
               >
                 {tab === 'all' ? '全部' : tab === 'us' ? '美股' : '港股'}
-                <span className={`ml-1.5 ${activeTab === tab ? 'opacity-60' : 'opacity-40'}`}>
+                <span className={`ml-1.5 ${activeTab === tab ? 'opacity-70' : 'opacity-40'}`}>
                   {counts[tab]}
                 </span>
               </button>
@@ -182,21 +181,21 @@ export default function WatchlistPage() {
             {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className={`p-4 rounded-2xl ${
+                className={`p-4 rounded-xl ${
                   isDark 
-                    ? 'bg-white/[0.03] border border-white/[0.06]' 
-                    : 'bg-white border border-gray-100'
+                    ? 'bg-[#1a2030]/80 border border-[#2a3344]' 
+                    : 'bg-white border border-[#e8e5df] shadow-sm'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
-                    <div className={`h-4 w-20 rounded ${isDark ? 'bg-white/[0.08]' : 'bg-gray-200'} animate-pulse`} />
-                    <div className={`h-3 w-14 rounded mt-2 ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                    <div className={`h-4 w-20 rounded ${isDark ? 'bg-[#2a3344]' : 'bg-[#e8e5df]'} animate-pulse`} />
+                    <div className={`h-3 w-14 rounded mt-2 ${isDark ? 'bg-[#232b3b]' : 'bg-[#f0ede8]'} animate-pulse`} />
                   </div>
-                  <div className={`h-4 w-14 mx-4 rounded ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                  <div className={`h-4 w-14 mx-4 rounded ${isDark ? 'bg-[#232b3b]' : 'bg-[#f0ede8]'} animate-pulse`} />
                   <div className="text-right">
-                    <div className={`h-4 w-16 rounded ml-auto ${isDark ? 'bg-white/[0.08]' : 'bg-gray-200'} animate-pulse`} />
-                    <div className={`h-3 w-12 rounded mt-2 ml-auto ${isDark ? 'bg-white/[0.06]' : 'bg-gray-100'} animate-pulse`} />
+                    <div className={`h-4 w-16 rounded ml-auto ${isDark ? 'bg-[#2a3344]' : 'bg-[#e8e5df]'} animate-pulse`} />
+                    <div className={`h-3 w-12 rounded mt-2 ml-auto ${isDark ? 'bg-[#232b3b]' : 'bg-[#f0ede8]'} animate-pulse`} />
                   </div>
                 </div>
               </div>
@@ -216,10 +215,10 @@ export default function WatchlistPage() {
                 <Link
                   key={`${stock.market}-${stock.symbol}`}
                   href={`/stock/${stock.market}/${stock.symbol}/`}
-                  className={`block p-4 rounded-2xl transition-all duration-200 card-hover ${
+                  className={`block p-4 rounded-xl transition-all duration-200 card-hover ${
                     isDark 
-                      ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]' 
-                      : 'bg-white hover:bg-gray-50 border border-gray-100 shadow-sm'
+                      ? 'bg-[#1a2030]/80 hover:bg-[#1e2636] border border-[#2a3344]' 
+                      : 'bg-white hover:bg-[#f5f3ef] border border-[#e8e5df] shadow-sm'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -229,13 +228,13 @@ export default function WatchlistPage() {
                         <span className={`font-semibold truncate ${colors.text}`}>{stock.name}</span>
                         <span className={`text-xs px-1.5 py-0.5 rounded ${
                           stock.market === 'US' 
-                            ? 'bg-blue-500/10 text-blue-500' 
-                            : 'bg-rose-500/10 text-rose-500'
+                            ? isDark ? 'bg-[#5B8FA8]/15 text-[#5B8FA8]' : 'bg-[#4A7A90]/10 text-[#4A7A90]'
+                            : isDark ? 'bg-[#C9A55C]/15 text-[#C9A55C]' : 'bg-[#A8862E]/10 text-[#A8862E]'
                         }`}>
                           {stock.market}
                         </span>
                       </div>
-                      <div className={`text-sm mt-0.5 opacity-50`}>{stock.symbol}</div>
+                      <div className={`text-sm mt-0.5 ${colors.textMuted}`}>{stock.symbol}</div>
                     </div>
 
                     {/* 中间：走势图 */}
@@ -249,7 +248,7 @@ export default function WatchlistPage() {
                         {price > 0 ? price.toFixed(stock.market === 'HK' ? 2 : 2) : '--'}
                       </div>
                       <div className={`text-sm font-medium tabular-nums ${
-                        isUp ? 'text-red-500' : 'text-green-500'
+                        isUp ? 'text-[#e74c3c]' : 'text-[#27ae60]'
                       }`}>
                         {changePercent !== 0 ? `${isUp ? '+' : ''}${changePercent.toFixed(2)}%` : '--'}
                       </div>
@@ -264,17 +263,17 @@ export default function WatchlistPage() {
         {/* 空状态 */}
         {!loading && watchlist.length === 0 && (
           <div className="text-center py-20">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
               <svg className="w-8 h-8 opacity-30" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
               </svg>
             </div>
             <div className={`text-lg font-medium ${colors.text}`}>暂无自选股票</div>
-            <div className="text-sm opacity-50 mt-1">点击股票详情页的 ❤️ 添加自选</div>
+            <div className={`text-sm ${colors.textMuted} mt-1`}>点击股票详情页的 ❤️ 添加自选</div>
             <Link 
               href="/search" 
               className={`inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full font-medium transition ${
-                isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'
+                isDark ? 'bg-[#C9A55C] text-[#0f1219] hover:bg-[#d4b06a]' : 'bg-[#A8862E] text-white hover:bg-[#957526]'
               }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

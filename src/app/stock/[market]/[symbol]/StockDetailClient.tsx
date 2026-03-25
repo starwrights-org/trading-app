@@ -18,8 +18,8 @@ function getMarketStatus(market: 'HK' | 'US'): { status: string; color: string; 
   // 周末休市
   if (dayOfWeek === 0 || dayOfWeek === 6) {
     return market === 'HK' 
-      ? { status: '休市', color: 'text-gray-500', settlement: 'T+2 结算' }
-      : { status: '休市', color: 'text-gray-500', settlement: 'T+1 结算' };
+      ? { status: '休市', color: 'text-[#1a1d23]/50', settlement: 'T+2 结算' }
+      : { status: '休市', color: 'text-[#1a1d23]/50', settlement: 'T+1 结算' };
   }
   
   if (market === 'HK') {
@@ -35,13 +35,13 @@ function getMarketStatus(market: 'HK' | 'US'): { status: string; color: string; 
     const hkClose2 = 8 * 60;       // 08:00 UTC = 16:00 HKT
     
     if (utcTime >= hkOpen1 && utcTime < hkClose1) {
-      return { status: '早市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+      return { status: '早市交易中', color: 'text-[#27ae60]', settlement: 'T+2 结算' };
     } else if (utcTime >= hkOpen2 && utcTime < hkClose2) {
-      return { status: '午市交易中', color: 'text-green-500', settlement: 'T+2 结算' };
+      return { status: '午市交易中', color: 'text-[#27ae60]', settlement: 'T+2 结算' };
     } else if (utcTime >= hkClose1 && utcTime < hkOpen2) {
-      return { status: '午休', color: 'text-yellow-500', settlement: 'T+2 结算' };
+      return { status: '午休', color: 'text-[#C9A55C]', settlement: 'T+2 结算' };
     } else {
-      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+2 结算' };
+      return { status: '已收盘', color: 'text-[#1a1d23]/50', settlement: 'T+2 结算' };
     }
   } else {
     // 美股时间 (夏令时 UTC-4，冬令时 UTC-5)
@@ -55,13 +55,13 @@ function getMarketStatus(market: 'HK' | 'US'): { status: string; color: string; 
     const usPostClose = 24 * 60;   // 24:00 UTC = 20:00 ET
     
     if (utcTime >= usOpen && utcTime < usClose) {
-      return { status: '交易中', color: 'text-green-500', settlement: 'T+1 结算' };
+      return { status: '交易中', color: 'text-[#27ae60]', settlement: 'T+1 结算' };
     } else if (utcTime >= usPreOpen && utcTime < usOpen) {
-      return { status: '盘前交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+      return { status: '盘前交易', color: 'text-[#5B8FA8]', settlement: 'T+1 结算' };
     } else if (utcTime >= usClose && utcTime < usPostClose) {
-      return { status: '盘后交易', color: 'text-cyan-500', settlement: 'T+1 结算' };
+      return { status: '盘后交易', color: 'text-[#5B8FA8]', settlement: 'T+1 结算' };
     } else {
-      return { status: '已收盘', color: 'text-gray-500', settlement: 'T+1 结算' };
+      return { status: '已收盘', color: 'text-[#1a1d23]/50', settlement: 'T+1 结算' };
     }
   }
 }
@@ -71,7 +71,7 @@ const KlineChart = dynamic(() => import('@/components/KlineChart'), {
   ssr: false,
   loading: () => (
     <div className="h-64 flex items-center justify-center">
-      <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+      <div className="animate-spin w-8 h-8 border-2 border-[#C9A55C] border-t-transparent rounded-full"></div>
     </div>
   )
 });
@@ -118,7 +118,7 @@ function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: 
     return (
       <div className={`${colors.bgCard} rounded-lg p-8`}>
         <div className="h-64 flex items-center justify-center">
-          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+          <div className="animate-spin w-8 h-8 border-2 border-[#C9A55C] border-t-transparent rounded-full"></div>
         </div>
       </div>
     );
@@ -201,11 +201,11 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'call': return 'bg-green-500/20 text-green-400';
-      case 'put': return 'bg-red-500/20 text-red-400';
-      case 'bull': return 'bg-orange-500/20 text-orange-400';
-      case 'bear': return 'bg-blue-500/20 text-blue-400';
-      default: return 'bg-gray-500/20 text-gray-400';
+      case 'call': return 'bg-[#27ae60]/20 text-[#27ae60]';
+      case 'put': return 'bg-[#e74c3c]/20 text-[#e74c3c]';
+      case 'bull': return 'bg-[#C9A55C]/20 text-[#C9A55C]';
+      case 'bear': return 'bg-[#5B8FA8]/20 text-[#5B8FA8]';
+      default: return 'bg-[#faf9f7]0/20 text-[#1a1d23]/40';
     }
   };
 
@@ -213,7 +213,7 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
     return (
       <div className={`${colors.bgCard} rounded-lg p-8`}>
         <div className="flex items-center justify-center">
-          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+          <div className="animate-spin w-8 h-8 border-2 border-[#C9A55C] border-t-transparent rounded-full"></div>
         </div>
       </div>
     );
@@ -229,7 +229,7 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
             onClick={() => setFilter(f)}
             className={`px-3 py-1 rounded-full text-sm whitespace-nowrap ${
               filter === f
-                ? 'bg-orange-500 text-white'
+                ? 'bg-[#C9A55C] text-white'
                 : `${colors.bgCard} ${colors.textMuted}`
             }`}
           >
@@ -271,7 +271,7 @@ function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 
                 </div>
                 <div className="text-right">
                   <div className="font-medium">{w.lastDone.toFixed(3)}</div>
-                  <div className={`text-xs ${w.changePercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <div className={`text-xs ${w.changePercent >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                     {w.changePercent >= 0 ? '+' : ''}{w.changePercent.toFixed(1)}%
                   </div>
                   <div className={`text-xs ${colors.textMuted}`}>
@@ -458,7 +458,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
     return (
       <div className={`min-h-screen ${colors.bg} ${colors.text} flex items-center justify-center`}>
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
+          <div className="animate-spin w-8 h-8 border-2 border-[#C9A55C] border-t-transparent rounded-full mx-auto"></div>
           <p className={`mt-2 ${colors.textMuted}`}>加载中...</p>
         </div>
       </div>
@@ -471,7 +471,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
         <div className="text-center">
           <div className="text-4xl mb-4">😕</div>
           <div className="text-xl">找不到股票 {symbol}</div>
-          <Link href="/search" className="text-blue-500 mt-4 inline-block">返回搜索</Link>
+          <Link href="/search" className="text-[#5B8FA8] mt-4 inline-block">返回搜索</Link>
         </div>
       </div>
     );
@@ -515,12 +515,12 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
   const turnover = (stock.volume * stock.price / 100000000).toFixed(2);
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} ${colors.text} pb-24`}>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} ${colors.text} pb-24`}>
       {/* Header - 现代简洁 */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+      <div className={`${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center">
-            <Link href="/" className={`p-2 -ml-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+            <Link href="/" className={`p-2 -ml-2 rounded-full ${isDark ? 'hover:bg-[#1e2636]' : 'hover:bg-[#1a1d23]/5'} transition`}>
               <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
@@ -528,15 +528,15 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
             <div className="flex-1 text-center">
               <div className="font-bold text-base">{stock.name}</div>
               <div className={`text-[11px] ${colors.textMuted} flex items-center justify-center gap-1.5`}>
-                <span className={`px-1.5 py-0.5 rounded ${market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                <span className={`px-1.5 py-0.5 rounded ${market === 'US' ? 'bg-[#5B8FA8]/12 text-[#5B8FA8]' : 'bg-[#C9A55C]/12 text-[#C9A55C]'}`}>
                   {market}
                 </span>
                 <span>{stock.symbol}</span>
                 <span className={marketStatus.color}>• {marketStatus.status}</span>
               </div>
             </div>
-            <button onClick={handleToggleFavorite} className={`p-2 -mr-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
-              <svg className={`w-5 h-5 ${favorited ? 'text-rose-500' : 'opacity-40'}`} fill={favorited ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <button onClick={handleToggleFavorite} className={`p-2 -mr-2 rounded-full ${isDark ? 'hover:bg-[#1e2636]' : 'hover:bg-[#1a1d23]/5'} transition`}>
+              <svg className={`w-5 h-5 ${favorited ? 'text-[#C9A55C]' : 'opacity-40'}`} fill={favorited ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
               </svg>
             </button>
@@ -546,13 +546,13 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
 
       <div className="max-w-lg mx-auto px-5 animate-page-enter">
         {/* 价格卡片 */}
-        <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
+        <div className={`p-5 rounded-2xl ${isDark ? 'bg-gradient-to-br from-[#1e2636] to-[#161b26] border border-[#2a3344]' : 'bg-white shadow-lg'}`}>
           <div className="flex items-end justify-between mb-4">
             <div>
-              <span className={`text-4xl font-bold tabular-nums ${isUp ? 'text-red-500' : 'text-green-500'}`}>
+              <span className={`text-4xl font-bold tabular-nums ${isUp ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                 {stock.price.toFixed(market === 'HK' ? 3 : 2)}
               </span>
-              <div className={`text-sm font-medium mt-1 ${isUp ? 'text-red-500' : 'text-green-500'}`}>
+              <div className={`text-sm font-medium mt-1 ${isUp ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                 {isUp ? '+' : ''}{stock.change.toFixed(2)} ({isUp ? '+' : ''}{stock.changePercent.toFixed(2)}%)
               </div>
             </div>
@@ -563,11 +563,11 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className={`grid grid-cols-4 gap-4 pt-4 border-t ${colors.borderLight}`}>
             <div>
               <div className={`text-xs ${colors.textMuted}`}>最高</div>
-              <div className="font-medium text-red-500 tabular-nums">{stock.high.toFixed(2)}</div>
+              <div className="font-medium text-[#e74c3c] tabular-nums">{stock.high.toFixed(2)}</div>
             </div>
             <div>
               <div className={`text-xs ${colors.textMuted}`}>最低</div>
-              <div className="font-medium text-green-500 tabular-nums">{stock.low.toFixed(2)}</div>
+              <div className="font-medium text-[#27ae60] tabular-nums">{stock.low.toFixed(2)}</div>
             </div>
             <div>
               <div className={`text-xs ${colors.textMuted}`}>今开</div>
@@ -601,11 +601,11 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
 
         {/* 盘后价格（仅美股） */}
         {market === 'US' && (
-          <div className={`mt-3 p-4 rounded-2xl flex items-center justify-between ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
+          <div className={`mt-3 p-4 rounded-xl flex items-center justify-between ${isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'}`}>
             <div className="flex items-center gap-2">
-              <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-50 text-cyan-600'}`}>盘后</span>
-              <span className="text-red-500 font-medium tabular-nums">{(stock.price * 1.008).toFixed(2)}</span>
-              <span className="text-red-500 text-sm">+0.84%</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${isDark ? 'bg-[#5B8FA8]/15 text-[#5B8FA8]' : 'bg-[#5B8FA8]/8 text-[#4A7A90]'}`}>盘后</span>
+              <span className="text-[#e74c3c] font-medium tabular-nums">{(stock.price * 1.008).toFixed(2)}</span>
+              <span className="text-[#e74c3c] text-sm">+0.84%</span>
             </div>
             <span className={`text-xs ${colors.textMuted}`}>19:59 ET</span>
           </div>
@@ -617,8 +617,8 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
             {['日K', '周K', '月K', '5分', '15分', '60分'].map((t, i) => (
               <button key={t} className={`px-3 py-1.5 rounded-lg text-sm whitespace-nowrap transition ${
                 i === 0 
-                  ? isDark ? 'bg-white text-black' : 'bg-black text-white'
-                  : isDark ? 'bg-white/5 text-white/60' : 'bg-gray-100 text-gray-600'
+                  ? isDark ? 'bg-[#C9A55C] text-[#0f1219]' : 'bg-[#A8862E] text-white'
+                  : isDark ? 'bg-[#1a2030] text-[#edf0f5]/60' : 'bg-[#f0ede8] text-[#1a1d23]/60'
               }`}>{t}</button>
             ))}
           </div>
@@ -634,7 +634,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
               { title: `分析师上调${stock.name}目标价至${(stock.price * 1.2).toFixed(0)}`, time: '昨天 15:20' },
               { title: `机构增持${stock.name}，看好长期发展`, time: '3天前' },
             ].map((news, idx) => (
-              <div key={idx} className={`p-4 rounded-2xl card-hover ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
+              <div key={idx} className={`p-4 rounded-xl card-hover ${isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'}`}>
                 <div className="text-sm">{news.title}</div>
                 <div className={`text-xs mt-2 ${colors.textMuted}`}>{news.time}</div>
               </div>
@@ -644,14 +644,14 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
       </div>
       
       {/* 底部操作栏 - 现代设计 */}
-      <div className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#0a0a0a]/95 border-white/5' : 'bg-white/95 border-gray-200'} border-t backdrop-blur-xl`}>
+      <div className={`fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#0f1219]/95 border-[#2a3344]' : 'bg-[#faf9f7]/95 border-[#e8e5df]'} border-t backdrop-blur-xl`}>
         <div className="max-w-lg mx-auto flex items-center px-4 py-3 gap-3">
-          <button className={`p-3 rounded-xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'} transition`}>
+          <button className={`p-3 rounded-xl ${isDark ? 'bg-[#1a2030] hover:bg-[#1e2636]' : 'bg-[#f0ede8] hover:bg-[#e8e5df]'} transition`}>
             <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
             </svg>
           </button>
-          <button className={`p-3 rounded-xl ${isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'} transition`}>
+          <button className={`p-3 rounded-xl ${isDark ? 'bg-[#1a2030] hover:bg-[#1e2636]' : 'bg-[#f0ede8] hover:bg-[#e8e5df]'} transition`}>
             <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
             </svg>
@@ -659,13 +659,13 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className="flex-1 flex gap-3">
             <button 
               onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} 
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
+              className="flex-1 bg-[#e74c3c] hover:bg-[#d44032] text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
             >
               买入
             </button>
             <button 
               onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} 
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
+              className="flex-1 bg-[#27ae60] hover:bg-[#219653] text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
             >
               卖出
             </button>
@@ -796,14 +796,14 @@ function TradeModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center animate-backdrop">
-      <div className="w-full max-w-lg bg-gray-900 dark:bg-gray-900 rounded-t-3xl animate-sheet">
+      <div className="w-full max-w-lg bg-[#0f1219] rounded-t-3xl animate-sheet">
         {result ? (
           <div className="p-6 text-center">
-            <div className={`text-5xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
+            <div className={`text-5xl mb-3 ${result.success ? 'text-[#27ae60]' : 'text-[#e74c3c]'}`}>
               {result.success ? '✓' : '✗'}
             </div>
             <div className="text-lg mb-4">{result.message}</div>
-            <button onClick={onClose} className="px-8 py-2 bg-orange-500 text-white rounded-lg">确定</button>
+            <button onClick={onClose} className="px-8 py-2 bg-[#C9A55C] text-white rounded-lg">确定</button>
           </div>
         ) : (
           <>
@@ -838,7 +838,7 @@ function TradeModal({
             </div>
             
             {/* 价格行 */}
-            <div className="flex flex-col px-4 py-3 border-t border-white/10">
+            <div className="flex flex-col px-4 py-3 border-t border-[#2a3344]">
               <div className="flex items-center">
                 <span className={`w-14 ${colors.textMuted}`}>价格</span>
                 <div className="flex-1 flex items-center justify-center gap-4">
@@ -858,7 +858,7 @@ function TradeModal({
                       }
                     }}
                     onBlur={handlePriceBlur}
-                    className={`text-xl font-bold w-24 text-center bg-transparent border-b ${priceError ? 'border-red-500' : colors.border} focus:border-orange-500 outline-none`}
+                    className={`text-xl font-bold w-24 text-center bg-transparent border-b ${priceError ? 'border-red-500' : colors.border} focus:border-[#C9A55C] outline-none`}
                   />
                   <button onClick={() => {
                     const newPrice = correctPrice(parseFloat(price) + currentSpread, market, 'up');
@@ -877,17 +877,17 @@ function TradeModal({
               <div className="flex items-center justify-between mt-1 px-14">
                 <span className={`text-xs ${colors.textMuted}`}>档位: {market === 'HK' ? 'HKD' : 'USD'} {currentSpread < 0.01 ? currentSpread.toFixed(3) : currentSpread.toFixed(2)}</span>
                 {priceError && (
-                  <button onClick={handleCorrectPrice} className="text-xs text-red-500 underline">点击修正</button>
+                  <button onClick={handleCorrectPrice} className="text-xs text-[#e74c3c] underline">点击修正</button>
                 )}
               </div>
               {/* 错误信息 */}
               {priceError && (
-                <div className="mt-1 px-14 text-xs text-red-500">{priceError}</div>
+                <div className="mt-1 px-14 text-xs text-[#e74c3c]">{priceError}</div>
               )}
             </div>
             
             {/* 数量行 */}
-            <div className="flex items-center px-4 py-3 border-t border-white/10">
+            <div className="flex items-center px-4 py-3 border-t border-[#2a3344]">
               <div className="w-14 flex items-center gap-1">
                 <span className={colors.textMuted}>数量</span>
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -907,7 +907,7 @@ function TradeModal({
                         setQuantity(val);
                       }
                     }}
-                    className={`text-xl font-bold w-16 text-center bg-transparent border-b ${colors.border} focus:border-orange-500 outline-none`}
+                    className={`text-xl font-bold w-16 text-center bg-transparent border-b ${colors.border} focus:border-[#C9A55C] outline-none`}
                   />
                   <div className={`text-xs ${colors.textMuted}`}>最小买卖单位 {lotSize}</div>
                 </div>
@@ -921,22 +921,22 @@ function TradeModal({
             </div>
             
             {/* 可买/可卖信息 */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-white/10 text-sm">
+            <div className="flex items-center justify-between px-4 py-2 border-t border-[#2a3344] text-sm">
               {tradeType === 'buy' ? (
                 <>
-                  <span className={colors.textMuted}>现金可买 <span className="text-orange-500">0</span> 股</span>
-                  <span className={colors.textMuted}>融资最大可买 <span className="text-orange-500">101,000</span> 股</span>
+                  <span className={colors.textMuted}>现金可买 <span className="text-[#C9A55C]">0</span> 股</span>
+                  <span className={colors.textMuted}>融资最大可买 <span className="text-[#C9A55C]">101,000</span> 股</span>
                 </>
               ) : (
                 <>
-                  <span className={colors.textMuted}>持仓 <span className="text-orange-500">{availableQty}</span> 股</span>
-                  <span className={colors.textMuted}>最大可卖 <span className="text-red-500">{maxSellQty > 0 ? `${maxSellQty}` : '0'}</span> 股</span>
+                  <span className={colors.textMuted}>持仓 <span className="text-[#C9A55C]">{availableQty}</span> 股</span>
+                  <span className={colors.textMuted}>最大可卖 <span className="text-[#e74c3c]">{maxSellQty > 0 ? `${maxSellQty}` : '0'}</span> 股</span>
                 </>
               )}
             </div>
             
             {/* 底部 */}
-            <div className="flex items-center px-4 py-3 border-t border-white/10">
+            <div className="flex items-center px-4 py-3 border-t border-[#2a3344]">
               <div className="flex-1">
                 <div className="font-bold">{currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
                 <div className={`text-xs ${colors.textMuted}`}>
@@ -947,7 +947,7 @@ function TradeModal({
                 onClick={handleSubmit}
                 disabled={submitting}
                 className={`px-8 py-3 rounded-lg font-bold text-white ${
-                  tradeType === 'buy' ? 'bg-orange-500' : 'bg-blue-500'
+                  tradeType === 'buy' ? 'bg-[#C9A55C]' : 'bg-[#5B8FA8]'
                 } ${submitting ? 'opacity-50' : ''}`}
               >
                 {submitting ? '提交中...' : tradeType === 'buy' ? '买入' : '卖出'}

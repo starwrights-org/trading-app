@@ -100,7 +100,7 @@ export default function FundRecordsPage() {
       <div className="max-w-lg mx-auto animate-page-enter">
         {/* 账户选择 */}
         <div className="px-4 py-3 flex items-center gap-2">
-          <span className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center text-white text-xs">💰</span>
+          <span className="w-7 h-7 bg-[#C9A55C] rounded-lg flex items-center justify-center text-white text-xs">💰</span>
           <span className={`text-sm ${colors.text}`}>证券账户 (LBPT10078568)</span>
         </div>
 
@@ -137,7 +137,7 @@ export default function FundRecordsPage() {
                       {/* 移动端友好的两行布局 */}
                       <div className="flex items-start justify-between mb-1">
                         <span className={`font-medium text-sm ${colors.text}`}>{record.type}</span>
-                        <span className={`font-medium text-sm tabular-nums ${record.amount >= 0 ? 'text-red-500' : colors.text}`}>
+                        <span className={`font-medium text-sm tabular-nums ${record.amount >= 0 ? 'text-[#e74c3c]' : colors.text}`}>
                           {record.amount >= 0 ? '+' : '-'}{record.currency} {Math.abs(record.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
@@ -157,7 +157,7 @@ export default function FundRecordsPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-28">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
               <svg className="w-8 h-8 opacity-20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
               </svg>
@@ -169,7 +169,7 @@ export default function FundRecordsPage() {
 
       {/* 时间筛选弹窗 */}
       {showTimeFilter && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end animate-backdrop">
+        <div className="fixed inset-0 bg-[#1a1d23]/50 z-50 flex items-end animate-backdrop">
           <div className={`w-full ${colors.bg} rounded-t-3xl animate-sheet`}>
             <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.borderLight}`}>
               <span className={`text-lg font-semibold ${colors.text}`}>自定义时间</span>
@@ -193,7 +193,7 @@ export default function FundRecordsPage() {
                     onClick={() => setTimeFilter(option.key as typeof timeFilter)}
                     className={`px-5 py-2 rounded-xl border transition ${
                       timeFilter === option.key
-                        ? isDark ? 'border-white bg-white text-black' : 'border-gray-900 bg-gray-900 text-white'
+                        ? isDark ? 'border-[#C9A55C] bg-[#C9A55C] text-[#0f1219]' : 'border-[#A8862E] bg-[#A8862E] text-white'
                         : `${colors.border} ${colors.textSecondary}`
                     }`}
                   >
@@ -244,7 +244,7 @@ export default function FundRecordsPage() {
               </button>
               <button 
                 onClick={() => setShowTimeFilter(false)}
-                className={`flex-1 py-3 rounded-xl text-white transition active:scale-[0.98] ${isDark ? 'bg-white text-black' : 'bg-gray-900'}`}
+                className={`flex-1 py-3 rounded-xl text-white transition active:scale-[0.98] ${isDark ? 'bg-[#C9A55C] text-[#0f1219]' : 'bg-[#A8862E] text-white'}`}
               >
                 确定
               </button>

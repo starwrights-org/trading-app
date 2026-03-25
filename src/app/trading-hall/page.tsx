@@ -161,7 +161,7 @@ export default function TradingHallPage() {
         {/* 账户选择 */}
         <div className={`px-4 py-3 flex items-center justify-between border-b ${colors.borderLight}`}>
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 bg-orange-500 rounded-md flex items-center justify-center text-white text-xs">💰</span>
+            <span className="w-6 h-6 bg-[#C9A55C] rounded-md flex items-center justify-center text-white text-xs">💰</span>
             <span className="font-medium text-sm">证券账户 (LBPT10078568)</span>
           </div>
           <svg className="w-4 h-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@ export default function TradingHallPage() {
           <div className="flex items-center">
             <span className={`w-14 text-sm ${colors.textMuted}`}>股票</span>
             <div className="flex-1 relative">
-              <div className={`flex items-center ${colors.input} rounded-xl px-3 py-2.5 transition-all focus-within:ring-2 focus-within:ring-orange-500/30`}>
+              <div className={`flex items-center ${colors.input} rounded-xl px-3 py-2.5 transition-all focus-within:ring-2 focus-within:ring-[#C9A55C]/30`}>
                 <svg className="w-4 h-4 opacity-40 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -212,7 +212,7 @@ export default function TradingHallPage() {
               
               {/* 搜索结果下拉 */}
               {showResults && (
-                <div className={`absolute left-0 right-0 top-full mt-1 rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto animate-scale-enter ${isDark ? 'bg-gray-800 border border-white/10' : 'bg-white border border-gray-200'}`}>
+                <div className={`absolute left-0 right-0 top-full mt-1 rounded-xl shadow-lg z-10 max-h-60 overflow-y-auto animate-scale-enter ${isDark ? 'bg-[#1a2030] border border-[#2a3344]' : 'bg-white border border-[#e8e5df]'}`}>
                   {searchResults.map(stock => (
                     <button
                       key={`${stock.market}-${stock.symbol}`}
@@ -222,7 +222,7 @@ export default function TradingHallPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{stock.symbol}</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded-md ${stock.market === 'HK' ? 'bg-red-500/15 text-red-400' : 'bg-blue-500/15 text-blue-400'}`}>
+                          <span className={`text-xs px-1.5 py-0.5 rounded-md ${stock.market === 'HK' ? 'bg-[#e74c3c]/15 text-[#e74c3c]' : 'bg-[#5B8FA8]/15 text-[#5B8FA8]'}`}>
                             {stock.market === 'HK' ? '港' : '美'}
                           </span>
                         </div>
@@ -242,7 +242,7 @@ export default function TradingHallPage() {
           
           {/* 已选股票提示 */}
           {selectedStock && (
-            <div className={`mt-2 ml-14 text-sm ${isDark ? 'text-green-400' : 'text-green-600'} animate-fade-enter`}>
+            <div className={`mt-2 ml-14 text-sm ${isDark ? 'text-[#27ae60]' : 'text-[#27ae60]'} animate-fade-enter`}>
               ✓ {selectedStock.symbol} ({selectedStock.market === 'HK' ? '港股' : '美股'}) · 每手 {lotSize} 股
             </div>
           )}
@@ -267,7 +267,7 @@ export default function TradingHallPage() {
                 onClick={() => setDirection('buy')}
                 className={`flex-1 py-2.5 rounded-l-xl font-medium text-sm transition-all ${
                   direction === 'buy'
-                    ? 'bg-red-500 text-white shadow-sm'
+                    ? 'bg-[#e74c3c] text-white shadow-sm'
                     : `${colors.input} ${colors.textMuted}`
                 }`}
               >
@@ -277,7 +277,7 @@ export default function TradingHallPage() {
                 onClick={() => setDirection('sell')}
                 className={`flex-1 py-2.5 rounded-r-xl font-medium text-sm transition-all ${
                   direction === 'sell'
-                    ? 'bg-green-600 text-white shadow-sm'
+                    ? 'bg-[#27ae60] text-white shadow-sm'
                     : `${colors.input} ${colors.textMuted}`
                 }`}
               >
@@ -372,8 +372,8 @@ export default function TradingHallPage() {
           <button
             className={`flex-1 py-3.5 rounded-xl font-semibold text-white transition-all active:scale-[0.98] ${
               direction === 'buy'
-                ? 'bg-red-500 shadow-red-500/20 shadow-lg'
-                : 'bg-green-600 shadow-green-600/20 shadow-lg'
+                ? 'bg-[#e74c3c] shadow-[#e74c3c]/20 shadow-lg'
+                : 'bg-[#27ae60] shadow-[#27ae60]/20 shadow-lg'
             } ${!canSubmit ? 'opacity-40 cursor-not-allowed shadow-none' : ''}`}
             disabled={!canSubmit}
           >
@@ -393,14 +393,14 @@ export default function TradingHallPage() {
         </div>
 
         {/* 底部持仓区域 */}
-        <div className={`mt-2 ${isDark ? 'bg-white/[0.02]' : 'bg-gray-50'} rounded-t-3xl`}>
+        <div className={`mt-2 ${isDark ? 'bg-[#161b26]' : 'bg-[#faf9f7]'} rounded-t-3xl`}>
           {/* 持仓/当日订单 Tab */}
           <div className="px-4 pt-4 flex items-center gap-6">
             <button
               onClick={() => setActiveTab('positions')}
               className={`font-semibold text-sm pb-2 transition ${
                 activeTab === 'positions' 
-                  ? `${colors.text} border-b-2 ${isDark ? 'border-white' : 'border-black'}` 
+                  ? `${colors.text} border-b-2 ${isDark ? 'border-[#C9A55C]' : 'border-[#A8862E]'}` 
                   : colors.textMuted
               }`}
             >
@@ -410,7 +410,7 @@ export default function TradingHallPage() {
               onClick={() => setActiveTab('orders')}
               className={`text-sm pb-2 transition ${
                 activeTab === 'orders' 
-                  ? `${colors.text} border-b-2 ${isDark ? 'border-white' : 'border-black'}` 
+                  ? `${colors.text} border-b-2 ${isDark ? 'border-[#C9A55C]' : 'border-[#A8862E]'}` 
                   : colors.textMuted
               }`}
             >
@@ -441,14 +441,14 @@ export default function TradingHallPage() {
                 }}
                 className={`w-full grid grid-cols-4 gap-2 px-4 py-3.5 text-left transition-all ${
                   selectedStock?.symbol === position.symbol 
-                    ? (isDark ? 'bg-white/[0.06]' : 'bg-blue-50')
+                    ? (isDark ? 'bg-[#1e2636]' : 'bg-[#5B8FA8]/10')
                     : ''
                 } ${colors.hover} active:scale-[0.99]`}
               >
                 <div>
                   <div className="font-medium text-sm">{position.name}</div>
                   <div className={`text-xs ${colors.textMuted} mt-0.5`}>
-                    <span className={position.market === 'US' ? 'text-blue-500' : 'text-rose-500'}>{position.market}</span> {position.symbol}
+                    <span className={position.market === 'US' ? 'text-[#5B8FA8]' : 'text-[#C9A55C]'}>{position.market}</span> {position.symbol}
                   </div>
                 </div>
                 <div className="text-right">
@@ -460,10 +460,10 @@ export default function TradingHallPage() {
                   <div className={`text-xs ${colors.textMuted} mt-0.5 tabular-nums`}>{position.costPrice.toFixed(3)}</div>
                 </div>
                 <div className="text-right">
-                  <div className={`text-sm tabular-nums ${position.profitLoss >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <div className={`text-sm tabular-nums ${position.profitLoss >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                     {position.profitLoss >= 0 ? '+' : ''}{position.profitLoss.toFixed(2)}
                   </div>
-                  <div className={`text-xs mt-0.5 tabular-nums ${position.profitLossPercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                  <div className={`text-xs mt-0.5 tabular-nums ${position.profitLossPercent >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                     {position.profitLossPercent >= 0 ? '+' : ''}{position.profitLossPercent.toFixed(2)}%
                   </div>
                 </div>

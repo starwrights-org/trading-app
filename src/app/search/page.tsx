@@ -19,7 +19,7 @@ const HISTORY_KEY = 'trading_search_history';
 export default function SearchPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-    const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
+    const bgColor = isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]';
   
   const [query, setQuery] = useState('');
   const [allStocks, setAllStocks] = useState<Stock[]>([]);
@@ -74,11 +74,11 @@ export default function SearchPage() {
   const handleStockClick = (stock: Stock) => addToHistory(stock.symbol);
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a] text-white' : 'bg-gray-50 text-black'}`}>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0f1219] text-[#edf0f5]' : 'bg-[#faf9f7] text-[#1a1d23]'}`}>
       {/* 搜索栏 */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10 px-5 py-4`}>
+      <div className={`${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} sticky top-0 z-10 px-5 py-4`}>
         <div className="max-w-lg mx-auto flex items-center gap-3">
-          <div className={`flex-1 flex items-center ${isDark ? 'bg-white/5' : 'bg-black/5'} rounded-xl px-4 py-3`}>
+          <div className={`flex-1 flex items-center ${isDark ? 'bg-[#1a2030]' : 'bg-[#1a1d23]/5'} rounded-xl px-4 py-3`}>
             <svg className="w-5 h-5 opacity-40 mr-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -88,7 +88,7 @@ export default function SearchPage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="搜索股票代码、名称"
               autoFocus
-              className={`flex-1 bg-transparent outline-none ${isDark ? 'placeholder-white/30' : 'placeholder-black/30'}`}
+              className={`flex-1 bg-transparent outline-none ${isDark ? 'placeholder-[#edf0f5]/30' : 'placeholder-[#1a1d23]/30'}`}
             />
             {query && (
               <button onClick={() => setQuery('')} className="opacity-40 hover:opacity-60">
@@ -98,7 +98,7 @@ export default function SearchPage() {
               </button>
             )}
           </div>
-          <Link href="/" className={`font-medium ${isDark ? 'text-white/60 hover:text-white' : 'text-black/60 hover:text-black'}`}>
+          <Link href="/" className={`font-medium ${isDark ? 'text-[#edf0f5]/60 hover:text-white' : 'text-black/60 hover:text-[#1a1d23]'}`}>
             取消
           </Link>
         </div>
@@ -118,7 +118,7 @@ export default function SearchPage() {
             </div>
             {results.length === 0 ? (
               <div className="text-center py-16">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+                <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
                   <svg className="w-8 h-8 opacity-30" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -132,17 +132,17 @@ export default function SearchPage() {
                     key={`${stock.market}-${stock.symbol}`}
                     href={`/stock/${stock.market}/${stock.symbol}`}
                     onClick={() => handleStockClick(stock)}
-                    className={`flex items-center justify-between p-4 rounded-2xl transition-all ${
+                    className={`flex items-center justify-between p-4 rounded-xl transition-all ${
                       isDark 
-                        ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]' 
-                        : 'bg-white hover:bg-gray-50 border border-gray-100 shadow-sm'
+                        ? 'bg-[#1a2030]/80 hover:bg-[#1e2636] border border-[#2a3344]' 
+                        : 'bg-white hover:bg-[#faf9f7] border border-[#f0ede8] shadow-sm'
                     }`}
                   >
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-semibold">{stock.symbol}</span>
                         <span className={`text-xs px-1.5 py-0.5 rounded ${
-                          stock.market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'
+                          stock.market === 'US' ? 'bg-[#5B8FA8]/12 text-[#5B8FA8]' : 'bg-[#C9A55C]/12 text-[#C9A55C]'
                         }`}>
                           {stock.market}
                         </span>
@@ -171,7 +171,7 @@ export default function SearchPage() {
                     key={term}
                     onClick={() => setQuery(term)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition ${
-                      isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'
+                      isDark ? 'bg-[#1a2030] hover:bg-[#1e2636]' : 'bg-[#1a1d23]/5 hover:bg-[#1a1d23]/10'
                     }`}
                   >
                     {term}
@@ -185,7 +185,7 @@ export default function SearchPage() {
               <section>
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="text-sm font-medium opacity-50">搜索历史</h3>
-                  <button onClick={clearHistory} className="text-sm text-orange-500 hover:text-orange-400">
+                  <button onClick={clearHistory} className="text-sm text-[#C9A55C] hover:text-[#d4b06a]">
                     清空
                   </button>
                 </div>
@@ -195,7 +195,7 @@ export default function SearchPage() {
                       key={`${term}-${index}`}
                       onClick={() => setQuery(term)}
                       className={`flex items-center gap-3 w-full text-left py-3 px-2 rounded-xl transition ${
-                        isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'
+                        isDark ? 'hover:bg-[#1a2030]' : 'hover:bg-[#1a1d23]/5'
                       }`}
                     >
                       <svg className="w-4 h-4 opacity-40" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -217,16 +217,16 @@ export default function SearchPage() {
                     key={`${stock.market}-${stock.symbol}`}
                     href={`/stock/${stock.market}/${stock.symbol}`}
                     onClick={() => handleStockClick(stock)}
-                    className={`p-4 rounded-2xl transition-all ${
+                    className={`p-4 rounded-xl transition-all ${
                       isDark 
-                        ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]' 
-                        : 'bg-white hover:bg-gray-50 border border-gray-100 shadow-sm'
+                        ? 'bg-[#1a2030]/80 hover:bg-[#1e2636] border border-[#2a3344]' 
+                        : 'bg-white hover:bg-[#faf9f7] border border-[#f0ede8] shadow-sm'
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-semibold">{stock.symbol}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded ${
-                        stock.market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'
+                        stock.market === 'US' ? 'bg-[#5B8FA8]/12 text-[#5B8FA8]' : 'bg-[#C9A55C]/12 text-[#C9A55C]'
                       }`}>
                         {stock.market}
                       </span>

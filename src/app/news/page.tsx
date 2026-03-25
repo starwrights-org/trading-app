@@ -24,7 +24,7 @@ const NEWS_HEADLINES = [
 export default function NewsPage() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-    const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
+    const bgColor = isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]';
   
   const [activeTab, setActiveTab] = useState<'headlines' | '7x24' | 'hot'>('headlines');
 
@@ -35,13 +35,13 @@ export default function NewsPage() {
   ];
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a] text-white' : 'bg-gray-50 text-black'} pb-20`}>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0f1219] text-[#edf0f5]' : 'bg-[#faf9f7] text-[#1a1d23]'} pb-20`}>
       {/* Header */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+      <div className={`${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-semibold tracking-tight">动态</h1>
-            <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}>
+            <Link href="/search" className={`p-2 rounded-full ${isDark ? 'hover:bg-[#1e2636]' : 'hover:bg-[#1a1d23]/5'} transition`}>
               <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -51,15 +51,15 @@ export default function NewsPage() {
 
         {/* Tab 切换 - 胶囊式 */}
         <div className="max-w-lg mx-auto px-5 pb-4">
-          <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-white/5' : 'bg-black/5'}`}>
+          <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-[#1a2030]' : 'bg-[#1a1d23]/5'}`}>
             {tabs.map(tab => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as typeof activeTab)}
                 className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeTab === tab.key
-                    ? isDark ? 'bg-white text-black' : 'bg-black text-white'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? isDark ? 'bg-[#C9A55C] text-[#0f1219]' : 'bg-[#A8862E] text-white'
+                    : 'text-[#1a1d23]/50 hover:text-[#1a1d23]/70'
                 }`}
               >
                 {tab.label}
@@ -74,14 +74,14 @@ export default function NewsPage() {
         {activeTab === 'headlines' && (
           <div className="space-y-3">
             {NEWS_HEADLINES.map(news => (
-              <article key={news.id} className={`p-4 rounded-2xl transition-all ${
+              <article key={news.id} className={`p-4 rounded-xl transition-all ${
                 isDark 
-                  ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]' 
-                  : 'bg-white hover:bg-gray-50 border border-gray-100 shadow-sm'
+                  ? 'bg-[#1a2030]/80 hover:bg-[#1e2636] border border-[#2a3344]' 
+                  : 'bg-white hover:bg-[#faf9f7] border border-[#f0ede8] shadow-sm'
               }`}>
                 <div className="flex items-start gap-3">
                   {news.pinned && (
-                    <span className="px-2 py-0.5 text-xs font-medium bg-green-500/10 text-green-500 rounded-full">
+                    <span className="px-2 py-0.5 text-xs font-medium bg-[#27ae60]/10 text-[#27ae60] rounded-full">
                       置顶
                     </span>
                   )}
@@ -89,7 +89,7 @@ export default function NewsPage() {
                 <h3 className={`font-medium leading-snug ${news.pinned ? 'mt-2' : ''}`}>
                   {news.title}
                 </h3>
-                <div className={`flex items-center gap-2 mt-3 text-sm ${isDark ? 'text-white/40' : 'text-gray-400'}`}>
+                <div className={`flex items-center gap-2 mt-3 text-sm ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>
                   <span>{news.source}</span>
                   <span>·</span>
                   <span>{news.time}</span>
@@ -98,10 +98,10 @@ export default function NewsPage() {
                   <div className="flex flex-wrap gap-2 mt-3">
                     {news.tags.map((tag, idx) => (
                       <span key={idx} className={`px-2 py-1 rounded-lg text-sm ${
-                        isDark ? 'bg-white/5' : 'bg-gray-100'
+                        isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'
                       }`}>
-                        <span className={isDark ? 'text-white/70' : 'text-gray-700'}>{tag.name}</span>
-                        <span className={`ml-1.5 ${tag.change >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        <span className={isDark ? 'text-[#edf0f5]/70' : 'text-[#1a1d23]/70'}>{tag.name}</span>
+                        <span className={`ml-1.5 ${tag.change >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                           {tag.change >= 0 ? '+' : ''}{tag.change.toFixed(2)}%
                         </span>
                       </span>
@@ -117,7 +117,7 @@ export default function NewsPage() {
         {activeTab === '7x24' && (
           <div className="space-y-1">
             {/* 日期标题 */}
-            <div className={`py-3 text-sm font-medium ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
+            <div className={`py-3 text-sm font-medium ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>
               03月21日 今天
             </div>
             
@@ -125,11 +125,11 @@ export default function NewsPage() {
               <article key={news.id} className="flex gap-4 py-4">
                 {/* 时间线 */}
                 <div className="flex flex-col items-center">
-                  <span className={`text-sm tabular-nums ${isDark ? 'text-white/40' : 'text-gray-400'}`}>
+                  <span className={`text-sm tabular-nums ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>
                     {news.time}
                   </span>
                   {idx < NEWS_7X24.length - 1 && (
-                    <div className={`flex-1 w-px mt-2 ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
+                    <div className={`flex-1 w-px mt-2 ${isDark ? 'bg-[#1e2636]' : 'bg-[#e8e5df]'}`} />
                   )}
                 </div>
                 
@@ -137,19 +137,19 @@ export default function NewsPage() {
                 <div className="flex-1 pb-4">
                   <h3 className="font-medium leading-snug">{news.title}</h3>
                   {news.content && (
-                    <p className={`text-sm mt-2 leading-relaxed ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
+                    <p className={`text-sm mt-2 leading-relaxed ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>
                       {news.content}
-                      <span className="text-blue-500 ml-1 cursor-pointer">展开</span>
+                      <span className="text-[#5B8FA8] ml-1 cursor-pointer">展开</span>
                     </p>
                   )}
                   {news.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {news.tags.map((tag, tidx) => (
                         <span key={tidx} className={`px-2 py-1 rounded-lg text-sm ${
-                          isDark ? 'bg-white/5' : 'bg-gray-100'
+                          isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'
                         }`}>
-                          <span className={isDark ? 'text-white/70' : 'text-gray-700'}>{tag.name}</span>
-                          <span className={`ml-1.5 text-red-500`}>
+                          <span className={isDark ? 'text-[#edf0f5]/70' : 'text-[#1a1d23]/70'}>{tag.name}</span>
+                          <span className={`ml-1.5 text-[#e74c3c]`}>
                             {tag.change.toFixed(2)}%
                           </span>
                         </span>
@@ -165,14 +165,14 @@ export default function NewsPage() {
         {/* 热榜 Tab */}
         {activeTab === 'hot' && (
           <div className="py-16 text-center">
-            <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+            <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
               <svg className="w-10 h-10 opacity-30" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
               </svg>
             </div>
-            <h2 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-black'}`}>热榜</h2>
-            <p className={`mt-2 ${isDark ? 'text-white/50' : 'text-gray-500'}`}>敬请期待</p>
+            <h2 className={`text-xl font-semibold ${isDark ? 'text-[#edf0f5]' : 'text-[#1a1d23]'}`}>热榜</h2>
+            <p className={`mt-2 ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>敬请期待</p>
           </div>
         )}
       </div>

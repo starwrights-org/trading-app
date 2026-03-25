@@ -89,7 +89,7 @@ export default function ExchangeRecordsPage() {
       <div className="max-w-lg mx-auto animate-page-enter">
         {/* 账户选择 */}
         <div className="px-4 py-3 flex items-center gap-2">
-          <span className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center text-white text-xs">💰</span>
+          <span className="w-7 h-7 bg-[#C9A55C] rounded-lg flex items-center justify-center text-white text-xs">💰</span>
           <span className={`text-sm ${colors.text}`}>证券账户 (LBPT10078568)</span>
         </div>
 
@@ -124,7 +124,7 @@ export default function ExchangeRecordsPage() {
                   {records.map(record => (
                     <div 
                       key={record.id} 
-                      className={`p-4 rounded-2xl card-hover ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}
+                      className={`p-4 rounded-xl card-hover ${isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'}`}
                     >
                       {/* 顶行：方向 + 状态 */}
                       <div className="flex items-center justify-between mb-2">
@@ -133,8 +133,8 @@ export default function ExchangeRecordsPage() {
                         </span>
                         <span className={`text-xs px-2 py-0.5 rounded-lg ${
                           record.status === 'pending' 
-                            ? 'bg-blue-500/10 text-blue-500' 
-                            : isDark ? 'bg-white/5 text-white/50' : 'bg-gray-100 text-gray-500'
+                            ? 'bg-[#5B8FA8]/12 text-[#5B8FA8]' 
+                            : isDark ? 'bg-[#1a2030] text-[#edf0f5]/50' : 'bg-[#f0ede8] text-[#1a1d23]/50'
                         }`}>
                           {record.status === 'pending' ? '已提交' : '已兑换'}
                         </span>
@@ -147,7 +147,7 @@ export default function ExchangeRecordsPage() {
                           {record.isEstimate && (
                             <span className={`text-xs px-1.5 py-0.5 border ${colors.border} rounded-md ${colors.textMuted}`}>预估</span>
                           )}
-                          <span className={`font-medium text-sm tabular-nums text-red-500`}>
+                          <span className={`font-medium text-sm tabular-nums text-[#e74c3c]`}>
                             +{record.toAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} {record.toCurrency}
                           </span>
                         </div>
@@ -170,7 +170,7 @@ export default function ExchangeRecordsPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-28">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
               <svg className="w-8 h-8 opacity-20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -182,7 +182,7 @@ export default function ExchangeRecordsPage() {
 
       {/* 时间筛选弹窗 */}
       {showTimeFilter && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end animate-backdrop">
+        <div className="fixed inset-0 bg-[#1a1d23]/50 z-50 flex items-end animate-backdrop">
           <div className={`w-full ${colors.bg} rounded-t-3xl animate-sheet`}>
             <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.borderLight}`}>
               <span className={`text-lg font-semibold ${colors.text}`}>选择时间</span>
@@ -209,7 +209,7 @@ export default function ExchangeRecordsPage() {
                     }}
                     className={`px-5 py-2 rounded-xl border transition ${
                       timeFilter === option.key
-                        ? 'border-blue-500 bg-blue-500 text-white'
+                        ? 'border-[#5B8FA8] bg-[#5B8FA8] text-white'
                         : `${colors.border} ${colors.textSecondary}`
                     }`}
                   >
@@ -222,7 +222,7 @@ export default function ExchangeRecordsPage() {
             <div className="px-4 py-4 pb-8">
               <button 
                 onClick={() => setShowTimeFilter(false)}
-                className="w-full py-3 bg-blue-500 text-white rounded-xl font-medium transition active:scale-[0.98]"
+                className="w-full py-3 bg-[#5B8FA8] text-white rounded-xl font-medium transition active:scale-[0.98]"
               >
                 确定
               </button>

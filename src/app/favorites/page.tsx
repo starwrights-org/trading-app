@@ -70,14 +70,14 @@ export default function FavoritesPage() {
       <div className="max-w-lg mx-auto px-4 py-4">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full"></div>
+            <div className="animate-spin w-8 h-8 border-2 border-[#C9A55C] border-t-transparent rounded-full"></div>
           </div>
         ) : favorites.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">💔</div>
             <div className={`text-lg ${colors.textMuted}`}>暂无收藏</div>
             <div className={`text-sm ${colors.textMuted} mt-2`}>点击股票详情页右上角的 ❤️ 添加收藏</div>
-            <Link href="/search" className="inline-block mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg">
+            <Link href="/search" className="inline-block mt-4 px-6 py-2 bg-[#C9A55C] text-white rounded-lg">
               去发现股票
             </Link>
           </div>
@@ -89,7 +89,7 @@ export default function FavoritesPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{stock.symbol}</span>
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${stock.market === 'HK' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${stock.market === 'HK' ? 'bg-[#e74c3c]/12 text-[#e74c3c]' : 'bg-[#5B8FA8]/12 text-[#4A7A90]'}`}>
                         {stock.market === 'HK' ? '港股' : '美股'}
                       </span>
                     </div>
@@ -100,7 +100,7 @@ export default function FavoritesPage() {
                       {stock.price ? stock.price.toFixed(stock.market === 'HK' ? 3 : 2) : '--'}
                     </div>
                     {stock.changePercent !== undefined && (
-                      <div className={`text-sm ${stock.changePercent >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                      <div className={`text-sm ${stock.changePercent >= 0 ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                         {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
                       </div>
                     )}
@@ -108,7 +108,7 @@ export default function FavoritesPage() {
                 </Link>
                 <button 
                   onClick={() => handleRemove(stock.symbol)}
-                  className="text-red-500 p-2 hover:bg-red-50 rounded-full"
+                  className="text-[#e74c3c] p-2 hover:bg-[#e74c3c]/8 rounded-full"
                   title="取消收藏"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

@@ -62,8 +62,7 @@ export default function BottomNav({ active }: BottomNavProps) {
 
   return (
     <nav className={`fixed bottom-0 left-0 right-0 ${
-      theme === 'dark' ? 'bg-[#0d1421]/95 border-blue-900/30' :
-      isDark ? 'bg-[#0a0a0a]/95 border-white/5' : 'bg-white/95 border-gray-200'
+      isDark ? 'bg-[#0f1219]/95 border-[#2a3344]' : 'bg-[#faf9f7]/95 border-[#e8e5df]'
     } border-t backdrop-blur-xl`}>
       <div className="max-w-lg mx-auto flex">
         {navItems.map(item => {
@@ -74,12 +73,12 @@ export default function BottomNav({ active }: BottomNavProps) {
               href={item.href}
               className={`flex-1 flex flex-col items-center py-3 transition-colors ${
                 isActive 
-                  ? isDark ? 'text-white' : 'text-black'
-                  : isDark ? 'text-white/40 hover:text-white/60' : 'text-gray-400 hover:text-gray-600'
+                  ? isDark ? 'text-[#C9A55C]' : 'text-[#A8862E]'
+                  : isDark ? 'text-[#edf0f5]/35 hover:text-[#edf0f5]/55' : 'text-[#1a1d23]/35 hover:text-[#1a1d23]/55'
               }`}
             >
               <item.Icon active={isActive} />
-              <span className={`text-[11px] mt-1 font-medium ${isActive ? '' : 'opacity-70'}`}>{item.label}</span>
+              <span className={`text-[11px] mt-1 font-medium`}>{item.label}</span>
             </Link>
           );
         })}

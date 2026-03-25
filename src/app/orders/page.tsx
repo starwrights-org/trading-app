@@ -86,7 +86,7 @@ export default function OrdersPage() {
       <div className="max-w-lg mx-auto animate-page-enter">
         {/* 搜索框 */}
         <div className="px-4 py-3">
-          <div className={`flex items-center ${colors.input} rounded-xl px-3 py-2.5 transition-all focus-within:ring-2 focus-within:ring-blue-500/20`}>
+          <div className={`flex items-center ${colors.input} rounded-xl px-3 py-2.5 transition-all focus-within:ring-2 focus-within:ring-[#5B8FA8]/20`}>
             <svg className={`w-4 h-4 opacity-40 mr-2`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -112,7 +112,7 @@ export default function OrdersPage() {
               onClick={() => { setActiveTab(tab.key as typeof activeTab); setStatusFilter('all'); }}
               className={`py-3 px-3 text-sm font-medium transition border-b-2 ${
                 activeTab === tab.key 
-                  ? `${colors.text} ${isDark ? 'border-white' : 'border-black'}` 
+                  ? `${colors.text} ${isDark ? 'border-[#C9A55C]' : 'border-[#A8862E]'}` 
                   : `${colors.textMuted} border-transparent`
               }`}
             >
@@ -145,7 +145,7 @@ export default function OrdersPage() {
                 onClick={() => setStatusFilter(filter === '全部' || filter === '全部状态' ? 'all' : filter)}
                 className={`px-3 py-1.5 rounded-xl text-sm whitespace-nowrap border transition ${
                   (statusFilter === 'all' && (filter === '全部' || filter === '全部状态')) || statusFilter === filter
-                    ? isDark ? 'border-white/30 bg-white/10 text-white' : 'border-gray-900 bg-gray-900 text-white'
+                    ? isDark ? 'border-[#3a4455] bg-[#1e2636] text-white' : 'border-gray-900 bg-gray-900 text-white'
                     : `${colors.border} ${colors.textMuted}`
                 }`}
               >
@@ -167,11 +167,11 @@ export default function OrdersPage() {
                 rejected: '已拒绝',
               };
               const statusColor: Record<string, string> = {
-                pending: 'text-blue-500',
-                partial: 'text-blue-500',
+                pending: 'text-[#5B8FA8]',
+                partial: 'text-[#5B8FA8]',
                 filled: colors.textMuted,
                 cancelled: colors.textMuted,
-                rejected: 'text-red-500',
+                rejected: 'text-[#e74c3c]',
               };
 
               return (
@@ -185,13 +185,13 @@ export default function OrdersPage() {
                     <div className="flex items-center gap-2">
                       <span className={`font-medium ${colors.text}`}>{order.name}</span>
                       <span className={`text-xs px-1.5 py-0.5 rounded-md ${
-                        order.market === 'US' ? 'bg-blue-500/10 text-blue-500' : 'bg-rose-500/10 text-rose-500'
+                        order.market === 'US' ? 'bg-[#5B8FA8]/12 text-[#5B8FA8]' : 'bg-[#C9A55C]/12 text-[#C9A55C]'
                       }`}>
                         {order.market}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-sm font-medium ${order.side === 'buy' ? 'text-red-500' : 'text-green-500'}`}>
+                      <span className={`text-sm font-medium ${order.side === 'buy' ? 'text-[#e74c3c]' : 'text-[#27ae60]'}`}>
                         {order.side === 'buy' ? '买入' : '卖出'}
                       </span>
                       <span className={`text-xs ${statusColor[order.status]}`}>
@@ -223,7 +223,7 @@ export default function OrdersPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-28">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-[#1a2030]' : 'bg-[#f0ede8]'} flex items-center justify-center`}>
               <svg className="w-8 h-8 opacity-20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>

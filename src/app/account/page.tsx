@@ -20,7 +20,7 @@ function getFavoritesCount(): number {
 export default function AccountPage() {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
-    const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
+    const bgColor = isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]';
   const [favCount, setFavCount] = useState(0);
 
   useEffect(() => {
@@ -35,22 +35,22 @@ export default function AccountPage() {
   ];
 
   const colorMap: { [key: string]: string } = {
-    blue: isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-50 text-blue-600',
-    green: isDark ? 'bg-green-500/20 text-green-400' : 'bg-green-50 text-green-600',
-    orange: isDark ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-50 text-orange-600',
-    gray: isDark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-600',
+    blue: isDark ? 'bg-[#5B8FA8]/20 text-[#5B8FA8]' : 'bg-[#5B8FA8]/10 text-[#4A7A90]',
+    green: isDark ? 'bg-[#27ae60]/20 text-[#27ae60]' : 'bg-[#27ae60]/8 text-[#27ae60]',
+    orange: isDark ? 'bg-[#C9A55C]/20 text-[#C9A55C]' : 'bg-[#C9A55C]/8 text-orange-600',
+    gray: isDark ? 'bg-[#1e2636] text-[#edf0f5]/60' : 'bg-[#f0ede8] text-[#1a1d23]/60',
   };
 
   return (
-    <main className={`min-h-screen ${isDark ? 'bg-[#0a0a0a] text-white' : 'bg-gray-50 text-black'} pb-20`}>
+    <main className={`min-h-screen ${isDark ? 'bg-[#0f1219] text-[#edf0f5]' : 'bg-[#faf9f7] text-[#1a1d23]'} pb-20`}>
       {/* Header */}
-      <div className={`${isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50'} sticky top-0 z-10`}>
+      <div className={`${isDark ? 'bg-[#0f1219]' : 'bg-[#faf9f7]'} sticky top-0 z-10`}>
         <div className="max-w-lg mx-auto px-5 pt-4 pb-3">
           <div className="flex items-center justify-between">
             <h1 className="text-[28px] font-bold tracking-tight">我的</h1>
             <button 
               onClick={toggleTheme}
-              className={`p-2 rounded-full ${isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'} transition`}
+              className={`p-2 rounded-full ${isDark ? 'hover:bg-[#1e2636]' : 'hover:bg-[#1a1d23]/5'} transition`}
             >
               {isDark ? (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -68,12 +68,12 @@ export default function AccountPage() {
 
       <div className="max-w-lg mx-auto px-5">
         {/* 用户卡片 */}
-        <div className={`p-5 rounded-3xl mb-6 ${
-          isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'
+        <div className={`p-5 rounded-2xl mb-6 ${
+          isDark ? 'bg-gradient-to-br from-[#1e2636] to-[#161b26] border border-[#2a3344]' : 'bg-white shadow-lg border border-[#e8e5df]'
         }`}>
           <div className="flex items-center gap-4">
-            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${
-              isDark ? 'bg-white/10' : 'bg-gray-100'
+            <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${
+              isDark ? 'bg-[#1e2636]' : 'bg-[#f0ede8]'
             }`}>
               <svg className="w-8 h-8 opacity-40" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -81,7 +81,7 @@ export default function AccountPage() {
             </div>
             <div className="flex-1">
               <div className="font-semibold text-lg">同舟证券用户</div>
-              <div className={`text-sm ${isDark ? 'text-white/50' : 'text-gray-500'}`}>ID: 30000079</div>
+              <div className={`text-sm ${isDark ? 'text-[#edf0f5]/50' : 'text-[#1a1d23]/50'}`}>ID: 30000079</div>
             </div>
             <svg className="w-5 h-5 opacity-40" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -89,22 +89,22 @@ export default function AccountPage() {
           </div>
 
           {/* 统计数据 */}
-          <div className="grid grid-cols-4 gap-4 mt-6 pt-5 border-t border-white/10">
+          <div className="grid grid-cols-4 gap-4 mt-6 pt-5 border-t border-[#2a3344]">
             <div className="text-center">
               <div className="text-xl font-semibold">0</div>
-              <div className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>关注</div>
+              <div className={`text-xs ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>关注</div>
             </div>
             <div className="text-center">
               <div className="text-xl font-semibold">0</div>
-              <div className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>粉丝</div>
+              <div className={`text-xs ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>粉丝</div>
             </div>
             <Link href="/favorites" className="text-center">
-              <div className="text-xl font-semibold text-rose-500">{favCount}</div>
-              <div className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>收藏</div>
+              <div className="text-xl font-semibold text-[#C9A55C]">{favCount}</div>
+              <div className={`text-xs ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>收藏</div>
             </Link>
             <div className="text-center">
               <div className="text-xl font-semibold">0</div>
-              <div className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>足迹</div>
+              <div className={`text-xs ${isDark ? 'text-[#edf0f5]/40' : 'text-[#1a1d23]/40'}`}>足迹</div>
             </div>
           </div>
         </div>
@@ -113,19 +113,19 @@ export default function AccountPage() {
         <div className="grid grid-cols-4 gap-4 mb-8">
           {menuItems.map(item => (
             <Link key={item.label} href={item.href} className="flex flex-col items-center">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-2 ${colorMap[item.color]}`}>
+              <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-2 ${colorMap[item.color]}`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                 </svg>
               </div>
-              <span className={`text-xs ${isDark ? 'text-white/60' : 'text-gray-600'}`}>{item.label}</span>
+              <span className={`text-xs ${isDark ? 'text-[#edf0f5]/60' : 'text-[#1a1d23]/60'}`}>{item.label}</span>
             </Link>
           ))}
         </div>
 
         {/* 设置列表 */}
-        <div className={`rounded-2xl overflow-hidden ${
-          isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
+        <div className={`rounded-xl overflow-hidden ${
+          isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'
         }`}>
           {[
             { label: '账户安全', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
@@ -134,8 +134,8 @@ export default function AccountPage() {
             { label: '关于我们', icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
           ].map((item, idx) => (
             <button key={item.label} className={`w-full flex items-center justify-between p-4 ${
-              idx > 0 ? `border-t ${isDark ? 'border-white/5' : 'border-gray-100'}` : ''
-            } ${isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'} transition`}>
+              idx > 0 ? `border-t ${isDark ? 'border-[#232b3b]' : 'border-[#f0ede8]'}` : ''
+            } ${isDark ? 'hover:bg-[#1a2030]' : 'hover:bg-[#faf9f7]'} transition`}>
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5 opacity-50" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
@@ -150,10 +150,10 @@ export default function AccountPage() {
         </div>
 
         {/* 主题切换 */}
-        <div className={`mt-6 p-4 rounded-2xl ${
-          isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'
+        <div className={`mt-6 p-4 rounded-xl ${
+          isDark ? 'bg-[#1a2030]/80 border border-[#2a3344]' : 'bg-white border border-[#f0ede8] shadow-sm'
         }`}>
-          <div className={`text-sm font-medium mb-3 ${isDark ? 'text-white/60' : 'text-gray-600'}`}>外观主题</div>
+          <div className={`text-sm font-medium mb-3 ${isDark ? 'text-[#edf0f5]/60' : 'text-[#1a1d23]/60'}`}>外观主题</div>
           <div className="flex gap-2">
             {[
               { key: 'dark', label: '深黑' },
@@ -167,8 +167,8 @@ export default function AccountPage() {
                 }}
                 className={`flex-1 py-3 rounded-xl text-sm font-medium transition ${
                   theme === t.key
-                    ? 'bg-green-500 text-white'
-                    : isDark ? 'bg-white/5 text-white/60' : 'bg-gray-100 text-gray-600'
+                    ? 'bg-[#27ae60] text-white'
+                    : isDark ? 'bg-[#1a2030] text-[#edf0f5]/60' : 'bg-[#f0ede8] text-[#1a1d23]/60'
                 }`}
               >
                 {t.label}
@@ -178,7 +178,7 @@ export default function AccountPage() {
         </div>
 
         {/* 版本信息 */}
-        <div className={`text-center py-8 ${isDark ? 'text-white/30' : 'text-gray-400'}`}>
+        <div className={`text-center py-8 ${isDark ? 'text-[#edf0f5]/30' : 'text-[#1a1d23]/40'}`}>
           <p className="text-sm">同舟证券 v1.0.0</p>
         </div>
       </div>
