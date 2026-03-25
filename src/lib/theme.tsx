@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = 'dark' | 'light' | 'dark';
+type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
   theme: Theme;
@@ -92,19 +92,5 @@ export const themeColors = {
     input: 'bg-gray-100',
     navBg: 'bg-white/95',
     cardGradient: 'from-gray-100 to-white',
-  },
-  midnight: {
-    bg: 'bg-[#0d1421]',
-    bgSecondary: 'bg-[#131c2e]',
-    bgCard: 'bg-[#1a2744]',
-    text: 'text-white',
-    textSecondary: 'text-blue-200',
-    textMuted: 'text-blue-300/50',
-    border: 'border-blue-900/50',
-    borderLight: 'border-blue-900/30',
-    hover: 'hover:bg-blue-900/30',
-    input: 'bg-blue-900/30',
-    navBg: 'bg-[#0d1421]/95',
-    cardGradient: 'from-blue-900/50 to-indigo-900/30',
   },
 };

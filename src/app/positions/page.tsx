@@ -8,7 +8,7 @@ import BottomNav from '@/components/BottomNav';
 
 export default function PositionsPage() {
   const { theme } = useTheme();
-  const isDark = theme === 'midnight';
+  const isDark = theme === 'dark';
     const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   
   const [showAmount, setShowAmount] = useState(true);

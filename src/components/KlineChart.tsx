@@ -50,7 +50,7 @@ export default function KlineChart({ data, symbol, theme = 'dark' }: KlineChartP
       };
     });
 
-    const isDarkTheme = theme === 'midnight';
+    const isDarkTheme = theme === 'dark';
     const textColor = isDarkTheme ? '#9ca3af' : '#6b7280';
     const gridColor = isDarkTheme ? '#333333' : '#e5e7eb';
     const crosshairLabelBg = isDarkTheme ? '#374151' : '#1f2937';

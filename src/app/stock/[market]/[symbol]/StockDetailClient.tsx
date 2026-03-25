@@ -40,17 +40,6 @@ const themeColors: Record<string, {
     hover: 'hover:bg-gray-50',
     navBg: 'bg-white/95',
   },
-  midnight: {
-    bg: 'bg-[#0d1421]',
-    bgCard: 'bg-[#1a2744]',
-    text: 'text-white',
-    textMuted: 'text-blue-300/50',
-    textSecondary: 'text-blue-200',
-    border: 'border-blue-900/50',
-    borderLight: 'border-blue-900/30',
-    hover: 'hover:bg-blue-900/30',
-    navBg: 'bg-[#0d1421]/95',
-  },
 };
 import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
 
@@ -438,7 +427,7 @@ function isFavorite(symbol: string): boolean {
 export default function StockDetailClient({ market, symbol }: { market: string; symbol: string }) {
   const { theme } = useTheme();
   const colors = themeColors[theme];
-  const isDark = theme === 'midnight';
+  const isDark = theme === 'dark';
   
   const [stockInfo, setStockInfo] = useState<StockFullInfo | null>(null);
   const [loading, setLoading] = useState(true);

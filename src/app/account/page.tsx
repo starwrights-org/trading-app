@@ -19,7 +19,7 @@ function getFavoritesCount(): number {
 
 export default function AccountPage() {
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'midnight';
+  const isDark = theme === 'dark';
     const bgColor = isDark ? 'bg-[#0a0a0a]' : 'bg-gray-50';
   const [favCount, setFavCount] = useState(0);
 
@@ -158,7 +158,6 @@ export default function AccountPage() {
             {[
               { key: 'dark', label: '深黑' },
               { key: 'light', label: '浅白' },
-              { key: 'midnight', label: '午夜蓝' },
             ].map(t => (
               <button
                 key={t.key}
