@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Trading App",
   description: "港股美股交易APP",
+  icons: {
+    icon: [
+      { url: '/trading-app/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({

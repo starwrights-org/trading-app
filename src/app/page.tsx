@@ -143,6 +143,15 @@ export default function WatchlistPage() {
           </div>
         </div>
 
+          {/* Pull-to-refresh hint */}
+        <div className="max-w-lg mx-auto flex justify-center py-1">
+          <div className={`pull-to-refresh-hint ${isDark ? 'text-white/20' : 'text-black/15'}`}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+
         {/* Tab 切换 - 胶囊式设计 */}
         <div className="max-w-lg mx-auto px-5 pb-4">
           <div className={`inline-flex p-1 rounded-xl ${isDark ? 'bg-white/5' : 'bg-black/5'}`}>
@@ -197,7 +206,7 @@ export default function WatchlistPage() {
 
         {/* 股票列表 - 卡片式设计 */}
         {!loading && (
-          <div className="space-y-3">
+          <div className="space-y-3 animate-page-enter">
             {watchlist.map((stock, idx) => {
               const isUp = (stock.changePercent || 0) >= 0;
               const price = stock.price || 0;
@@ -207,7 +216,7 @@ export default function WatchlistPage() {
                 <Link
                   key={`${stock.market}-${stock.symbol}`}
                   href={`/stock/${stock.market}/${stock.symbol}/`}
-                  className={`block p-4 rounded-2xl transition-all duration-200 ${
+                  className={`block p-4 rounded-2xl transition-all duration-200 card-hover ${
                     isDark 
                       ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]' 
                       : 'bg-white hover:bg-gray-50 border border-gray-100 shadow-sm'

@@ -22,6 +22,7 @@ const EXCHANGE_RATES: Record<string, Record<string, number>> = {
 export default function CurrencyExchangePage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
+  const isDark = theme === 'dark';
   
   const [fromCurrency, setFromCurrency] = useState<'HKD' | 'USD' | 'CNH'>('HKD');
   const [toCurrency, setToCurrency] = useState<'HKD' | 'USD' | 'CNH'>('USD');
@@ -87,10 +88,10 @@ export default function CurrencyExchangePage() {
   if (showSuccessPage) {
     return (
       <main className={`min-h-screen ${colors.bg} ${colors.text}`}>
-        <div className="max-w-lg mx-auto flex flex-col min-h-screen">
+        <div className="max-w-lg mx-auto flex flex-col min-h-screen animate-page-enter">
           {/* 成功图标和标题 */}
           <div className="flex-1 flex flex-col items-center justify-center px-4">
-            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6">
+            <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 animate-scale-enter">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -102,14 +103,12 @@ export default function CurrencyExchangePage() {
           {/* 时间线 */}
           <div className={`px-6 py-8 border-t ${colors.border}`}>
             <div className="flex">
-              {/* 时间线左侧 */}
               <div className="flex flex-col items-center mr-4">
-                <div className="w-3 h-3 bg-gray-900 rounded-full" />
-                <div className={`w-0.5 h-12 ${colors.border} bg-current`} />
+                <div className={`w-3 h-3 rounded-full ${isDark ? 'bg-white' : 'bg-gray-900'}`} />
+                <div className={`w-0.5 h-12 ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
                 <div className={`w-3 h-3 border-2 ${colors.border} rounded-full`} />
               </div>
               
-              {/* 时间线内容 */}
               <div className="flex-1">
                 <div className="mb-8">
                   <div className={`font-medium ${colors.text}`}>兑换申请已提交</div>
@@ -127,7 +126,7 @@ export default function CurrencyExchangePage() {
           <div className="px-4 pb-8">
             <Link 
               href="/positions"
-              className="block w-full py-4 bg-blue-500 text-white text-center rounded-full font-medium"
+              className="block w-full py-4 bg-blue-500 text-white text-center rounded-xl font-medium transition active:scale-[0.98]"
             >
               完成
             </Link>
@@ -141,20 +140,20 @@ export default function CurrencyExchangePage() {
   }
 
   return (
-    <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
+    <main className={`min-h-screen ${colors.bg} ${colors.text} pb-24`}>
       {/* Header */}
-      <div className={`${colors.bg} sticky top-0 z-10`}>
+      <div className={`${colors.bg} sticky top-0 z-10 border-b ${colors.borderLight}`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center">
-          <Link href="/positions" className={`mr-4 ${colors.textSecondary} hover:${colors.text}`}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Link href="/positions" className={`p-1 mr-3 rounded-lg ${colors.hover} transition`}>
+            <svg className="w-6 h-6 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
           <div className="flex-1 text-center">
-            <div className="text-lg font-medium">货币兑换</div>
+            <div className="text-lg font-semibold">货币兑换</div>
             <div className={`text-xs ${colors.textMuted}`}>证券账户 (LBPT10078568)</div>
           </div>
-          <Link href="/exchange-records" className={colors.textSecondary}>
+          <Link href="/exchange-records" className={`p-1 rounded-lg ${colors.hover} transition opacity-60`}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -162,54 +161,54 @@ export default function CurrencyExchangePage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-lg mx-auto animate-page-enter">
         {/* 进行中的兑换提示 */}
         <Link 
           href="/exchange-records"
-          className={`mx-4 mt-3 flex items-center justify-between px-4 py-3 ${colors.bgCard} rounded-xl`}
+          className={`mx-4 mt-3 flex items-center justify-between px-4 py-3 rounded-2xl card-hover ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">📋</span>
-            <span className={colors.text}>您有 1 笔进行中的货币兑换</span>
+            <span className={`text-sm ${colors.text}`}>您有 1 笔进行中的货币兑换</span>
           </div>
-          <svg className={`w-5 h-5 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-4 h-4 ${colors.textMuted}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </Link>
 
         {/* 参考汇率 */}
-        <div className={`px-4 py-3 ${colors.textSecondary} text-sm`}>
+        <div className={`px-4 py-3 text-sm ${colors.textMuted}`}>
           参考汇率：1 {CURRENCIES[fromCurrency].name} = {rate.toFixed(4)} {CURRENCIES[toCurrency].name}
         </div>
 
         {/* 兑换卡片 */}
-        <div className={`mx-4 ${colors.bgCard} rounded-2xl p-4`}>
+        <div className={`mx-4 rounded-2xl p-5 ${isDark ? 'bg-gradient-to-br from-white/[0.06] to-white/[0.02] border border-white/[0.06]' : 'bg-white shadow-lg border border-gray-100'}`}>
           {/* 货币选择行 */}
           <div className="flex items-center justify-between mb-6">
             <button 
               onClick={() => setShowFromPicker(true)}
-              className="flex items-center gap-2"
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl ${colors.hover} transition`}
             >
               <span className="text-2xl">{CURRENCIES[fromCurrency].flag}</span>
               <span className="font-medium">{CURRENCIES[fromCurrency].name}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             
-            <button onClick={handleSwap} className={`p-2 ${colors.textSecondary}`}>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button onClick={handleSwap} className={`p-2.5 rounded-xl ${colors.input} transition active:scale-95`}>
+              <svg className="w-5 h-5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </button>
             
             <button 
               onClick={() => setShowToPicker(true)}
-              className="flex items-center gap-2"
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl ${colors.hover} transition`}
             >
               <span className="text-2xl">{CURRENCIES[toCurrency].flag}</span>
               <span className="font-medium">{CURRENCIES[toCurrency].name}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
@@ -226,10 +225,10 @@ export default function CurrencyExchangePage() {
                   value={fromAmount}
                   onChange={(e) => setFromAmount(e.target.value)}
                   placeholder="输入兑出金额"
-                  className={`text-2xl font-bold bg-transparent outline-none flex-1 min-w-0 ${colors.text} placeholder:${colors.textMuted}`}
+                  className={`text-2xl font-bold bg-transparent outline-none flex-1 min-w-0 tabular-nums ${colors.text}`}
                 />
               </div>
-              <button onClick={handleAll} className="text-blue-500 text-sm flex-shrink-0 ml-2">
+              <button onClick={handleAll} className="text-blue-500 text-sm flex-shrink-0 ml-2 font-medium">
                 全部
               </button>
             </div>
@@ -241,17 +240,17 @@ export default function CurrencyExchangePage() {
               onClick={() => setShowBalanceDetail(!showBalanceDetail)}
               className="flex items-center gap-2"
             >
-              <span className={colors.textMuted}>可兑预估</span>
-              <span className="text-orange-500 font-medium">
+              <span className={`text-sm ${colors.textMuted}`}>可兑预估</span>
+              <span className="text-orange-500 font-medium tabular-nums">
                 {fromBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })} {fromCurrency}
               </span>
-              <svg className={`w-4 h-4 ${colors.textMuted} transition ${showBalanceDetail ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className={`w-4 h-4 ${colors.textMuted} transition-transform ${showBalanceDetail ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             
             {showBalanceDetail && (
-              <div className={`mt-2 text-sm ${colors.textSecondary}`}>
+              <div className={`mt-2 text-sm ${colors.textSecondary} animate-fade-enter`}>
                 <div>美元可兑：{CURRENCIES.USD.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} USD</div>
                 <div>港元可兑：{CURRENCIES.HKD.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} HKD</div>
               </div>
@@ -266,7 +265,7 @@ export default function CurrencyExchangePage() {
             <div className={`text-sm ${colors.textMuted} mb-2`}>兑入</div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold">{toCurrency}</span>
-              <span className={`text-2xl font-bold ${toAmount ? colors.text : colors.textMuted}`}>
+              <span className={`text-2xl font-bold tabular-nums ${toAmount ? colors.text : colors.textMuted}`}>
                 {toAmount || '0.00'}
               </span>
               {toAmount && <span className={`text-sm ${colors.textMuted}`}>预估</span>}
@@ -275,9 +274,9 @@ export default function CurrencyExchangePage() {
         </div>
 
         {/* 温馨提示 */}
-        <div className={`mx-4 mt-6 p-4 ${colors.bgSecondary} rounded-xl`}>
-          <div className={`font-medium ${colors.text} mb-2`}>温馨提示</div>
-          <div className={`text-sm ${colors.textMuted} space-y-1`}>
+        <div className={`mx-4 mt-5 p-4 rounded-2xl ${isDark ? 'bg-white/[0.02] border border-white/[0.04]' : 'bg-gray-50 border border-gray-100'}`}>
+          <div className={`font-medium text-sm ${colors.text} mb-2`}>温馨提示</div>
+          <div className={`text-xs ${colors.textMuted} space-y-1 leading-relaxed`}>
             <p>1. 页面中展示的汇率仅供参考，请以实际兑换后的金额为准。</p>
             <p>2. 预计完成时间仅供参考，请以实际完成时间为准。</p>
             <p>3. 功能仅用于交易结算，请不要使用它进行货币投机，与交易无关的请求都将被拒绝，请谨慎操作。</p>
@@ -291,15 +290,15 @@ export default function CurrencyExchangePage() {
       </div>
 
       {/* 底部按钮 */}
-      <div className={`fixed bottom-0 left-0 right-0 ${colors.bg} p-4 pb-6`}>
-        <div className="max-w-lg mx-auto">
+      <div className={`fixed bottom-0 left-0 right-0 ${colors.bg} border-t ${colors.borderLight} backdrop-blur-xl`}>
+        <div className="max-w-lg mx-auto p-4 pb-6">
           <button 
             onClick={handleApply}
             disabled={!fromAmount || parseFloat(fromAmount) <= 0}
-            className={`w-full py-4 rounded-full font-medium transition ${
+            className={`w-full py-4 rounded-xl font-medium transition-all active:scale-[0.98] ${
               fromAmount && parseFloat(fromAmount) > 0
-                ? 'bg-blue-500 text-white'
-                : `${colors.bgSecondary} ${colors.textMuted}`
+                ? 'bg-blue-500 text-white shadow-blue-500/20 shadow-lg'
+                : `${colors.input} ${colors.textMuted}`
             }`}
           >
             申请兑换
@@ -309,23 +308,21 @@ export default function CurrencyExchangePage() {
 
       {/* 确认弹窗 */}
       {showConfirmModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-          <div className={`w-full ${colors.bg} rounded-t-3xl`}>
-            {/* 标题栏 */}
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end animate-backdrop">
+          <div className={`w-full ${colors.bg} rounded-t-3xl animate-sheet`}>
             <div className={`flex items-center justify-between px-4 py-4`}>
-              <span className={`text-lg font-medium ${colors.text}`}>货币兑换确认</span>
-              <button onClick={() => setShowConfirmModal(false)} className={colors.textMuted}>
+              <span className={`text-lg font-semibold ${colors.text}`}>货币兑换确认</span>
+              <button onClick={() => setShowConfirmModal(false)} className={`p-1 rounded-lg ${colors.hover} transition opacity-60`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* 兑换信息 */}
             <div className="px-4 py-4 space-y-4">
               <div className="flex items-center justify-between">
                 <span className={colors.textMuted}>兑出</span>
-                <span className={`font-medium ${colors.text}`}>
+                <span className={`font-medium tabular-nums ${colors.text}`}>
                   {parseFloat(fromAmount).toFixed(2)} {CURRENCIES[fromCurrency].name}
                 </span>
               </div>
@@ -333,18 +330,17 @@ export default function CurrencyExchangePage() {
                 <span className={colors.textMuted}>兑入</span>
                 <div className="text-right">
                   <span className={`text-sm ${colors.textMuted}`}>预估 </span>
-                  <span className={`font-medium ${colors.text}`}>
+                  <span className={`font-medium tabular-nums ${colors.text}`}>
                     {toAmount} {CURRENCIES[toCurrency].name}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* 确定按钮 */}
             <div className="px-4 py-4 pb-8">
               <button 
                 onClick={handleConfirm}
-                className="w-full py-4 bg-blue-500 text-white rounded-full font-medium"
+                className="w-full py-4 bg-blue-500 text-white rounded-xl font-medium transition active:scale-[0.98]"
               >
                 确定
               </button>
@@ -367,6 +363,7 @@ export default function CurrencyExchangePage() {
           }}
           onClose={() => setShowFromPicker(false)}
           colors={colors}
+          isDark={isDark}
         />
       )}
 
@@ -384,6 +381,7 @@ export default function CurrencyExchangePage() {
           }}
           onClose={() => setShowToPicker(false)}
           colors={colors}
+          isDark={isDark}
         />
       )}
     </main>
@@ -396,31 +394,31 @@ function CurrencyPicker({
   selected, 
   onSelect, 
   onClose,
-  colors 
+  colors,
+  isDark,
 }: { 
   title: string;
   selected: string;
   onSelect: (currency: 'HKD' | 'USD' | 'CNH') => void;
   onClose: () => void;
   colors: typeof themeColors.dark;
+  isDark: boolean;
 }) {
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-      <div className={`w-full ${colors.bg} rounded-t-3xl`}>
-        {/* 标题栏 */}
-        <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.border}`}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-end animate-backdrop">
+      <div className={`w-full ${colors.bg} rounded-t-3xl animate-sheet`}>
+        <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.borderLight}`}>
           <button onClick={onClose} className={colors.textSecondary}>取消</button>
-          <span className={`font-medium ${colors.text}`}>{title}</span>
-          <button onClick={onClose} className="text-blue-500">确定</button>
+          <span className={`font-semibold ${colors.text}`}>{title}</span>
+          <button onClick={onClose} className="text-blue-500 font-medium">确定</button>
         </div>
 
-        {/* 货币列表 */}
-        <div className="py-4">
+        <div className="py-2">
           {(['HKD', 'USD', 'CNH'] as const).map(currency => (
             <button
               key={currency}
               onClick={() => onSelect(currency)}
-              className={`w-full px-4 py-4 flex items-center justify-between ${colors.hover}`}
+              className={`w-full px-4 py-4 flex items-center justify-between ${colors.hover} transition`}
             >
               <div className="flex items-center gap-3">
                 <span className="text-2xl">{CURRENCIES[currency].flag}</span>
@@ -430,7 +428,7 @@ function CurrencyPicker({
                 </div>
               </div>
               {selected === currency && (
-                <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                 </svg>
               )}

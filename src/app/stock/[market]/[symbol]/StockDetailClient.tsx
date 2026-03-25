@@ -4,43 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { getStock, submitOrder, MOCK_STOCKS, MOCK_POSITIONS } from '@/lib/mockData';
-import { useTheme } from '@/lib/theme';
-
-// 简化的颜色系统
-const themeColors: Record<string, {
-  bg: string;
-  bgCard: string;
-  text: string;
-  textMuted: string;
-  textSecondary: string;
-  border: string;
-  borderLight: string;
-  hover: string;
-  navBg: string;
-}> = {
-  dark: {
-    bg: 'bg-[#0a0a0a]',
-    bgCard: 'bg-white/[0.03]',
-    text: 'text-white',
-    textMuted: 'text-white/40',
-    textSecondary: 'text-white/60',
-    border: 'border-white/[0.06]',
-    borderLight: 'border-white/[0.04]',
-    hover: 'hover:bg-white/[0.06]',
-    navBg: 'bg-[#0a0a0a]/95',
-  },
-  light: {
-    bg: 'bg-gray-50',
-    bgCard: 'bg-white',
-    text: 'text-black',
-    textMuted: 'text-gray-400',
-    textSecondary: 'text-gray-600',
-    border: 'border-gray-200',
-    borderLight: 'border-gray-100',
-    hover: 'hover:bg-gray-50',
-    navBg: 'bg-white/95',
-  },
-};
+import { useTheme, themeColors } from '@/lib/theme';
 import { validatePrice, getSpread, correctPrice } from '@/lib/priceValidation';
 
 // 市场状态计算函数
@@ -123,7 +87,7 @@ interface KlineData {
 }
 
 // K 线图表包装器
-function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: string; theme: string }) {
+function KlineChartWrapper({ symbol, market, theme }: { symbol: string; market: string; theme: 'dark' | 'light' }) {
   const [klineData, setKlineData] = useState<KlineData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -195,7 +159,7 @@ interface WarrantData {
 }
 
 // 窝轮列表组件
-function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: string; colors: typeof themeColors.dark }) {
+function WarrantListWrapper({ symbol, theme, colors }: { symbol: string; theme: 'dark' | 'light'; colors: typeof themeColors.dark }) {
   const [warrants, setWarrants] = useState<WarrantData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -580,7 +544,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-5">
+      <div className="max-w-lg mx-auto px-5 animate-page-enter">
         {/* 价格卡片 */}
         <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
           <div className="flex items-end justify-between mb-4">
@@ -596,7 +560,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           </div>
           
           {/* 简化的数据网格 */}
-          <div className="grid grid-cols-4 gap-4 pt-4 border-t border-white/10">
+          <div className={`grid grid-cols-4 gap-4 pt-4 border-t ${colors.borderLight}`}>
             <div>
               <div className={`text-xs ${colors.textMuted}`}>最高</div>
               <div className="font-medium text-red-500 tabular-nums">{stock.high.toFixed(2)}</div>
@@ -670,7 +634,7 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
               { title: `分析师上调${stock.name}目标价至${(stock.price * 1.2).toFixed(0)}`, time: '昨天 15:20' },
               { title: `机构增持${stock.name}，看好长期发展`, time: '3天前' },
             ].map((news, idx) => (
-              <div key={idx} className={`p-4 rounded-2xl ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
+              <div key={idx} className={`p-4 rounded-2xl card-hover ${isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white border border-gray-100 shadow-sm'}`}>
                 <div className="text-sm">{news.title}</div>
                 <div className={`text-xs mt-2 ${colors.textMuted}`}>{news.time}</div>
               </div>
@@ -695,13 +659,13 @@ export default function StockDetailClient({ market, symbol }: { market: string; 
           <div className="flex-1 flex gap-3">
             <button 
               onClick={() => { setTradeType('buy'); setShowTradeModal(true); }} 
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl text-center transition"
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
             >
               买入
             </button>
             <button 
               onClick={() => { setTradeType('sell'); setShowTradeModal(true); }} 
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl text-center transition"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl text-center transition active:scale-[0.97]"
             >
               卖出
             </button>
@@ -831,8 +795,8 @@ function TradeModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center">
-      <div className="w-full max-w-lg bg-gray-900 dark:bg-gray-900 rounded-t-3xl">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-end justify-center animate-backdrop">
+      <div className="w-full max-w-lg bg-gray-900 dark:bg-gray-900 rounded-t-3xl animate-sheet">
         {result ? (
           <div className="p-6 text-center">
             <div className={`text-5xl mb-3 ${result.success ? 'text-green-500' : 'text-red-500'}`}>
@@ -874,7 +838,7 @@ function TradeModal({
             </div>
             
             {/* 价格行 */}
-            <div className="flex flex-col px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col px-4 py-3 border-t border-white/10">
               <div className="flex items-center">
                 <span className={`w-14 ${colors.textMuted}`}>价格</span>
                 <div className="flex-1 flex items-center justify-center gap-4">
@@ -923,7 +887,7 @@ function TradeModal({
             </div>
             
             {/* 数量行 */}
-            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center px-4 py-3 border-t border-white/10">
               <div className="w-14 flex items-center gap-1">
                 <span className={colors.textMuted}>数量</span>
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -957,7 +921,7 @@ function TradeModal({
             </div>
             
             {/* 可买/可卖信息 */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm">
+            <div className="flex items-center justify-between px-4 py-2 border-t border-white/10 text-sm">
               {tradeType === 'buy' ? (
                 <>
                   <span className={colors.textMuted}>现金可买 <span className="text-orange-500">0</span> 股</span>
@@ -972,7 +936,7 @@ function TradeModal({
             </div>
             
             {/* 底部 */}
-            <div className="flex items-center px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center px-4 py-3 border-t border-white/10">
               <div className="flex-1">
                 <div className="font-bold">{currency} {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
                 <div className={`text-xs ${colors.textMuted}`}>

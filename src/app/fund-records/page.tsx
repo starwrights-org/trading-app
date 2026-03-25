@@ -20,13 +20,13 @@ const MOCK_FUND_RECORDS = [
 export default function FundRecordsPage() {
   const { theme } = useTheme();
   const colors = themeColors[theme];
+  const isDark = theme === 'dark';
   
   const [showTimeFilter, setShowTimeFilter] = useState(false);
   const [timeFilter, setTimeFilter] = useState<'all' | 'week' | 'month' | '3months' | 'custom'>('all');
   const [customStartDate, setCustomStartDate] = useState('2000.01.01');
   const [customEndDate, setCustomEndDate] = useState('2026.03.21');
 
-  // 按时间筛选记录
   const filteredRecords = useMemo(() => {
     let records = [...MOCK_FUND_RECORDS];
     
@@ -46,7 +46,6 @@ export default function FundRecordsPage() {
     return records;
   }, [timeFilter]);
 
-  // 按月份分组
   const groupedRecords = useMemo(() => {
     const groups: Record<string, typeof MOCK_FUND_RECORDS> = {};
     
@@ -86,37 +85,37 @@ export default function FundRecordsPage() {
   return (
     <main className={`min-h-screen ${colors.bg} ${colors.text} pb-20`}>
       {/* Header */}
-      <div className={`${colors.bg} sticky top-0 z-10 border-b ${colors.border}`}>
+      <div className={`${colors.bg} sticky top-0 z-10 border-b ${colors.borderLight}`}>
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center">
-          <Link href="/positions" className={`mr-4 ${colors.textSecondary} hover:${colors.text}`}>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Link href="/positions" className={`p-1 mr-3 rounded-lg ${colors.hover} transition`}>
+            <svg className="w-6 h-6 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <h1 className="flex-1 text-center text-lg font-medium">资金记录</h1>
+          <h1 className="flex-1 text-center text-lg font-semibold">资金记录</h1>
           <div className="w-6" />
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-lg mx-auto animate-page-enter">
         {/* 账户选择 */}
         <div className="px-4 py-3 flex items-center gap-2">
-          <span className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white text-sm">💰</span>
-          <span className={colors.text}>证券账户 (LBPT10078568)</span>
+          <span className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center text-white text-xs">💰</span>
+          <span className={`text-sm ${colors.text}`}>证券账户 (LBPT10078568)</span>
         </div>
 
         {/* 时间筛选 + 筛选图标 */}
         <div className="px-4 py-2 flex items-center justify-between">
           <button 
             onClick={() => setShowTimeFilter(true)}
-            className={`flex items-center gap-1 px-3 py-1.5 border ${colors.border} rounded-full text-sm`}
+            className={`flex items-center gap-1 px-3 py-1.5 border ${colors.border} rounded-xl text-sm transition ${colors.hover}`}
           >
             {getTimeFilterLabel()}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <button className={colors.textSecondary}>
+          <button className={`p-1.5 rounded-lg ${colors.hover} transition opacity-60`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
@@ -128,26 +127,23 @@ export default function FundRecordsPage() {
           <div>
             {Object.entries(groupedRecords).map(([monthKey, records]) => (
               <div key={monthKey}>
-                {/* 月份标题 */}
-                <div className={`px-4 py-2 text-lg font-bold ${colors.text}`}>
+                <div className={`px-4 py-2 text-base font-bold ${colors.text}`}>
                   {getMonthLabel(monthKey)}
                 </div>
                 
-                {/* 该月记录 */}
                 <div className={`divide-y ${colors.borderLight}`}>
                   {records.map(record => (
-                    <div key={record.id} className="px-4 py-4">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <div className={`font-medium ${colors.text}`}>{record.type}</div>
-                          <div className={`text-sm ${colors.textMuted} mt-1`}>{record.date}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className={`font-medium ${record.amount >= 0 ? colors.text : colors.text}`}>
-                            {record.amount >= 0 ? '' : '-'}{record.currency} {Math.abs(record.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                          </div>
-                          <div className={`text-sm ${colors.textMuted} mt-1`}>{record.detail}</div>
-                        </div>
+                    <div key={record.id} className={`px-4 py-4 ${colors.hover} transition`}>
+                      {/* 移动端友好的两行布局 */}
+                      <div className="flex items-start justify-between mb-1">
+                        <span className={`font-medium text-sm ${colors.text}`}>{record.type}</span>
+                        <span className={`font-medium text-sm tabular-nums ${record.amount >= 0 ? 'text-red-500' : colors.text}`}>
+                          {record.amount >= 0 ? '+' : '-'}{record.currency} {Math.abs(record.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className={`text-xs ${colors.textMuted}`}>{record.date}</span>
+                        <span className={`text-xs ${colors.textMuted}`}>{record.detail}</span>
                       </div>
                     </div>
                   ))}
@@ -155,18 +151,15 @@ export default function FundRecordsPage() {
               </div>
             ))}
             
-            {/* 底部提示 */}
             <div className={`text-center py-6 text-sm ${colors.textMuted}`}>
               没有更多了
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-32">
-            <div className="w-24 h-24 mb-4">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <ellipse cx="50" cy="60" rx="35" ry="15" fill={theme === 'dark' ? '#2d3748' : '#f0f0f0'} />
-                <ellipse cx="50" cy="50" rx="30" ry="10" fill={theme === 'dark' ? '#1a202c' : '#e8e8e8'} stroke={theme === 'dark' ? '#4a5568' : '#d8d8d8'} strokeWidth="2" />
-                <ellipse cx="50" cy="50" rx="15" ry="5" fill={theme === 'dark' ? '#2d3748' : '#f8f8f8'} />
+          <div className="flex flex-col items-center justify-center py-28">
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${isDark ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center`}>
+              <svg className="w-8 h-8 opacity-20" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
               </svg>
             </div>
             <div className={colors.textMuted}>暂无记录</div>
@@ -176,19 +169,17 @@ export default function FundRecordsPage() {
 
       {/* 时间筛选弹窗 */}
       {showTimeFilter && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-          <div className={`w-full ${colors.bg} rounded-t-3xl`}>
-            {/* 弹窗标题 */}
-            <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200">
-              <span className="text-lg font-medium">自定义时间</span>
-              <button onClick={() => setShowTimeFilter(false)} className={colors.textMuted}>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end animate-backdrop">
+          <div className={`w-full ${colors.bg} rounded-t-3xl animate-sheet`}>
+            <div className={`flex items-center justify-between px-4 py-4 border-b ${colors.borderLight}`}>
+              <span className={`text-lg font-semibold ${colors.text}`}>自定义时间</span>
+              <button onClick={() => setShowTimeFilter(false)} className={`p-1 rounded-lg ${colors.hover} transition opacity-60`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            {/* 快捷选项 */}
             <div className="px-4 py-4">
               <div className="flex flex-wrap gap-3">
                 {[
@@ -200,9 +191,9 @@ export default function FundRecordsPage() {
                   <button
                     key={option.key}
                     onClick={() => setTimeFilter(option.key as typeof timeFilter)}
-                    className={`px-6 py-2 rounded-full border transition ${
+                    className={`px-5 py-2 rounded-xl border transition ${
                       timeFilter === option.key
-                        ? 'border-gray-900 bg-gray-900 text-white'
+                        ? isDark ? 'border-white bg-white text-black' : 'border-gray-900 bg-gray-900 text-white'
                         : `${colors.border} ${colors.textSecondary}`
                     }`}
                   >
@@ -212,21 +203,19 @@ export default function FundRecordsPage() {
               </div>
             </div>
 
-            {/* 自定义日期范围 */}
             <div className="px-4 py-4">
-              <div className="flex items-center gap-4">
-                <button className={`flex-1 py-3 px-4 border ${colors.border} rounded-full text-center ${colors.textSecondary}`}>
+              <div className="flex items-center gap-3">
+                <button className={`flex-1 py-3 px-4 border ${colors.border} rounded-xl text-center text-sm ${colors.textSecondary}`}>
                   {customStartDate}
                 </button>
                 <span className={colors.textMuted}>—</span>
-                <button className={`flex-1 py-3 px-4 border ${colors.border} rounded-full text-center ${colors.textSecondary}`}>
+                <button className={`flex-1 py-3 px-4 border ${colors.border} rounded-xl text-center text-sm ${colors.textSecondary}`}>
                   {customEndDate}
                 </button>
               </div>
             </div>
 
-            {/* 日期选择器（简化版） */}
-            <div className="px-4 py-4 border-t border-gray-200">
+            <div className={`px-4 py-4 border-t ${colors.borderLight}`}>
               <div className="flex justify-center gap-8 text-center">
                 <div>
                   <div className="font-bold text-lg">2000 年</div>
@@ -246,19 +235,16 @@ export default function FundRecordsPage() {
               </div>
             </div>
 
-            {/* 底部按钮 */}
-            <div className="flex gap-4 px-4 py-4 pb-8">
+            <div className="flex gap-3 px-4 py-4 pb-8">
               <button 
-                onClick={() => {
-                  setTimeFilter('all');
-                }}
-                className={`flex-1 py-3 border ${colors.border} rounded-full ${colors.text}`}
+                onClick={() => setTimeFilter('all')}
+                className={`flex-1 py-3 border ${colors.border} rounded-xl ${colors.text} transition active:scale-[0.98]`}
               >
                 重置
               </button>
               <button 
                 onClick={() => setShowTimeFilter(false)}
-                className="flex-1 py-3 bg-gray-900 text-white rounded-full"
+                className={`flex-1 py-3 rounded-xl text-white transition active:scale-[0.98] ${isDark ? 'bg-white text-black' : 'bg-gray-900'}`}
               >
                 确定
               </button>

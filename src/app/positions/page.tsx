@@ -46,7 +46,7 @@ export default function PositionsPage() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-5">
+      <div className="max-w-lg mx-auto px-5 animate-page-enter">
         {/* 总资产卡片 */}
         <div className={`p-5 rounded-3xl ${isDark ? 'bg-gradient-to-br from-white/[0.08] to-white/[0.03]' : 'bg-white shadow-lg'}`}>
           <div className="flex items-center gap-2 mb-3">
